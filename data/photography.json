@@ -1,0 +1,921 @@
+{
+  "profile": {
+    "name": "Abdl Rahman Kamal",
+    "role": "Photographer · UAE",
+    "intro": "I photograph the atmosphere around a subject—where light, motion, and place begin to tell a story.",
+    "about": "I started photography in 2019, learning through mistakes, experimentation, and a growing curiosity about what makes an image feel complete.\n\nThe Huawei P30 Pro was where that process became serious. Its 5x periscope lens, roughly equivalent to 125mm, taught me to look more carefully at distance, compression, and framing. Adobe Lightroom became part of the craft too, helping me refine color, recover detail, and bring the image closer to what I saw.\n\nMoving to the Huawei P60 Pro gave me more flexibility through improved color and its 3.5x periscope lens, roughly 95mm. But the real upgrade was in how I saw. I moved from casual, angled frames toward reading the atmosphere, finding the right subject, and letting the photograph tell its own story.\n\nThe tools have changed, but intention remains at the center of the work.",
+    "email": "abdshawki@gmail.com",
+    "socialLinks": [
+      {
+        "label": "Instagram",
+        "href": "https://instagram.com/abdlr7man04"
+      }
+    ]
+  },
+  "hero": {
+    "eyebrow": "Visual journal / UAE",
+    "title": "Frames that let",
+    "titleAccent": "the world breathe.",
+    "description": "A visual journal of speed, weather, and the quiet geometry of place.",
+    "primaryCta": "Explore selected work",
+    "secondaryCta": "About the photographer",
+    "yearLabel": "2024—2026",
+    "locationLabel": "United Arab Emirates",
+    "images": [
+      {
+        "src": "/photography/full/img-20240717-182422-1.webp",
+        "alt": "Dark gray Mercedes coupe with an orange racing stripe, captured sharp while surrounding traffic and background are motion-blurred.",
+        "label": "",
+        "collectionSlug": "automotive",
+        "photoId": "automotive-1789413168642",
+        "meta": "01 / 03"
+      },
+      {
+        "src": "/photography/full/img-20231226-180154.webp",
+        "alt": "Bicycle against sunset gradient",
+        "label": "Night / Motion",
+        "meta": "02 / 03",
+        "collectionSlug": "cycling-mood",
+        "photoId": "cycle-2"
+      },
+      {
+        "src": "/photography/full/sunset-skyline.webp",
+        "alt": "City skyline silhouetted against a deep orange-red sunset with the low sun near the horizon beneath textured clouds and a tall tower at the right; a single bird is visible in flight.",
+        "label": "City / Light",
+        "collectionSlug": "golden-hour",
+        "photoId": "sun-1",
+        "meta": "03 / 03"
+      }
+    ]
+  },
+  "primaryCollections": [
+    {
+      "slug": "real-estate",
+      "title": "Interior Design Showcase",
+      "theme": "Full listing sets that sell a lifestyle — wide establishing shots, detail vignettes, and day-to-dusk pairs.",
+      "intro": "A mock listing set for a furnished apartment: establishing shots, detail vignettes, a balcony/window hero, plus a day-to-dusk pair and a styled-vs-unstyled before/after.",
+      "skillsDemonstrated": "Wide-angle composition, interior lighting balance, day-to-dusk exposure matching, and staging awareness.",
+      "coverImage": "",
+      "section": "primary",
+      "photos": [
+        {
+          "id": "real-estate-1789382151800",
+          "featuredRank": 1,
+          "title": "Opulent Dining Hall with Crystal Chandeliers",
+          "src": "/photography/full/img-20260529-181143.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260529-181143.webp",
+          "alt": "Wide interior of a large dining room with a row of ornate crystal chandeliers along a coffered ceiling, a central high-backed banquette, tables set for service and tall windows providing daylight at the left.",
+          "story": "A symmetrical interior composition centered on a sequence of elaborate chandeliers that recede into the distance; warm artificial light and daylight from the windows create layered tonal depth while the central banquette and table layout reinforce strong leading lines and visual balance.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Window Light",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 74
+          }
+        },
+        {
+          "id": "real-estate-1789382183934",
+          "featuredRank": 2,
+          "title": "Teal Dining Room with Red Pendants",
+          "src": "/photography/full/img-20260627-162426-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260627-162426-1.webp",
+          "alt": "Restaurant interior with teal ceiling and walls, geometric tiled floor, rows of banquettes and red pendant lamps arranged symmetrically.",
+          "story": "Wide-angle interior emphasizing strong central symmetry and layered depth; a cool teal palette is contrasted by saturated red pendant shades and repeating arched lamp posts, with patterned floor tiles and varied upholstery textures adding visual rhythm.",
+          "tags": [
+            "Environmental Texture",
+            "Color Grading",
+            "Leading Lines",
+            "Depth",
+            "Visual Balance",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/5",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "real-estate-1789382186579",
+          "featuredRank": 3,
+          "title": "Teal Dining Interior with Red Pendants",
+          "src": "/photography/full/img-20260627-162438.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260627-162438.webp",
+          "alt": "Restaurant interior with teal ceiling, patterned tile floor, banquette seating and red fringe pendant lamps down a central aisle.",
+          "story": "Wide-angle composition emphasizes symmetrical ceiling coffers and a central aisle that creates strong leading lines and layered depth. Warm red pendant lights contrast with cool teal finishes, highlighting varied textures in upholstery and floor tile.",
+          "tags": [
+            "Environmental Texture",
+            "Color Grading",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "real-estate-1789382189077",
+          "title": "Teal and Red Dining Interior",
+          "src": "/photography/full/img-20260627-162418.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260627-162418.webp",
+          "alt": "Restaurant interior with teal coffered ceiling, mirrored panels, red pendant lamps, patterned banquettes and geometric tiled floor.",
+          "story": "A coffered teal ceiling with mirrored inserts and globe pendants creates a repeating grid that guides the eye through layered banquette seating. Patterned upholstery, arched red lamps and geometric floor tiles establish tactile repetition and strong foreground-to-background depth.",
+          "tags": [
+            "Environmental Texture",
+            "Color Grading",
+            "Leading Lines",
+            "Depth",
+            "Reflection Control",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/5",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        }
+      ]
+    },
+    {
+      "slug": "automotive",
+      "title": "Urban Automotive Motion",
+      "theme": "Contemporary cars photographed in urban streets emphasizing motion, reflections and architectural context.",
+      "intro": "Eleven images featuring modern automobiles on city roads and parking areas. The series highlights moving vehicles and parked cars framed against buildings, signage and streetscapes, using varied lighting from daylight through dusk and wet-road reflections.",
+      "skillsDemonstrated": "Panning and motion blur control, low-angle composition, handling mixed lighting (golden hour to night), managing reflections on wet surfaces and car bodywork, selective framing with architectural and street elements.",
+      "coverImage": "",
+      "section": "primary",
+      "photos": [
+        {
+          "id": "automotive-1789413177862",
+          "title": "Dark Sedan on Highway",
+          "src": "/photography/full/img-20260619-181616-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260619-181616-1.webp",
+          "alt": "Dark sedan traveling on a multi-lane highway with blurred foreground, guardrail, hedgerow and trees under a hazy sky.",
+          "story": "Low-angle roadside shot of a dark sedan with subtle motion blur; guardrail and lane markings form strong leading lines while hedges and trees provide environmental framing under soft, atmospheric light.",
+          "tags": [
+            "Motion Blur",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Reflection Control",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 49,
+            "y": 80
+          }
+        },
+        {
+          "id": "automotive-1789413192713",
+          "title": "Audi RS3 in motion",
+          "src": "/photography/full/img-20240627-160925-3.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240627-160925-3.webp",
+          "alt": "Rear three-quarter view of a gray Audi RS3 passing at speed, photographed from a neighboring car with background motion blur and visible transmission towers.",
+          "story": "Rear three-quarter of an Audi RS3 captured from inside a nearby vehicle; panning keeps the car relatively sharp while the road and utility towers blur, using compositional lines for environmental framing.",
+          "tags": [
+            "Panning",
+            "Motion Blur",
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 72
+          }
+        },
+        {
+          "id": "automotive-1789413188741",
+          "title": "Ford Mustang rear in urban sunlight",
+          "src": "/photography/full/img-20240303-101904.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240303-101904.webp",
+          "alt": "Rear three-quarter view of a dark Ford Mustang driving past a sunlit stone building",
+          "story": "A Ford Mustang is captured in motion against a sunlit multi-story façade, highlighting strong shadow patterns and layered depth in the composition.",
+          "tags": [
+            "Motion Blur",
+            "Shutter Speed",
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 88
+          }
+        },
+        {
+          "id": "automotive-1789413180709",
+          "title": "Red sports car beneath a golden-glass tower",
+          "src": "/photography/full/red-porsche-panning.webp",
+          "thumbnailSrc": "/photography/thumbs/red-porsche-panning.webp",
+          "alt": "Red sports car with prominent rear wing and black SUV on a city street, framed by trees and a high-rise reflecting warm golden light.",
+          "story": "A layered urban composition where foreground vegetation and roadside elements frame a red sports car and black SUV, leading the eye to a high-rise whose glass facade reflects warm, atmospheric light.",
+          "tags": [
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Motion Blur",
+            "Atmospheric Light"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 71
+          }
+        },
+        {
+          "id": "automotive-1789413184698",
+          "title": "BMW sedan at desert horizon",
+          "src": "/photography/full/img-20240107-164308.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240107-164308.webp",
+          "alt": "Dark BMW sedan parked on paved lot with a low sandy ridge behind and a clear blue sky, warm side light highlighting the car's reflective surfaces.",
+          "story": "A dark BMW sedan is placed low in the frame beneath an expansive sky; warm lateral light emphasizes the sandy texture of the ridge and the strong reflections on the car's glossy body.",
+          "tags": [
+            "Environmental Texture",
+            "Rule of Thirds",
+            "Visual Balance",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 84
+          },
+          "featuredRank": 1
+        },
+        {
+          "id": "automotive-1789413171117",
+          "featuredRank": 3,
+          "title": "Evening queue by lit storefronts",
+          "src": "/photography/full/img-20241007-182612.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20241007-182612.webp",
+          "alt": "Line of cars queued along a street at dusk, lit lampposts and round red storefront signs reading 'CAFETERIA', 'GROCERY', 'SALON GENTS' beside a sidewalk where a pedestrian walks under a purple-orange sky.",
+          "story": "An urban dusk scene frames rows of cars and lampposts leading toward a warm horizon, while bold round shop signs and a solitary pedestrian on the sidewalk provide scale and compositional counterpoint.",
+          "tags": [
+            "Golden Hour",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Exposure Balance",
+            "Environmental Texture"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 48,
+            "y": 91
+          }
+        },
+        {
+          "id": "auto-1",
+          "title": "Green BMW M4 framed by red poles",
+          "src": "/photography/full/img-20240412-171207.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240412-171207.webp",
+          "alt": "Front view of a green BMW M4 parked before stepped beige buildings, red vertical poles and another car behind, with glossy reflections on the hood.",
+          "story": "A glossy green BMW M4 fills the foreground, its hood and grille catching reflections of the surroundings. Red vertical poles and the stepped architecture create layered leading lines and environmental framing that emphasize symmetry and depth.",
+          "tags": [
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Reflection Control",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 47,
+            "y": 79
+          },
+          "featuredRank": 2,
+          "aspectRatio": "3/4"
+        },
+        {
+          "id": "automotive-1789413174131",
+          "title": "Century sedan on a commercial street",
+          "src": "/photography/full/img-20250726-155122-1-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250726-155122-1-1.webp",
+          "alt": "Rear view of a Century sedan driving down a sunlit commercial street with shopfronts and a yield sign, distant minarets visible.",
+          "story": "A Century sedan occupies the foreground as layered shopfronts and street signage recede into a warm, color-graded background; shallow depth and compositional lines guide the eye from the car to the distant towers.",
+          "tags": [
+            "Exposure Balance",
+            "Color Grading",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/5",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 48,
+            "y": 74
+          }
+        },
+        {
+          "id": "automotive-1789413175551",
+          "title": "GMC SUV on rain‑slick road",
+          "src": "/photography/full/img-20260327-180756-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260327-180756-1.webp",
+          "alt": "Front three-quarter view of a GMC SUV driving on a wet road with multiple cars and headlights reflecting on the pavement under an overcast sky.",
+          "story": "A GMC SUV occupies the foreground left while a procession of vehicles recedes into the distance; headlights and road surface reflections form strong leading lines and enhance depth and environmental texture.",
+          "tags": [
+            "Environmental Texture",
+            "Leading Lines",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/3",
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 53,
+            "y": 83
+          }
+        },
+        {
+          "id": "automotive-1789413168642",
+          "title": "Mercedes coupe with orange stripe",
+          "src": "/photography/full/img-20240717-182422-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240717-182422-1.webp",
+          "alt": "Dark gray Mercedes coupe with an orange racing stripe, captured sharp while surrounding traffic and background are motion-blurred.",
+          "story": "A panned capture isolates a dark-gray Mercedes coupe with orange accents against a streaked, blurred urban background; leading lines of the roadway and warm color grading emphasize speed and depth.",
+          "tags": [
+            "Panning",
+            "Motion Blur",
+            "Color Grading",
+            "Leading Lines",
+            "Depth",
+            "Visual Balance"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/3",
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 49,
+            "y": 55
+          }
+        },
+        {
+          "id": "automotive-1789413172399",
+          "title": "Blue Ford Mustang on Wet Road",
+          "src": "/photography/full/img-20250103-164135-3.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250103-164135-3.webp",
+          "alt": "Blue Ford Mustang in profile panning across a wet road with blurred background and clear reflections on the pavement.",
+          "story": "A blue Ford Mustang is sharply tracked against a streaked, motion-blurred background while wet pavement produces strong mirrored reflections, highlighting speed and surface texture.",
+          "tags": [
+            "Panning",
+            "Motion Blur",
+            "Environmental Texture",
+            "Color Grading",
+            "Leading Lines",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "16/9",
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 35,
+            "y": 43
+          }
+        }
+      ]
+    },
+    {
+      "slug": "product",
+      "title": "Product Photography",
+      "theme": "Window-light studio setups and in-context lifestyle shots — a complete mini-brand concept.",
+      "intro": "A small 'mini brand' concept shot with window light and a simple backdrop, then an in-context lifestyle version of the same product on a real desk or in someone's hands.",
+      "skillsDemonstrated": "Window-light exposure, clean studio-style backgrounds, lifestyle context shooting, and brand-level consistency.",
+      "coverImage": "",
+      "section": "primary",
+      "photos": [
+        {
+          "id": "product-1789412025052",
+          "featuredRank": 1,
+          "title": "Two pink polishes with dried florals",
+          "src": "/photography/full/img-20241201-152736.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20241201-152736.webp",
+          "alt": "Two small pink nail polish bottles on a wooden ledge with a faint reflection, framed by yellow flowers, baby’s breath and eucalyptus in soft focus.",
+          "story": "Two pink nail polish bottles are centered on a textured wooden surface and visually framed by yellow blooms, baby’s breath and eucalyptus. Shallow depth of field and warm color grading emphasize texture and a subtle foreground reflection.",
+          "tags": [
+            "Environmental Texture",
+            "Color Grading",
+            "Environmental Framing",
+            "Depth",
+            "Visual Balance",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 95
+          }
+        }
+      ]
+    },
+    {
+      "slug": "event",
+      "title": "Event Coverage",
+      "theme": "Reading the room and adapting fast — candids, posed moments, and detail shots from a live event.",
+      "intro": "A mix of candid, posed, and detail shots from a low-stakes local event (market, exhibition, or gathering) that proves adaptability and awareness.",
+      "skillsDemonstrated": "Fast-changing exposure adaptation, candid timing, posed direction, and environmental storytelling.",
+      "coverImage": "",
+      "section": "primary",
+      "photos": [
+        {
+          "id": "event-1789890826472",
+          "title": "Open equipment rack with green‑lit modules",
+          "src": "/photography/full/img-20260916-154428.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260916-154428.webp",
+          "alt": "Person beside an open equipment rack showing stacked green‑lit circuit modules under overhead exhibition lighting and trusses.",
+          "story": "A viewer stands left of a tall cabinet of stacked electronic modules, each with green status indicators; strong overhead fixtures produce a starburst highlight while the exhibition trusses and nearby screens frame the scene.",
+          "tags": [
+            "Exposure Balance",
+            "Color Grading",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "featuredRank": 1,
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          },
+          "location": "Schneider Electric Innovation Summit MEA - Abu Dhabi"
+        }
+      ]
+    }
+  ],
+  "archiveCollections": [
+    {
+      "slug": "landscape-buildings",
+      "title": "Landscape & Architecture",
+      "theme": "The towering scale of the city, focusing on monumental facades and geometric shapes.",
+      "intro": "Place is never a backdrop: it provides the structure, scale, and emotional distance of each frame.",
+      "skillsDemonstrated": "Architectural leading lines, rule of thirds, and balancing foreground anchors.",
+      "coverImage": "/photography/full/2025-12-19-201533673.webp",
+      "section": "archive",
+      "photos": [
+        {
+          "id": "land-1",
+          "featuredRank": 1,
+          "title": "Glass towers framed by palms",
+          "src": "/photography/full/2025-12-19-201533673.webp",
+          "thumbnailSrc": "/photography/thumbs/2025-12-19-201533673.webp",
+          "alt": "Three curved glass towers rising behind palm trees and a low arched walkway under a moody overcast sky.",
+          "story": "Vertical composition centers three reflective high-rise towers behind foreground palms and a curved pedestrian bridge, creating pronounced environmental framing and layered depth. Overcast light mutes highlights and enhances subtle reflections on the glass façades.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Reflection Control",
+            "Symmetry"
+          ],
+          "aspectRatio": "4/5",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 100
+          }
+        },
+        {
+          "id": "land-6",
+          "title": "Reflective Towers at Sunset",
+          "featuredRank": 3,
+          "src": "/photography/full/birds-etihad.webp",
+          "thumbnailSrc": "/photography/thumbs/birds-etihad.webp",
+          "alt": "Cluster of glass-clad skyscrapers under a dramatic pink-orange sunset sky with scattered birds.",
+          "story": "A vertical cluster of reflective towers rises into a vibrant sunset, framed by layered clouds and a flock of birds that emphasize the composition's balance and scale.",
+          "tags": [
+            "Golden Hour",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Visual Balance",
+            "Reflection Control"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "land-2",
+          "title": "Checkered Facade",
+          "src": "/photography/full/img-20240305-101907-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240305-101907-1.webp",
+          "alt": "Colorful glass building",
+          "story": "A vibrant, multi-colored building exterior stands striking against a dramatic stormy sky.",
+          "tags": [
+            "Visual Balance",
+            "Color Grading"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
+        },
+        {
+          "id": "land-4",
+          "title": "Soaring Heights",
+          "src": "/photography/full/img-20240309-112044.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240309-112044.webp",
+          "alt": "Skyscrapers through clouds",
+          "story": "Massive skyscrapers pierce through the heavy, brooding cloud cover, emphasizing the city's monumental scale.",
+          "tags": [
+            "Depth",
+            "Atmospheric Light"
+          ],
+          "aspectRatio": "4/3",
+          "orientation": "landscape"
+        },
+        {
+          "id": "land-5",
+          "title": "Curving Path",
+          "src": "/photography/full/img-20240410-070743-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240410-070743-1.webp",
+          "alt": "Pathway leading to skyline",
+          "story": "A winding brick pathway leads the eye through manicured greens toward the distant skyline.",
+          "tags": [
+            "Leading Lines",
+            "Depth"
+          ],
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "featuredRank": 2,
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        }
+      ]
+    },
+    {
+      "slug": "nature-mood",
+      "title": "Nature & Moody Weather",
+      "theme": "Embracing the cloudy, rainy, and heavy atmospheric days.",
+      "intro": "A collection highlighting how weather transforms familiar environments into moody, cinematic scenes.",
+      "skillsDemonstrated": "Highlight protection, anticipating weather conditions, and emphasizing deep shadows.",
+      "coverImage": "/photography/full/img-20240502-190721-2.webp",
+      "section": "archive",
+      "photos": [
+        {
+          "id": "nat-1",
+          "featuredRank": 1,
+          "title": "Gathering Storm",
+          "src": "/photography/full/img-20240502-190721-2.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240502-190721-2.webp",
+          "alt": "Heavy storm clouds",
+          "story": "Intense, heavy storm clouds roll over the city, glowing ominously with the last light of day.",
+          "tags": [
+            "Atmospheric Light",
+            "Exposure Balance"
+          ],
+          "aspectRatio": "9/16",
+          "orientation": "portrait"
+        },
+        {
+          "id": "nat-2",
+          "featuredRank": 2,
+          "title": "Moody Horizons",
+          "src": "/photography/full/dusk-promenade.webp",
+          "thumbnailSrc": "/photography/thumbs/dusk-promenade.webp",
+          "alt": "Dark clouds over promenade",
+          "story": "Deep clouds hang low over the promenade, creating a sense of quiet anticipation before the rain breaks.",
+          "tags": [
+            "Environmental Texture",
+            "Color Grading"
+          ],
+          "aspectRatio": "4/3",
+          "orientation": "landscape"
+        },
+        {
+          "id": "nat-3",
+          "featuredRank": 3,
+          "title": "Mountain Commute",
+          "src": "/photography/full/img-20240214-180439.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240214-180439.webp",
+          "alt": "Traffic with mountain background",
+          "story": "Traffic flows under a heavy, overcast sky, dwarfed by the majestic mountains towering in the distance.",
+          "tags": [
+            "Depth",
+            "Environmental Framing"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
+        }
+      ]
+    },
+    {
+      "slug": "night-photography",
+      "title": "Night Photography",
+      "theme": "Exploring the stark geometry of the city once the sun sets, guided by artificial light.",
+      "intro": "Low-light exposures that bring out the hidden colors, neons, and dramatic contrasts of the night.",
+      "skillsDemonstrated": "Low-light exposure control, managing extreme contrasts, and color grading.",
+      "coverImage": "/photography/full/img-20230921-194523-2.webp",
+      "section": "archive",
+      "photos": [
+        {
+          "id": "night-1",
+          "featuredRank": 1,
+          "title": "Neon Oasis",
+          "src": "/photography/full/img-20230921-194523-2.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20230921-194523-2.webp",
+          "alt": "Modern architecture at night",
+          "story": "Modern geometric architecture glows vibrantly against the deep, dark blue night sky.",
+          "tags": [
+            "Exposure Balance",
+            "Color Grading"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
+        },
+        {
+          "id": "night-2",
+          "featuredRank": 2,
+          "title": "Electric Strike",
+          "src": "/photography/full/img-20231125-023906.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20231125-023906.webp",
+          "alt": "Lightning bolt striking at night",
+          "story": "A massive bolt of lightning shatters the night sky, captured in a split-second exposure.",
+          "tags": [
+            "Shutter Speed",
+            "Exposure Balance"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 96
+          }
+        },
+        {
+          "id": "night-3",
+          "featuredRank": 3,
+          "title": "Illuminated Grandeur",
+          "src": "/photography/full/img-20240323-211537.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240323-211537.webp",
+          "alt": "Grand Mosque at night",
+          "story": "The intricate, ornate pillars of the Grand Mosque glow majestically into the night.",
+          "tags": [
+            "Environmental Texture",
+            "Visual Balance"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
+        },
+        {
+          "id": "night-4",
+          "title": "Fairy Light Skyline",
+          "src": "/photography/full/img-20240615-230349-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240615-230349-1.webp",
+          "alt": "Trees with fairy lights and skyline",
+          "story": "Trees wrapped in warm golden lights contrast beautifully with the cool, towering skyline across the water.",
+          "tags": [
+            "Depth",
+            "Color Grading"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
+        }
+      ]
+    },
+    {
+      "slug": "cycling-mood",
+      "title": "Cycling Mood",
+      "theme": "The quiet moments of riding, framed by the scale of the city and changing skies.",
+      "intro": "Two wheels and an empty path. A collection dedicated to the peaceful cadence of cycling at dusk.",
+      "skillsDemonstrated": "Foreground anchoring, leading lines, and dynamic composition.",
+      "coverImage": "/photography/full/bike-dusk-skyline.webp",
+      "section": "archive",
+      "photos": [
+        {
+          "id": "cycle-1",
+          "featuredRank": 1,
+          "title": "Twilight Rest",
+          "src": "/photography/full/bike-dusk-skyline.webp",
+          "thumbnailSrc": "/photography/thumbs/bike-dusk-skyline.webp",
+          "alt": "Bike at dusk",
+          "story": "A bicycle rests along a quiet pathway, with the city's towering silhouette in the distance.",
+          "tags": [
+            "Leading Lines",
+            "Environmental Framing"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
+        },
+        {
+          "id": "cycle-2",
+          "title": "Sunset Ride",
+          "src": "/photography/full/img-20231226-180154.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20231226-180154.webp",
+          "alt": "Bicycle against sunset gradient",
+          "story": "A bicycle leans against a railing as the sky transitions into a brilliant orange and blue gradient.",
+          "tags": [
+            "Golden Hour",
+            "Rule of Thirds"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "featuredRank": 2,
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "cycle-3",
+          "title": "Curved Promenade with Bicycles and Gradient Sky",
+          "featuredRank": 3,
+          "src": "/photography/full/img-20231226-180412.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20231226-180412.webp",
+          "alt": "Two bicycles on a curved waterfront promenade lit by warm path lights, leading toward a calm sea under a smooth blue-to-orange gradient sky.",
+          "story": "The image emphasizes the sweeping curve of the illuminated promenade and strong leading lines toward the horizon, pairing warm foreground lighting with a cool gradient sky and tranquil water. A parked bicycle in the foreground and a cyclist ahead provide depth and scale.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Visual Balance"
+          ],
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 74
+          }
+        }
+      ]
+    },
+    {
+      "slug": "fireworks",
+      "title": "Fireworks",
+      "theme": "Explosions of light celebrating the night, captured with precision.",
+      "intro": "Timing is everything. Capturing the apex of a burst while maintaining the surrounding city's exposure.",
+      "skillsDemonstrated": "Long exposure timing, highlight protection, and scale visualization.",
+      "coverImage": "/photography/full/img-20240101-000804-1.webp",
+      "section": "archive",
+      "photos": [
+        {
+          "id": "fire-1",
+          "featuredRank": 1,
+          "title": "Golden Eruption",
+          "src": "/photography/full/fireworks-water.webp",
+          "thumbnailSrc": "/photography/thumbs/fireworks-water.webp",
+          "alt": "Fireworks over water",
+          "story": "A breathtaking explosion of golden light reflects across the dark, rippling waters of the city.",
+          "tags": [
+            "Exposure Balance",
+            "Shutter Speed"
+          ],
+          "aspectRatio": "9/16",
+          "orientation": "portrait"
+        },
+        {
+          "id": "fire-2",
+          "title": "Night Sky Bloom",
+          "featuredRank": 2,
+          "src": "/photography/full/img-20231203-210947.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20231203-210947.webp",
+          "alt": "Perfect firework burst",
+          "story": "A massive, perfectly timed firework shell bursts above the skyline, filling the frame with intricate trails.",
+          "tags": [
+            "Shutter Speed",
+            "Visual Balance"
+          ],
+          "aspectRatio": "3/4",
+          "focalPoint": {
+            "x": 43,
+            "y": 69
+          },
+          "orientation": "portrait"
+        },
+        {
+          "id": "fire-3",
+          "featuredRank": 3,
+          "title": "Celebration",
+          "src": "/photography/full/img-20240101-000804-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240101-000804-1.webp",
+          "alt": "Colorful fireworks display",
+          "story": "A colorful, vibrant display of fireworks lights up the shoreline as crowds gather to watch.",
+          "tags": [
+            "Exposure Balance",
+            "Color Grading"
+          ],
+          "aspectRatio": "1/1",
+          "orientation": "square",
+          "focalPoint": {
+            "x": 50,
+            "y": 85
+          }
+        }
+      ]
+    },
+    {
+      "slug": "golden-hour",
+      "title": "Sunset & Golden Hour",
+      "theme": "The fleeting minutes when the sun bathes the world in vibrant oranges, pinks, and deep purples.",
+      "intro": "Transient skies and changing light turn familiar city scenes into singular, unrepeatable moments.",
+      "skillsDemonstrated": "Golden-hour color grading, deep gradient capturing, and dramatic silhouettes.",
+      "coverImage": "/photography/full/sunset-skyline.webp",
+      "section": "archive",
+      "photos": [
+        {
+          "id": "sun-1",
+          "featuredRank": 1,
+          "title": "Urban Sunset Silhouette",
+          "src": "/photography/full/sunset-skyline.webp",
+          "thumbnailSrc": "/photography/thumbs/sunset-skyline.webp",
+          "alt": "City skyline silhouetted against a deep orange-red sunset with the low sun near the horizon beneath textured clouds and a tall tower at the right; a single bird is visible in flight.",
+          "story": "A panoramic view of a silhouetted urban skyline beneath layered orange and crimson clouds as the sun sinks toward the horizon; a tall high-rise at right and a lone bird provide scale and visual balance.",
+          "tags": [
+            "Environmental Texture",
+            "Golden Hour",
+            "Color Grading",
+            "Atmospheric Light",
+            "Rule of Thirds",
+            "Visual Balance"
+          ],
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 48,
+            "y": 51
+          },
+          "aspectRatio": "2.4/1"
+        },
+        {
+          "id": "sun-2",
+          "title": "Grid Silhouette",
+          "featuredRank": 2,
+          "src": "/photography/full/transmission-towers.webp",
+          "thumbnailSrc": "/photography/thumbs/transmission-towers.webp",
+          "alt": "Power lines at sunset",
+          "story": "Massive power lines create a striking geometric pattern against the warm dusk sky.",
+          "tags": [
+            "Environmental Texture",
+            "Leading Lines"
+          ],
+          "aspectRatio": "9/16",
+          "orientation": "portrait"
+        },
+        {
+          "id": "sun-3",
+          "title": "Crimson Evening",
+          "featuredRank": 3,
+          "src": "/photography/full/vibrant-sunset-street.webp",
+          "thumbnailSrc": "/photography/thumbs/vibrant-sunset-street.webp",
+          "alt": "Purple and red sunset over street",
+          "story": "An unbelievable collision of purple and red dominates the sky, illuminating a peaceful evening walk.",
+          "tags": [
+            "Atmospheric Light",
+            "Color Grading"
+          ],
+          "aspectRatio": "1/1",
+          "orientation": "square"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,ital,wght@6..72,400;6..72,400&family=Syne:wght@400..800&display=swap");
+
+:root {
+  --ink:#11110f;
+  --paper:#e7e3db;
+  --soft:#b9b5ac;
+  --line:rgba(231,227,219,.22);
+  --orange:#d96831;
+  --serif:"Newsreader", Georgia, serif;
+  --sans:"DM Sans", Arial, sans-serif;
+  --mono:"DM Mono", monospace;
+
+  /* Obsidian Darkroom design tokens. Photography styles consume these
+     semantic values so the visual system can be tuned in one place. */
+  --darkroom-canvas:#0a0a0b;
+  --darkroom-surface-lowest:#0e0e0f;
+  --darkroom-surface:#141416;
+  --darkroom-surface-low:#1c1b1c;
+  --darkroom-surface-mid:#201f20;
+  --darkroom-surface-high:#2a2a2b;
+  --darkroom-surface-highest:#353436;
+  --darkroom-bone:#f3f1ec;
+  --darkroom-text:#e5e2e3;
+  --darkroom-muted:#8e8d88;
+  --darkroom-muted-bright:#c7c7bf;
+  --darkroom-outline:rgba(142,141,136,.2);
+  --darkroom-outline-strong:rgba(142,141,136,.42);
+  --darkroom-amber:#d4a373;
+  --darkroom-red:#d9383a;
+  --darkroom-display:"Syne", Arial, sans-serif;
+  --darkroom-body:"Hanken Grotesk", Arial, sans-serif;
+  --darkroom-label:"JetBrains Mono", monospace;
+  --darkroom-gutter:3rem;
+  --darkroom-gutter-mobile:1.25rem;
+  --darkroom-space-xs:.25rem;
+  --darkroom-space-sm:.5rem;
+  --darkroom-space-md:1rem;
+  --darkroom-space-lg:1.5rem;
+  --darkroom-space-xl:3rem;
+}
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; background:var(--ink); }
+body { margin:0; background:var(--ink); color:var(--paper); font-family:var(--sans); font-size:16px; overflow-x:hidden; }
+a { color:inherit; text-decoration:none; }
+button { font:inherit; }
+.reveal-ready [data-reveal] { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1); transition-delay:var(--reveal-delay,0ms); }
+.reveal-ready [data-reveal].is-visible { opacity:1; transform:translateY(0); }
+
+/* Shared site chrome. Section pages supply the content and theme-specific surfaces. */
+.shared-site-header { position:fixed; inset:0 0 auto; z-index:30; padding:0 32px; color:var(--paper); background:rgba(12,12,11,.72); border-bottom:1px solid rgba(231,227,219,.12); backdrop-filter:blur(18px); }
+.shared-header-inner { width:min(1440px,100%); min-height:78px; margin:auto; display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:32px; }
+.shared-wordmark { display:flex; align-items:center; gap:12px; justify-self:start; font:600 11px var(--sans); letter-spacing:.02em; }
+.shared-wordmark img { display:block; flex:none; width:auto; max-width:40px; max-height:40px; object-fit:contain; transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .25s ease; }
+.shared-wordmark span:last-child { color:rgba(231,227,219,.78); transition:color .2s ease; }
+.shared-wordmark:hover img,.shared-wordmark:focus-visible img { transform:translateY(-2px) rotate(-6deg) scale(1.08); filter:drop-shadow(0 3px 6px rgba(88,166,255,.42)); }
+.shared-wordmark:hover span:last-child,.shared-wordmark:focus-visible span:last-child { color:var(--section-accent,var(--orange)); }
+.shared-wordmark:focus-visible { outline:2px solid var(--section-accent,var(--orange)); outline-offset:5px; }
+.shared-desktop-nav { display:flex; align-items:center; gap:30px; color:rgba(231,227,219,.62); font:500 10px var(--sans); letter-spacing:.1em; text-transform:uppercase; }
+.shared-desktop-nav a, .shared-header-actions a { position:relative; transition:color .25s ease; }
+.shared-desktop-nav a::after { position:absolute; right:0; bottom:-9px; left:0; height:1px; content:""; background:var(--section-accent,var(--orange)); transform:scaleX(0); transform-origin:right; transition:transform .24s ease; }
+.shared-desktop-nav a.is-active::after { transform:scaleX(1); transform-origin:left; }
+.shared-desktop-nav a:hover, .shared-desktop-nav a:focus-visible, .shared-header-actions a:hover, .shared-header-actions a:focus-visible { color:var(--section-accent,var(--orange)); }
+.shared-desktop-nav a.is-active { color:var(--paper); }
+.shared-header-actions { justify-self:end; display:flex; align-items:center; gap:25px; color:var(--paper); font:600 10px var(--sans); letter-spacing:.1em; text-transform:uppercase; }
+.shared-header-actions a { display:flex; align-items:center; gap:9px; }
+.shared-header-actions span { color:var(--section-accent,var(--orange)); font-size:16px; }
+.shared-menu-toggle { display:none; justify-self:end; width:42px; height:42px; padding:0; border:1px solid rgba(231,227,219,.25); border-radius:50%; background:transparent; cursor:pointer; }
+.shared-menu-toggle span { display:block; width:14px; height:1px; margin:4px auto; background:var(--paper); }
+.shared-mobile-backdrop { position:fixed; inset:0; z-index:40; display:flex; justify-content:flex-end; background:rgba(8,8,7,.72); backdrop-filter:blur(12px); }
+.shared-mobile-menu { width:min(520px,100%); min-height:100%; padding:26px 24px 30px; background:#161614; box-shadow:-24px 0 70px rgba(0,0,0,.28); }
+.shared-mobile-topline { display:flex; align-items:center; justify-content:space-between; padding-bottom:54px; border-bottom:1px solid rgba(231,227,219,.15); color:var(--soft); font:500 10px var(--sans); letter-spacing:.1em; text-transform:uppercase; }
+.shared-mobile-topline button { border:0; padding:7px 0; background:transparent; color:var(--soft); cursor:pointer; font:inherit; text-transform:inherit; letter-spacing:inherit; }
+.shared-mobile-menu nav { display:flex; flex-direction:column; }
+.shared-mobile-menu nav a { display:grid; grid-template-columns:38px 1fr auto; align-items:center; gap:14px; padding:23px 0; border-bottom:1px solid rgba(231,227,219,.15); color:var(--paper); font:500 clamp(2.5rem,8vw,4.4rem)/.9 var(--serif); letter-spacing:-.06em; }
+.shared-mobile-menu nav a.is-active { color:var(--section-accent,var(--orange)); }
+.shared-mobile-menu nav a span { color:var(--section-accent,var(--orange)); font:10px var(--mono); letter-spacing:.08em; }
+.shared-mobile-menu nav a > span:last-child, .shared-mobile-menu > a span { color:var(--section-accent,var(--orange)); font:22px var(--sans); }
+.shared-mobile-menu > a { display:flex; align-items:center; gap:12px; margin-top:40px; color:var(--paper); font:600 10px var(--sans); letter-spacing:.1em; text-transform:uppercase; }
+.shared-site-footer { width:100%; max-width:none; margin:0; padding:76px 48px 28px; border-top:0; }
+.shared-footer-inner { width:min(1344px,100%); margin:auto; }
+.shared-site-footer p { margin:0; font-size:13px; line-height:1.5; }
+.shared-footer-email { display:inline-block; margin:24px 0 70px; font:400 clamp(2rem,4vw,4.3rem)/1 var(--serif); letter-spacing:-.05em; }
+.shared-footer-bottom { display:flex; justify-content:space-between; gap:20px; font:10px var(--mono); color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
+.shared-footer-bottom div { display:flex; gap:24px; }
+.shared-footer-bottom a:hover { color:var(--section-accent,var(--orange)); }
+.dev-footer { background:var(--cs-coral,#f26d51); color:var(--cs-ink,#10242d); }
+.dev-footer .shared-footer-bottom { color:rgba(16,36,45,.7); }
+.photography-footer { background:var(--ink); color:var(--paper); }
+
+@media (max-width: 850px) {
+  .shared-site-header { padding:0 26px; }
+  .shared-header-inner { min-height:76px; }
+  .shared-desktop-nav, .shared-header-actions { display:none; }
+  .shared-menu-toggle { display:block; }
+  .shared-site-footer { padding:70px 26px 25px; }
+}
+
+@media (max-width: 560px) {
+  .shared-site-header { padding:0 18px; }
+  .shared-header-inner { min-height:68px; }
+  .shared-wordmark { gap:8px; font-size:clamp(10px,3vw,11px); white-space:nowrap; }
+  .shared-wordmark img { max-width:36px; max-height:36px; }
+  .shared-site-footer { padding:64px 18px 24px; }
+  .shared-footer-email { margin-bottom:54px; }
+  .shared-footer-bottom { display:block; line-height:2; }
+  .shared-footer-bottom div { flex-wrap:wrap; gap:10px 20px; margin:18px 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shared-wordmark img,.shared-wordmark span:last-child { transition:none; }
+  .shared-wordmark:hover img,.shared-wordmark:focus-visible img { transform:none; filter:none; }
+}

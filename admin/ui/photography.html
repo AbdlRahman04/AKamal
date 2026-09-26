@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Photography Workspace</title>
+  <link rel="stylesheet" href="photography.css" />
+</head>
+
+<body>
+
+  <!-- ── Toast notifications ── -->
+  <div id="toast-container"></div>
+
+  <!-- ── Top bar ── -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-icon"></span>
+      <h1 class="topbar-title">Photography Workspace</h1>
+    </div>
+    <div class="topbar-right">
+      <a href="http://localhost:3000/photography" target="_blank" rel="noopener" class="btn btn-outline"
+        title="Open portfolio in new tab">
+        ↗ View Portfolio
+      </a>
+      <a href="/dev-admin" class="btn btn-outline" title="Open the Dev workspace">
+        Dev Workspace ↗
+      </a>
+      <span id="status-indicator" class="status-dot status-connected" title="Connected"></span>
+      <button id="btn-new-collection" class="btn btn-accent" title="New collection">
+        <span>+</span> New Collection
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+
+    <!-- ── Sidebar: collection list ── -->
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-section">
+        <h2 class="sidebar-heading">Primary</h2>
+        <ul id="list-primary" class="collection-list"></ul>
+      </div>
+      <div class="sidebar-section">
+        <h2 class="sidebar-heading">Archive</h2>
+      <ul id="list-archive" class="collection-list"></ul>
+      </div>
+      <div class="sidebar-section sidebar-workspace-section">
+        <button id="btn-profile-editor" class="sidebar-workspace-btn" type="button">
+          <span>Profile &amp; About</span>
+          <span aria-hidden="true">↗</span>
+        </button>
+      </div>
+      <section class="activity-card" aria-labelledby="activity-heading">
+        <div class="activity-heading-row">
+          <h2 id="activity-heading" class="sidebar-heading">Recent activity</h2>
+          <span id="activity-status-dot" class="status-dot status-connected" title="Activity status"></span>
+        </div>
+        <p id="activity-status" class="activity-status">Checking activity history…</p>
+        <div class="activity-counts">
+          <span><strong id="activity-error-count">0</strong> errors</span>
+          <span><strong id="activity-audit-count">0</strong> actions</span>
+        </div>
+        <p id="activity-latest" class="activity-latest">No activity recorded yet.</p>
+        <button id="btn-toggle-activity" class="btn btn-outline btn-sm activity-toggle" aria-expanded="false">
+          Show recent
+        </button>
+        <div id="activity-events" class="activity-events" hidden></div>
+      </section>
+      <section class="ai-service-card" aria-labelledby="ai-service-heading">
+        <div class="ai-service-heading-row">
+          <h2 id="ai-service-heading" class="sidebar-heading">AI Service</h2>
+          <span id="ai-service-dot" class="status-dot status-error" title="AI status"></span>
+        </div>
+        <p id="ai-service-state" class="ai-service-state">Checking configuration…</p>
+        <dl class="ai-service-details">
+          <div>
+            <dt>Deployment</dt>
+            <dd id="ai-deployment">—</dd>
+          </div>
+          <div>
+            <dt>Retries</dt>
+            <dd id="ai-retries">—</dd>
+          </div>
+          <div>
+            <dt>Vision cap</dt>
+            <dd id="ai-image-cap">—</dd>
+          </div>
+          <div>
+            <dt>Prompts</dt>
+            <dd id="ai-prompts">—</dd>
+          </div>
+        </dl>
+        <button id="btn-refresh-ai-status" class="btn btn-outline btn-sm ai-refresh">Refresh status</button>
+      </section>
+    </aside>
+
+    <!-- ── Main content area ── -->
+    <main id="main" class="main">
+
+      <!-- Empty state (shown when no collection is selected) -->
+      <div id="empty-state" class="empty-state">
+        <div class="empty-state-icon">🗂</div>
+        <p>Select a collection or Profile &amp; About from the sidebar to begin editing.</p>
+      </div>
+
+      <!-- Profile and About editor -->
+      <div id="profile-editor" class="panel" style="display:none">
+        <section class="panel-section profile-meta">
+          <div class="meta-header">
+            <div>
+              <p class="panel-kicker">Identity / Portfolio voice</p>
+              <h2 class="panel-title-static">Profile &amp; About</h2>
+            </div>
+            <div class="meta-actions">
+              <button id="btn-analyze-profile" class="btn btn-secondary btn-sm">Analyze Portfolio with AI</button>
+              <button id="btn-save-profile" class="btn btn-accent btn-sm">Save Profile</button>
+            </div>
+          </div>
+
+          <p class="profile-help">AI reviews every non-placeholder portfolio image and drafts copy from the visual patterns it finds plus your photography journey. Review and edit the draft before saving.</p>
+
+          <div class="profile-grid">
+            <label class="field profile-field-wide">
+              <span class="field-label">Intro</span>
+              <textarea id="profile-intro" class="field-input" rows="3" spellcheck="false"></textarea>
+            </label>
+            <label class="field profile-field-wide">
+              <span class="field-label">About</span>
+              <textarea id="profile-about" class="field-input" rows="9" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">Email</span>
+              <input id="profile-email" class="field-input" type="email" spellcheck="false" />
+            </label>
+            <label class="field">
+              <span class="field-label">Instagram URL</span>
+              <input id="profile-instagram" class="field-input" type="url" spellcheck="false" />
+            </label>
+          </div>
+          <p id="profile-ai-status" class="ai-status" aria-live="polite"></p>
+          <div id="profile-ai-summary" class="profile-ai-summary" hidden>
+            <div class="profile-ai-summary-head">
+              <span class="field-label">Visual themes</span>
+              <span id="profile-ai-count" class="profile-ai-count"></span>
+            </div>
+            <div id="profile-ai-themes" class="profile-ai-themes"></div>
+          </div>
+        </section>
+
+        <section class="panel-section hero-editor-section">
+          <div class="meta-header">
+            <div>
+              <p class="panel-kicker">Homepage / Image plates</p>
+              <h2 class="panel-title-static">Hero images</h2>
+            </div>
+            <button id="btn-save-hero" class="btn btn-accent btn-sm">Save Hero Photos</button>
+          </div>
+          <p class="profile-help">Choose three existing portfolio photos for the homepage hero collage. Placeholder photos cannot be selected.</p>
+          <div id="hero-slots" class="hero-slot-grid"></div>
+          <p id="hero-status" class="ai-status" aria-live="polite"></p>
+        </section>
+      </div>
+
+      <!-- Collection editor (hidden by default) -->
+      <div id="collection-editor" class="panel" style="display:none">
+
+        <!-- Collection header fields -->
+        <section class="panel-section collection-meta">
+          <div class="meta-header">
+            <h2 id="editor-title" class="panel-title" contenteditable="true" spellcheck="false"></h2>
+            <div class="meta-actions">
+              <button id="btn-analyze-collection" class="btn btn-secondary btn-sm">Analyze Collection with AI</button>
+              <button id="btn-analyze-all-photos" class="btn btn-secondary btn-sm">Analyze All Photos with AI</button>
+              <button id="btn-save-collection" class="btn btn-accent btn-sm">Save Changes</button>
+              <button id="btn-delete-collection" class="btn btn-danger btn-sm" title="Delete this collection">Delete
+                Collection</button>
+            </div>
+          </div>
+
+          <div class="meta-grid">
+            <label class="field">
+              <span class="field-label">Theme</span>
+              <textarea id="field-theme" class="field-input" rows="2" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">Intro</span>
+              <textarea id="field-intro" class="field-input" rows="3" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">Skills Demonstrated</span>
+              <textarea id="field-skills" class="field-input" rows="2" spellcheck="false"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">Section</span>
+              <select id="field-section" class="field-input">
+                <option value="primary">Primary</option>
+                <option value="archive">Archive</option>
+              </select>
+            </label>
+          </div>
+          <p id="collection-ai-status" class="ai-status" aria-live="polite"></p>
+        </section>
+
+        <!-- Upload zone -->
+        <section class="panel-section">
+          <div id="upload-zone" class="upload-zone">
+            <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/tiff" multiple hidden />
+            <div class="upload-zone-content">
+              <div class="upload-icon">⬆</div>
+              <p>Drag &amp; drop images here, or <button type="button" id="btn-browse" class="text-link">browse
+                  files</button></p>
+              <span class="upload-hint">JPEG · PNG · WebP · TIFF — up to 50 MB each</span>
+            </div>
+            <div id="upload-progress" class="upload-progress" style="display:none">
+              <div class="upload-progress-bar-wrapper">
+                <div id="upload-progress-bar" class="upload-progress-bar"></div>
+              </div>
+              <span id="upload-progress-text" class="upload-progress-text">Uploading...</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Photo grid (drag-to-reorder) -->
+        <section class="panel-section">
+          <div class="section-header">
+            <h3 class="section-title">Photos</h3>
+            <span id="photo-count" class="badge">0</span>
+          </div>
+          <div id="photo-grid" class="admin-photo-grid"></div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ── Photo detail sidebar (right) ── -->
+    <aside id="photo-detail" class="detail-panel" style="display:none">
+      <div class="detail-header">
+        <div class="detail-heading">
+          <span class="detail-kicker">Selected photo</span>
+          <h3 class="detail-title">Photo Details</h3>
+        </div>
+        <div class="detail-header-actions">
+          <button id="btn-analyze-photo" class="btn btn-secondary btn-sm">Analyze with AI</button>
+          <button id="btn-close-detail" class="btn-icon" title="Close">✕</button>
+        </div>
+      </div>
+      <div class="detail-preview">
+        <span class="detail-preview-label">Full-frame preview</span>
+        <img id="detail-img" src="" alt="" />
+      </div>
+      <div class="detail-fields">
+        <section class="detail-section">
+          <div class="detail-section-heading"><span>Content</span><span class="detail-section-number">01</span></div>
+          <label class="field">
+            <span class="field-label">Title</span>
+            <input id="detail-title" class="field-input" type="text" spellcheck="false" />
+          </label>
+          <label class="field">
+            <span class="field-label">Location <span class="field-hint">Optional</span></span>
+            <input id="detail-location" class="field-input" type="text" maxlength="160"
+              placeholder="e.g. Al Ain, UAE" spellcheck="false" />
+          </label>
+          <label class="field">
+            <span class="field-label">Alt Text</span>
+            <input id="detail-alt" class="field-input" type="text" spellcheck="false" />
+          </label>
+          <label class="field">
+            <span class="field-label">Story</span>
+            <textarea id="detail-story" class="field-input" rows="4" spellcheck="false"></textarea>
+          </label>
+        </section>
+
+        <section class="detail-section">
+          <div class="detail-section-heading"><span>Presentation</span><span class="detail-section-number">02</span></div>
+          <label class="field">
+            <span class="field-label">Display Size</span>
+            <select id="detail-displaySize" class="field-input">
+              <option value="">Auto (default grid)</option>
+              <option value="small">Small (span 4)</option>
+              <option value="medium">Medium (span 6)</option>
+              <option value="large">Large (span 8)</option>
+              <option value="feature">Feature (span 12)</option>
+            </select>
+          </label>
+          <div class="field-pair">
+            <label class="field">
+              <span class="field-label">Featured Rank</span>
+              <select id="detail-featuredRank" class="field-input">
+                <option value="">Not featured</option>
+                <option value="1">Featured 1</option>
+                <option value="2">Featured 2</option>
+                <option value="3">Featured 3</option>
+              </select>
+            </label>
+            <label class="field">
+              <span class="field-label">Orientation</span>
+              <select id="detail-orientation" class="field-input">
+                <option value="">Auto</option>
+                <option value="landscape">Landscape</option>
+                <option value="portrait">Portrait</option>
+                <option value="square">Square</option>
+              </select>
+            </label>
+          </div>
+          <label class="field">
+            <span class="field-label">Aspect Ratio</span>
+            <select id="detail-aspectRatio" class="field-input">
+              <option value="">Auto</option>
+              <option value="4/3">4 : 3</option>
+              <option value="3/2">3 : 2</option>
+              <option value="16/9">16 : 9</option>
+              <option value="1/1">1 : 1</option>
+              <option value="3/4">3 : 4</option>
+              <option value="2/3">2 : 3</option>
+              <option value="9/16">9 : 16</option>
+              <option value="custom">Custom</option>
+            </select>
+            <input id="detail-aspectRatio-custom" class="field-input custom-ratio-input" type="text"
+              placeholder="e.g. 5/4" />
+          </label>
+        </section>
+
+        <section class="detail-section">
+          <div class="detail-section-heading"><span>Crop &amp; focus</span><span class="detail-section-number">03</span></div>
+          <div class="field">
+            <span class="field-label">Focal Point</span>
+            <div class="focal-preview">
+              <img id="detail-focal-img" src="" alt="" />
+              <span id="detail-focal-marker"></span>
+            </div>
+            <label class="range-field">
+              <span>X <output id="detail-focal-x-value">50%</output></span>
+              <input id="detail-focal-x" type="range" min="0" max="100" value="50" />
+            </label>
+            <label class="range-field">
+              <span>Y <output id="detail-focal-y-value">50%</output></span>
+              <input id="detail-focal-y" type="range" min="0" max="100" value="50" />
+            </label>
+          </div>
+        </section>
+
+        <section class="detail-section">
+          <div class="detail-section-heading"><span>Classification</span><span class="detail-section-number">04</span></div>
+          <fieldset class="field tag-field">
+            <legend class="field-label">Tags <span id="tag-count" class="tag-count">0/6 selected</span></legend>
+            <div id="detail-tags" class="tag-grid"></div>
+          </fieldset>
+        </section>
+      </div>
+
+      <div class="detail-footer">
+        <div class="detail-save-state"><span id="detail-save-dot"></span><span id="detail-save-label">All changes saved</span></div>
+        <button id="btn-save-photo" class="btn btn-accent btn-sm">Save Metadata</button>
+        <button id="btn-replace-image" class="btn btn-secondary btn-sm">Replace Image</button>
+        <button id="btn-delete-photo" class="btn btn-danger btn-sm">Delete Photo</button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- ── Confirm modal ── -->
+  <div id="modal-overlay" class="modal-overlay" style="display:none">
+    <div class="modal">
+      <p id="modal-message" class="modal-message"></p>
+      <div class="modal-actions">
+        <button id="modal-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="modal-confirm" class="btn btn-danger">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── New Collection modal ── -->
+  <div id="new-collection-overlay" class="modal-overlay" style="display:none">
+    <div class="modal modal-lg">
+      <h3 class="modal-heading">Create Collection</h3>
+      <label class="field">
+        <span class="field-label">Title</span>
+        <input id="nc-title" class="field-input" type="text" placeholder="e.g. Wedding Photography" />
+      </label>
+      <label class="field">
+        <span class="field-label">Slug</span>
+        <input id="nc-slug" class="field-input" type="text" placeholder="auto-generated from title" />
+      </label>
+      <label class="field">
+        <span class="field-label">Section</span>
+        <select id="nc-section" class="field-input">
+          <option value="primary">Primary</option>
+          <option value="archive">Archive</option>
+        </select>
+      </label>
+      <label class="field">
+        <span class="field-label">Theme</span>
+        <textarea id="nc-theme" class="field-input" rows="2" placeholder="Short description"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button id="nc-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="nc-create" class="btn btn-accent">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="ai.js"></script>
+  <script src="photography.js"></script>
+</body>
+
+</html>

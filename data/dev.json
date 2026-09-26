@@ -1,0 +1,297 @@
+{
+  "profile": {
+    "name": "Abdulrahman Kamal",
+    "role": "Software Developer | AI & Data",
+    "title": "I build useful software from complex ideas.",
+    "intro": "Computer Science graduate focused on software engineering, AI applications, and data integration. I turn business requirements into clear, tested, and useful technical solutions.",
+    "location": "Abu Dhabi, United Arab Emirates",
+    "email": "abdshawki@gmail.com",
+    "availability": "Open to software engineering, data, and AI opportunities",
+    "portraitUrl": "/dev/cv-image-cropped-0894141f-854b-498d-a004-1bb84d69db82.webp",
+    "phone": "+971 56 629 4551",
+    "contactHeading": "Let's build something useful.",
+    "contactIntro": "Have a software idea, data challenge, or AI workflow in mind? I would like to hear about it.",
+    "links": [
+      {
+        "label": "LinkedIn",
+        "href": "https://www.linkedin.com/in/abdulrahman-kamal04/"
+      }
+    ]
+  },
+  "skills": [
+    {
+      "slug": "software-development",
+      "number": "01",
+      "name": "Software Development",
+      "description": "Programming languages, application frameworks, requirements analysis, and delivery practices.",
+      "items": [
+        "Python",
+        "Java",
+        "React",
+        "Node.js",
+        "Flask",
+        "Requirements Gathering",
+        "Process Analysis",
+        "Software Engineering",
+        "Functional Testing",
+        "SDLC"
+      ]
+    },
+    {
+      "slug": "data-integration",
+      "number": "02",
+      "name": "Data & Integration",
+      "description": "Relational data, service interfaces, and validation for reliable application workflows.",
+      "items": [
+        "PostgreSQL",
+        "MySQL",
+        "REST APIs",
+        "Excel",
+        "Data Validation"
+      ]
+    },
+    {
+      "slug": "ai-machine-learning",
+      "number": "03",
+      "name": "AI & Machine Learning",
+      "description": "Applied AI and computer vision explored through practical model and workflow projects.",
+      "items": [
+        "Agentic AI",
+        "Prompt Engineering",
+        "TensorFlow",
+        "Keras",
+        "Computer Vision"
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "slug": "plant-health-monitoring-system",
+      "number": "01",
+      "title": "Plant Health Monitoring System",
+      "type": "AI application / Senior design project",
+      "year": "2026",
+      "status": "Completed",
+      "summary": "A Flask application that uses a fine-tuned MobileNetV2 model to classify plant diseases from leaf images.",
+      "problem": "Plant disease identification needs to be fast and accessible to end users working from image data.",
+      "solution": "A transfer-learning model was trained with TensorFlow and Keras, then integrated into a Flask REST endpoint for real-time disease prediction.",
+      "technologies": [
+        "Python",
+        "TensorFlow",
+        "Keras",
+        "MobileNetV2",
+        "Flask"
+      ],
+      "highlights": [
+        "Fine-tuned a MobileNetV2 transfer-learning model for plant disease classification",
+        "Compared CNN architectures to guide model selection and reduce experimentation time",
+        "Delivered a REST endpoint for real-time prediction from leaf images"
+      ],
+      "githubUrl": "",
+      "liveUrl": "",
+      "featured": true
+    },
+    {
+      "slug": "smart-cafeteria-ordering-system",
+      "number": "02",
+      "title": "Smart Cafeteria Ordering System",
+      "type": "Full-stack web application / Team project",
+      "year": "2025",
+      "status": "Completed",
+      "summary": "A full-stack cafeteria pre-ordering platform with secure payments and a role-based content management system.",
+      "problem": "A cafeteria ordering workflow needs convenient online payments while keeping menu management simple for staff.",
+      "solution": "A React and Node.js application connected to PostgreSQL, with Stripe checkout, role-based CMS controls, and cloud deployment through Infrastructure-as-Code.",
+      "technologies": [
+        "React",
+        "Node.js",
+        "Express.js",
+        "PostgreSQL",
+        "Stripe",
+        "Render"
+      ],
+      "highlights": [
+        "Implemented a secure Stripe API checkout workflow",
+        "Built role-based CMS interfaces for menu listings and product images",
+        "Automated deployment with render.yaml and a serverless Neon PostgreSQL database",
+        "GitHub project: AURAKs-Dine"
+      ],
+      "githubUrl": "",
+      "liveUrl": "",
+      "featured": false
+    },
+    {
+      "slug": "portfolio-platform",
+      "number": "03",
+      "title": "Portfolio Platform",
+      "type": "Web platform / Content system",
+      "year": "2026",
+      "status": "In progress",
+      "summary": "A fast, editorial portfolio platform that combines a public experience with a purpose-built content workspace.",
+      "problem": "A portfolio needs to communicate creative work while still being easy to maintain as the work grows.",
+      "solution": "A statically generated Next.js experience is paired with a local Express admin service, structured content, image processing, and optional AI-assisted metadata workflows.",
+      "technologies": [
+        "Next.js",
+        "TypeScript",
+        "React",
+        "Express",
+        "Sharp"
+      ],
+      "highlights": [
+        "Typed content model with reusable presentation rules",
+        "Optimized image pipeline for full-size and thumbnail assets",
+        "Accessible interactions, keyboard support, and responsive layouts"
+      ],
+      "githubUrl": "",
+      "liveUrl": "/",
+      "featured": true,
+      "coverImageUrl": "",
+      "accent": ""
+    }
+  ],
+  "journey": [
+    {
+      "slug": "software-data-ai",
+      "period": "Focus",
+      "title": "Software, data, and AI",
+      "description": "Building practical systems where robust engineering, useful data, and applied AI meet."
+    },
+    {
+      "slug": "requirements-to-working-systems",
+      "period": "Now",
+      "title": "Requirements to working systems",
+      "description": "Turning business needs into clear specifications, tested workflows, and dependable technical solutions."
+    },
+    {
+      "slug": "deeper-project-stories",
+      "period": "Next",
+      "title": "Deeper project stories",
+      "description": "Documenting the decisions, trade-offs, and measurable outcomes behind each build."
+    }
+  ],
+  "experience": [
+    {
+      "slug": "added-ai-data-analysis-intern",
+      "number": "01",
+      "company": "Abu Dhabi Department of Economic Development (ADDED)",
+      "role": "AI & Data Analysis Intern",
+      "period": "Jun 2026 - Jul 2026",
+      "summary": "Gathered requirements and defined functional specifications for four department-specific AI agents on an enterprise Agentic AI platform. Configured dashboards and KPI cards, engineered prompts and scoring rules with an AI Engineer, and executed CRUD, RBAC, workflow, deployment, and data validation checks across staging and production.",
+      "technologies": [
+        "Agentic AI",
+        "Prompt Engineering",
+        "Python",
+        "Excel",
+        "Functional Testing",
+        "RBAC"
+      ],
+      "current": false
+    },
+    {
+      "slug": "alpha-data-cybersecurity-soc-noc-intern",
+      "number": "02",
+      "company": "Alpha Data",
+      "role": "Cybersecurity / SOC-NOC Intern",
+      "period": "May 2025 - Jul 2025",
+      "summary": "Monitored security logs to identify abnormal network activity and support the SOC/NOC incident response team.",
+      "technologies": [
+        "Security Monitoring",
+        "Network Operations",
+        "Incident Response"
+      ],
+      "current": false
+    }
+  ],
+  "certificates": [
+    {
+      "name": "Foundations: Data, Data, Everywhere",
+      "issuer": "Google",
+      "year": "2026",
+      "description": "Google Data Analytics Professional Certificate coursework foundation.",
+      "credentialUrl": "",
+      "imageUrl": "/dev/coursera-foundations-data-data-everywhere-page-001-0b414bcd-096f-470e-9896-d9837e8a24f7.webp",
+      "slug": "google-data-analytics-foundations",
+      "number": "01"
+    },
+    {
+      "name": "Agentic AI and AI Agents: A Primer for Leaders",
+      "issuer": "Vanderbilt University",
+      "year": "2026",
+      "description": "A primer on agentic AI systems and AI agent workflows.",
+      "credentialUrl": "",
+      "imageUrl": "/dev/coursera-agentic-ai-and-ai-agents-a-primer-for-leaders-page-0001-95fed8f2-655b-41e3-b9f2-f66a107f1661.webp",
+      "slug": "agentic-ai-and-ai-agents-primer",
+      "number": "02"
+    },
+    {
+      "name": "AI Infrastructure and Operations Fundamentals",
+      "issuer": "NVIDIA",
+      "year": "2025",
+      "description": "Foundations of infrastructure and operations for AI workloads.",
+      "credentialUrl": "",
+      "imageUrl": "/dev/coursera-ai-infrastructure-and-operations-fundamentals-page-0001-035ded63-2c26-4f22-9b72-0ba0c7587dc8.webp",
+      "slug": "ai-infrastructure-and-operations-fundamentals",
+      "number": "03"
+    },
+    {
+      "name": "Introduction to Software Engineering - IBM",
+      "issuer": "IBM",
+      "year": "2025",
+      "description": "",
+      "credentialUrl": "https://www.coursera.org/account/accomplishments/verify/BXYFIL94KFKS",
+      "imageUrl": "/dev/coursera-introduction-to-software-engineering-ibm-page-0001-f52f8dca-5f70-410c-a634-88c090c56e58.webp",
+      "slug": "introduction-to-software-engineering-ibm",
+      "number": "04"
+    }
+  ],
+  "toolkits": [
+    {
+      "slug": "python-ai-stack",
+      "number": "01",
+      "name": "Python + TensorFlow",
+      "category": "AI and data",
+      "description": "Python workflows for model experimentation, validation, and applied AI applications.",
+      "url": ""
+    },
+    {
+      "slug": "react-node-stack",
+      "number": "02",
+      "name": "React + Node.js",
+      "category": "Application development",
+      "description": "Full-stack JavaScript and TypeScript building blocks for useful web applications.",
+      "url": ""
+    },
+    {
+      "slug": "relational-data",
+      "number": "03",
+      "name": "PostgreSQL + MySQL",
+      "category": "Data and services",
+      "description": "Relational data modeling and application integration for dependable workflows.",
+      "url": ""
+    },
+    {
+      "slug": "testing-and-validation",
+      "number": "04",
+      "name": "Testing and validation",
+      "category": "Delivery",
+      "description": "Functional testing, workflow verification, RBAC checks, and data validation.",
+      "url": ""
+    }
+  ],
+  "education": [
+    {
+      "slug": "bsc-computer-science-aurak",
+      "number": "01",
+      "degree": "Bachelor of Science in Computer Science",
+      "institution": "American University of Ras Al Khaimah, School of Engineering and Computing",
+      "period": "Aug 2022 - Jun 2026",
+      "description": "ABET-accredited program; QS 5 Stars Plus and Top 500 (2025), with SACSCOC and QAA accreditation.",
+      "focus": [
+        "Java and OOP",
+        "Database Systems",
+        "Software Engineering",
+        "Data Communication",
+        "Network Security"
+      ]
+    }
+  ]
+}
