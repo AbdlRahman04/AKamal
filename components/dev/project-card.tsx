@@ -61,6 +61,8 @@ export default function ProjectCard({ project, delay, index, technologyLimit }: 
     ["Deployment", project.deployment],
   ].filter(([, value]) => value?.trim());
   const narratives = [
+    ["Problem", project.problem],
+    ["Solution", project.solution],
     ["My Contribution", project.contribution],
     ["Key Feature", project.keyFeature],
     ["Technical Challenge", project.technicalChallenge],
