@@ -67,7 +67,7 @@ export default function DevHome() {
               <div className="ds-profile-skills" aria-label="Key skills">{profileSkills.map((skill) => <span key={skill}>{skill}</span>)}</div>
               <div className="ds-hero-actions">
                 <a className="ds-button ds-button-primary" href="#projects">View projects <Arrow /></a>
-                <a className="ds-button ds-button-quiet" href="/resume.pdf" download>Download CV <span aria-hidden="true">&darr;</span></a>
+                <a className="ds-button ds-button-quiet" href="/Abdl%20Rahman%20Kamal%20-%20resume.pdf" download>Download CV <span aria-hidden="true">&darr;</span></a>
               </div>
               <div className="ds-profile-links">
                 <a href={`mailto:${devProfile.email}`}>Email</a>
