@@ -72,8 +72,9 @@ export async function processImage(buffer, originalFilename, collectionSlug) {
   await fs.mkdir(THUMBS_DIR, { recursive: true });
   await fs.mkdir(FULL_DIR, { recursive: true });
 
-  /* Save original */
-  await fs.writeFile(path.join(originalsSubDir, originalFilename), buffer);
+  /* Save the original with the same unique stem used by generated assets. */
+  const originalExtension = path.extname(originalFilename).toLowerCase() || ".jpg";
+  await fs.writeFile(path.join(originalsSubDir, `${stem}${originalExtension}`), buffer);
 
   /* Generate thumbnail */
   await sharp(buffer)

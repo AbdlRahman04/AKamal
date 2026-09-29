@@ -14,10 +14,10 @@ if (!Array.isArray(data.profile?.links)) errors.push("profile.links must be an a
 
 for (const [collection, required] of Object.entries({
   skills: ["name", "description", "items"],
-  projects: ["title", "summary", "problem", "solution", "technologies", "highlights"],
+  projects: ["title", "summary", "problem", "solution", "technologies", "stackBreakdown", "highlights"],
   journey: ["period", "title", "description"],
   experience: ["company", "role", "period", "summary", "technologies"],
-  certificates: ["name", "issuer", "year"],
+  certificates: ["name", "issuer", "year", "status"],
   toolkits: ["name", "category"],
   education: ["degree", "institution", "period"],
 })) {
@@ -32,11 +32,23 @@ for (const [collection, required] of Object.entries({
     if (slugs.has(item.slug)) errors.push(`${collection}[${index}].slug is duplicated: ${item.slug}`);
     slugs.add(item.slug);
     for (const field of required) {
-      const expectsArray = ["items", "technologies", "highlights"].includes(field);
+      const expectsArray = ["items", "technologies", "stackBreakdown", "highlights"].includes(field);
       if (expectsArray ? !Array.isArray(item[field]) : !item[field]) {
         errors.push(`${collection}[${index}].${field} is required`);
       }
     }
+  }
+}
+
+for (const [index, project] of (data.projects || []).entries()) {
+  for (const field of ["role", "frontend", "backend", "database", "deployment", "contribution", "keyFeature", "technicalChallenge"]) {
+    if (project[field] !== undefined && typeof project[field] !== "string") errors.push(`projects[${index}].${field} must be a string`);
+  }
+  if (project.teamSize !== undefined && (!Number.isInteger(project.teamSize) || project.teamSize <= 0)) {
+    errors.push(`projects[${index}].teamSize must be a positive integer`);
+  }
+  if (Array.isArray(project.stackBreakdown) && (!project.stackBreakdown.length || project.stackBreakdown.some((line) => typeof line !== "string" || !line.trim()))) {
+    errors.push(`projects[${index}].stackBreakdown needs at least one non-empty line`);
   }
 }
 
@@ -51,6 +63,12 @@ for (const collection of ["projects", "certificates", "toolkits"]) {
     for (const field of urlFields) {
       if (item[field] && !/^(https?:\/\/|\/)/.test(item[field])) errors.push(`${collection}[${index}].${field} must be an http(s) URL or site path`);
     }
+  }
+}
+
+for (const [index, certificate] of (data.certificates || []).entries()) {
+  if (!["completed", "in-progress"].includes(certificate.status)) {
+    errors.push(`certificates[${index}].status must be completed or in-progress`);
   }
 }
 

@@ -153,11 +153,39 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   }, [menuOpen]);
 
   useEffect(() => {
+    if (!isPhotography) return;
+
+    const footer = document.querySelector<HTMLElement>(".photography-footer[data-reveal]");
+    if (!footer) return;
+
+    const revealFooter = () => footer.classList.add("is-visible");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      revealFooter();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          revealFooter();
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.08, rootMargin: "0px 0px -5% 0px" },
+    );
+
+    observer.observe(footer);
+    return () => observer.disconnect();
+  }, [isPhotography]);
+
+  useEffect(() => {
     const defaultHref = navigation[0]?.href || "#top";
-    setActiveHref(window.location.hash || defaultHref);
     const sections = navigation
       .map((item) => ({ href: item.href, element: document.querySelector(item.href) }))
       .filter((item): item is { href: string; element: Element } => item.element !== null);
+    setActiveHref(window.location.hash || defaultHref);
+
     if (!sections.length) return;
 
     const observer = new IntersectionObserver((entries) => {
@@ -170,12 +198,15 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     }, { rootMargin: "-18% 0px -68%", threshold: [0, 0.15, 0.45] });
 
     sections.forEach((section) => observer.observe(section.element));
-    return () => observer.disconnect();
+
+    return () => {
+      observer.disconnect();
+    };
   }, [navigation]);
 
   return (
     <>
-      <header className={`shared-site-header${isPhotography ? " is-photography" : " is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
+      <header className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
         <div className="shared-header-inner">
           <Link className="shared-wordmark" href={isPhotography ? "/photography#top" : "/#top"}>
             <img
@@ -186,7 +217,10 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             <span>Abdul Rahman Kamal</span>
           </Link>
           <nav className="shared-desktop-nav" aria-label="Primary navigation">
-            {navigation.map((item) => <a key={item.href} href={item.href} className={activeHref === item.href ? "is-active" : undefined} aria-current={activeHref === item.href ? "page" : undefined}>{item.label}</a>)}
+            {navigation.map((item) => {
+              const isActive = activeHref === item.href;
+              return <a key={item.href} href={item.href} className={isActive ? "is-active" : undefined} aria-current={isActive ? "location" : undefined} onClick={() => setActiveHref(item.href)}>{item.label}</a>;
+            })}
           </nav>
           <div className="shared-header-actions">
             {isPhotography && (
@@ -195,7 +229,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             <Link href={isPhotography ? "/" : "/photography"}>
               {isPhotography ? "Dev" : "Photography"}
             </Link>
-            <a href="#contact">Let&apos;s talk</a>
+            <a href="#contact">{isPhotography ? "Commission" : <>Contact me <span aria-hidden="true">→</span></>}</a>
           </div>
           <button
             className="shared-menu-toggle"
@@ -221,13 +255,18 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             </div>
             <nav aria-label="Mobile primary navigation">
               {navigation.map((item, index) => (
-                <a key={item.href} href={item.href} className={activeHref === item.href ? "is-active" : undefined} aria-current={activeHref === item.href ? "page" : undefined} onClick={() => setMenuOpen(false)}>
+                <a key={item.href} href={item.href} className={activeHref === item.href ? "is-active" : undefined} aria-current={activeHref === item.href ? "location" : undefined} onClick={() => { setActiveHref(item.href); setMenuOpen(false); }}>
                   <span>0{index + 1}</span>{item.label}
                 </a>
               ))}
             </nav>
             {isPhotography && (
               <PhotographyThemeSwitch theme={photographyTheme} onToggle={togglePhotographyTheme} ready={photographyThemeReady} />
+            )}
+            {isPhotography && (
+              <a href="#contact" onClick={() => setMenuOpen(false)}>
+                Commission
+              </a>
             )}
             <a href={isPhotography ? "/" : "/photography"} onClick={() => setMenuOpen(false)}>
               {isPhotography ? "Dev" : "Photography"}

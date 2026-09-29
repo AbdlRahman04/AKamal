@@ -82,23 +82,38 @@
         "MobileNetV2",
         "Flask"
       ],
+      "stackBreakdown": [
+        "Backend: Flask REST API",
+        "AI model: TensorFlow, Keras, MobileNetV2"
+      ],
       "highlights": [
         "Fine-tuned a MobileNetV2 transfer-learning model for plant disease classification",
         "Compared CNN architectures to guide model selection and reduce experimentation time",
         "Delivered a REST endpoint for real-time prediction from leaf images"
       ],
-      "githubUrl": "",
-      "liveUrl": "",
-      "featured": true
+      "githubUrl": "https://github.com/AbdlRahman04/leafai",
+      "liveUrl": "https://leafai-frontend.onrender.com/",
+      "featured": true,
+      "coverImageUrl": "",
+      "accent": ""
     },
     {
       "slug": "smart-cafeteria-ordering-system",
       "number": "02",
-      "title": "Smart Cafeteria Ordering System",
+      "title": "AURAK's Dine Ordering System",
+      "role": "Full-stack development",
+      "teamSize": 6,
+      "frontend": "React",
+      "backend": "Node.js · Express.js",
+      "database": "PostgreSQL · Neon",
+      "deployment": "Render",
+      "contribution": "",
+      "keyFeature": "Stripe-based checkout was included in the team’s ordering workflow.",
+      "technicalChallenge": "Connecting the system’s components and deploying the backend on Render with Neon PostgreSQL while keeping application configuration working correctly.",
       "type": "Full-stack web application / Team project",
       "year": "2025",
       "status": "Completed",
-      "summary": "A full-stack cafeteria pre-ordering platform with secure payments and a role-based content management system.",
+      "summary": "A full-stack cafeteria pre-ordering platform with Stripe-based checkout and a role-based content management system.",
       "problem": "A cafeteria ordering workflow needs convenient online payments while keeping menu management simple for staff.",
       "solution": "A React and Node.js application connected to PostgreSQL, with Stripe checkout, role-based CMS controls, and cloud deployment through Infrastructure-as-Code.",
       "technologies": [
@@ -107,17 +122,24 @@
         "Express.js",
         "PostgreSQL",
         "Stripe",
-        "Render"
+        "Render",
+        "Neon"
+      ],
+      "stackBreakdown": [
+        "Frontend: React",
+        "Backend: Node.js, Express",
+        "Database: PostgreSQL on Neon"
       ],
       "highlights": [
-        "Implemented a secure Stripe API checkout workflow",
+        "Stripe-based checkout was included in the team’s ordering workflow.",
         "Built role-based CMS interfaces for menu listings and product images",
-        "Automated deployment with render.yaml and a serverless Neon PostgreSQL database",
-        "GitHub project: AURAKs-Dine"
+        "Automated deployment with render.yaml and a serverless Neon PostgreSQL database"
       ],
-      "githubUrl": "",
-      "liveUrl": "",
-      "featured": false
+      "githubUrl": "https://github.com/AbdlRahman04/AURAKs-Dine",
+      "liveUrl": "https://auraks-dine.onrender.com/",
+      "featured": true,
+      "coverImageUrl": "",
+      "accent": ""
     },
     {
       "slug": "portfolio-platform",
@@ -136,15 +158,20 @@
         "Express",
         "Sharp"
       ],
+      "stackBreakdown": [
+        "Frontend: Next.js, React, TypeScript",
+        "Local admin: Express",
+        "Content: JSON files"
+      ],
       "highlights": [
         "Typed content model with reusable presentation rules",
         "Optimized image pipeline for full-size and thumbnail assets",
         "Accessible interactions, keyboard support, and responsive layouts"
       ],
       "githubUrl": "",
-      "liveUrl": "/",
+      "liveUrl": "https://myportfolio3212.z36.web.core.windows.net/",
       "featured": true,
-      "coverImageUrl": "",
+      "coverImageUrl": "/dev/screenshot-1-47f91da8-9567-477e-a109-a2b1b890b641.webp",
       "accent": ""
     }
   ],
@@ -207,7 +234,8 @@
       "issuer": "Google",
       "year": "2026",
       "description": "Google Data Analytics Professional Certificate coursework foundation.",
-      "credentialUrl": "",
+      "status": "completed",
+      "credentialUrl": "https://coursera.org/share/e5054c8d18275b0a42069b52f1d0c299",
       "imageUrl": "/dev/coursera-foundations-data-data-everywhere-page-001-0b414bcd-096f-470e-9896-d9837e8a24f7.webp",
       "slug": "google-data-analytics-foundations",
       "number": "01"
@@ -217,7 +245,8 @@
       "issuer": "Vanderbilt University",
       "year": "2026",
       "description": "A primer on agentic AI systems and AI agent workflows.",
-      "credentialUrl": "",
+      "status": "completed",
+      "credentialUrl": "https://coursera.org/share/3a48b9e9fd87683c5fb65f05d437ebf9",
       "imageUrl": "/dev/coursera-agentic-ai-and-ai-agents-a-primer-for-leaders-page-0001-95fed8f2-655b-41e3-b9f2-f66a107f1661.webp",
       "slug": "agentic-ai-and-ai-agents-primer",
       "number": "02"
@@ -227,7 +256,8 @@
       "issuer": "NVIDIA",
       "year": "2025",
       "description": "Foundations of infrastructure and operations for AI workloads.",
-      "credentialUrl": "",
+      "status": "completed",
+      "credentialUrl": "https://coursera.org/share/fec6f63f2007a3599e07b6f367e7d4fb",
       "imageUrl": "/dev/coursera-ai-infrastructure-and-operations-fundamentals-page-0001-035ded63-2c26-4f22-9b72-0ba0c7587dc8.webp",
       "slug": "ai-infrastructure-and-operations-fundamentals",
       "number": "03"
@@ -237,10 +267,55 @@
       "issuer": "IBM",
       "year": "2025",
       "description": "",
+      "status": "completed",
       "credentialUrl": "https://www.coursera.org/account/accomplishments/verify/BXYFIL94KFKS",
       "imageUrl": "/dev/coursera-introduction-to-software-engineering-ibm-page-0001-f52f8dca-5f70-410c-a634-88c090c56e58.webp",
       "slug": "introduction-to-software-engineering-ibm",
       "number": "04"
+    },
+    {
+      "name": "Generative AI: Prompt Engineering Basics",
+      "issuer": "IBM",
+      "year": "2025",
+      "description": "",
+      "status": "completed",
+      "credentialUrl": "https://coursera.org/share/2b3d773acb5bfb69f6b8f123aa73614e",
+      "imageUrl": "",
+      "slug": "generative-ai-prompt-engineering-basics",
+      "number": "05"
+    },
+    {
+      "name": "Principles of Photo Composition and Digital Image Post-Production",
+      "issuer": "Michigan State University",
+      "year": "2023",
+      "description": "",
+      "status": "completed",
+      "credentialUrl": "https://coursera.org/share/fec6f63f2007a3599e07b6f367e7d4fb",
+      "imageUrl": "",
+      "slug": "principles-of-photo-composition-and-digital-image-post-production",
+      "number": "06"
+    },
+    {
+      "name": "Software Testing and Automation Specialization",
+      "issuer": "University of Minnesota",
+      "year": "2026",
+      "description": "",
+      "status": "in-progress",
+      "credentialUrl": "",
+      "imageUrl": "",
+      "slug": "software-testing-and-automation-specialization",
+      "number": "07"
+    },
+    {
+      "name": "AWS Cloud Technical Essentials",
+      "issuer": "AWS",
+      "year": "2026",
+      "description": "",
+      "status": "in-progress",
+      "credentialUrl": "",
+      "imageUrl": "",
+      "slug": "aws-cloud-technical-essentials",
+      "number": "08"
     }
   ],
   "toolkits": [

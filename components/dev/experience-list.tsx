@@ -1,19 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import type { DevExperience } from "@/data/dev";
 
 export default function ExperienceList({ items }: { items: DevExperience[] }) {
-  const [openSlug, setOpenSlug] = useState<string | null>(null);
-
   return (
     <div className="ds-experience-list">
       {items.map((item) => (
         <details
           className="ds-experience-row"
           key={item.slug}
-          open={openSlug === item.slug}
-          onToggle={(event) => setOpenSlug(event.currentTarget.open ? item.slug : null)}
         >
           <summary>
             <span className="ds-row-number">{item.number}</span>

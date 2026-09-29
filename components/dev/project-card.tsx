@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties, PointerEvent } from "react";
+import { useId, useState, type CSSProperties, type PointerEvent } from "react";
 import Image from "next/image";
 import type { DevProject } from "@/data/dev";
 
@@ -49,7 +49,30 @@ function ProjectArtwork({ project }: { project: DevProject }) {
   );
 }
 
-export default function ProjectCard({ project, delay, index }: { project: DevProject; delay: number; index: number }) {
+export default function ProjectCard({ project, delay, index, technologyLimit }: { project: DevProject; delay: number; index: number; technologyLimit?: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const detailsId = useId();
+  const facts = [
+    ["Role", project.role],
+    ["Team", project.teamSize ? `${project.teamSize} members` : undefined],
+    ["Frontend", project.frontend],
+    ["Backend", project.backend],
+    ["Database", project.database],
+    ["Deployment", project.deployment],
+  ].filter(([, value]) => value?.trim());
+  const narratives = [
+    ["My Contribution", project.contribution],
+    ["Key Feature", project.keyFeature],
+    ["Technical Challenge", project.technicalChallenge],
+  ].filter(([, value]) => value?.trim());
+  const hasStructuredDetails = facts.length > 0 || narratives.length > 0;
+  const legacyStack = project.stackBreakdown.filter((line) => line.trim());
+  const legacyHighlight = project.highlights.find((line) => line.trim());
+  const hasDetails = hasStructuredDetails || legacyStack.length > 0 || Boolean(legacyHighlight);
+  const metadata = [project.role?.trim() ? `Role: ${project.role.trim()}` : "", project.teamSize ? `Team of ${project.teamSize}` : ""].filter(Boolean).join(" \u00b7 ");
+  const visibleTechnologies = technologyLimit !== undefined && Number.isInteger(technologyLimit) && technologyLimit > 0
+    ? project.technologies.slice(0, technologyLimit) : project.technologies;
+  const hiddenTechnologies = project.technologies.slice(visibleTechnologies.length);
   const projectAccents = ["#4f8cff", "#8b5cf6", "#059669", "#dc2626"];
   const style = { "--project-accent": project.accent || projectAccents[index % projectAccents.length], "--reveal-delay": `${delay}ms` } as CSSProperties;
   const category = project.type.split("/")[0].trim();
@@ -86,12 +109,31 @@ export default function ProjectCard({ project, delay, index }: { project: DevPro
         <div className="ds-project-meta"><span>{project.number} <i>/</i> {project.year}</span><span className={project.status.toLowerCase() === "completed" ? "is-complete" : "is-progress"}><i />{project.status}</span></div>
         <h3>{project.title}</h3>
         <p className="ds-project-summary">{project.summary}</p>
-        <div className="ds-chip-list" aria-label="Technologies used">{project.technologies.map((item) => <span key={item}>{item}</span>)}</div>
+        {metadata && <p className="ds-project-role">{metadata}</p>}
+        <div className="ds-chip-list" aria-label="Technologies used">{visibleTechnologies.map((item) => <span key={item}>{item}</span>)}{hiddenTechnologies.length > 0 && <span title={hiddenTechnologies.join(", ")}><span aria-hidden="true">+{hiddenTechnologies.length}</span><span className="ds-project-sr-only">Additional technologies: {hiddenTechnologies.join(", ")}</span></span>}</div>
         {(project.githubUrl || project.liveUrl) && <div className="ds-project-actions">
-          {project.githubUrl && <a className="ds-project-action ds-project-action-source" href={project.githubUrl} target={project.githubUrl.startsWith("http") ? "_blank" : undefined} rel={project.githubUrl.startsWith("http") ? "noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>GitHub <span aria-hidden="true">↗</span></a>}
-          {project.liveUrl && <a className="ds-project-action ds-project-action-live" href={project.liveUrl} target={project.liveUrl.startsWith("http") ? "_blank" : undefined} rel={project.liveUrl.startsWith("http") ? "noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>Live demo <span aria-hidden="true">↗</span></a>}
+          {project.githubUrl && <a className="ds-project-action ds-project-action-source" href={project.githubUrl} aria-label={project.githubUrl.startsWith("http") ? `View source for ${project.title} (opens in a new tab)` : undefined} target={project.githubUrl.startsWith("http") ? "_blank" : undefined} rel={project.githubUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>View source <span aria-hidden="true">↗</span></a>}
+          {project.liveUrl && <a className="ds-project-action ds-project-action-live" href={project.liveUrl} aria-label={project.liveUrl.startsWith("http") ? `Live demo for ${project.title} (opens in a new tab)` : undefined} target={project.liveUrl.startsWith("http") ? "_blank" : undefined} rel={project.liveUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>Live demo <span aria-hidden="true">↗</span></a>}
         </div>}
-        <details className="ds-details"><summary>Case-study notes <span aria-hidden="true">+</span></summary><div className="ds-project-notes"><div><b>The brief</b><p>{project.problem}</p></div><div><b>The approach</b><p>{project.solution}</p></div></div>{!!project.highlights.length && <ul>{project.highlights.map((item) => <li key={item}>{item}</li>)}</ul>}</details>
+        {hasDetails && <div className="ds-project-details">
+          <button className="ds-project-toggle" type="button" aria-expanded={expanded} aria-controls={detailsId} onClick={() => setExpanded((value) => !value)}>
+            Project details
+            <svg aria-hidden="true" viewBox="0 0 20 20"><path d="m5 7.5 5 5 5-5" /></svg>
+          </button>
+          <div id={detailsId} className={`ds-project-panel${expanded ? " is-expanded" : ""}`} aria-hidden={!expanded} inert={!expanded}>
+            <div className="ds-project-panel-inner">
+              <div className="ds-project-case-study">
+                {hasStructuredDetails ? <>
+                  {facts.length > 0 && <dl className="ds-project-facts">{facts.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                  {narratives.length > 0 && <dl className="ds-project-narratives">{narratives.map(([label, value]) => <div key={label} className={label === "My Contribution" ? "ds-project-contribution" : undefined}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>}
+                </> : <div className="ds-project-notes">
+                  {legacyStack.length > 0 && <ul aria-label="Technical breakdown">{legacyStack.map((item) => <li key={item}>{item}</li>)}</ul>}
+                  {legacyHighlight && <p><b>Highlight</b>{legacyHighlight}</p>}
+                </div>}
+              </div>
+            </div>
+          </div>
+        </div>}
       </div>
     </article>
   );

@@ -39,6 +39,16 @@ export type DevProject = {
   problem: string;
   solution: string;
   technologies: string[];
+  role?: string;
+  teamSize?: number;
+  frontend?: string;
+  backend?: string;
+  database?: string;
+  deployment?: string;
+  contribution?: string;
+  keyFeature?: string;
+  technicalChallenge?: string;
+  stackBreakdown: string[];
   highlights: string[];
   githubUrl: string;
   liveUrl: string;
@@ -72,6 +82,7 @@ export type DevCertificate = {
   issuer: string;
   year: string;
   description: string;
+  status: "completed" | "in-progress";
   credentialUrl: string;
   imageUrl: string;
 };

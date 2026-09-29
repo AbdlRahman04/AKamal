@@ -1,24 +1,29 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "../components/dev/dev.css";
 import SiteChrome from "@/components/site/site-chrome";
 
 export const metadata: Metadata = {
-  title: "Abdulrahman — Software / Data / AI",
+  title: "Abdul Rahman Kamal — Software / Data / AI",
   description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
   icons: {
     icon: "/assets/dev-logo.png",
   },
   openGraph: {
-    title: "Abdulrahman — Software / Data / AI",
+    title: "Abdul Rahman Kamal — Software / Data / AI",
     description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Abdulrahman — Software / Data / AI",
+    title: "Abdul Rahman Kamal — Software / Data / AI",
     description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

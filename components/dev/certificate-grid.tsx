@@ -41,50 +41,98 @@ function placeholderImage(certificate: DevCertificate) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
-export default function CertificateGrid({ certificates }: { certificates: DevCertificate[] }) {
+function CertificateCard({ certificate }: { certificate: DevCertificate }) {
+  const isPreview = !certificate.imageUrl;
+  const image = certificate.imageUrl || placeholderImage(certificate);
+  const externalCredential = certificate.credentialUrl.startsWith("http");
+
+  return (
+    <li className="ds-certificate-item">
+      <article className="ds-certificate-card">
+        <div className="ds-certificate-image-wrap">
+          <Image
+            className="ds-certificate-image"
+            src={image}
+            alt={isPreview ? `${certificate.name}, illustrative credential preview` : `${certificate.name} certificate scan`}
+            width={960}
+            height={740}
+            unoptimized
+          />
+          {isPreview && <span className="ds-certificate-preview-label">Illustrative preview</span>}
+        </div>
+        <div className="ds-certificate-card-content">
+          <div className="ds-certificate-card-meta">
+            <span>{certificate.number} <i aria-hidden="true">/</i> CERTIFICATE</span>
+            <span className="ds-certificate-card-year">{certificate.year}</span>
+          </div>
+          <h3>{certificate.name}</h3>
+          <p className="ds-certificate-card-issuer">{certificate.issuer}</p>
+          {certificate.description && <p className="ds-certificate-card-description">{certificate.description}</p>}
+          {certificate.credentialUrl && (
+            <a className="ds-certificate-verify" href={certificate.credentialUrl} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
+              Verify credential <span aria-hidden="true">↗</span>
+            </a>
+          )}
+        </div>
+      </article>
+    </li>
+  );
+}
+
+function CertificateListItem({ certificate }: { certificate: DevCertificate }) {
+  const externalCredential = certificate.credentialUrl.startsWith("http");
+  const statusLabel = certificate.status === "completed" ? "Completed" : "In progress";
+
+  return (
+    <li className="ds-certificate-list-item">
+      <span className="ds-certificate-list-number">{certificate.number}</span>
+      <div className="ds-certificate-list-copy">
+        <h4>{certificate.name}</h4>
+        <p>{certificate.issuer}</p>
+      </div>
+      <span className={`ds-certificate-list-status is-${certificate.status}`}>{statusLabel}</span>
+      <span className="ds-certificate-list-year">{certificate.year}</span>
+      {certificate.credentialUrl ? (
+        <a className="ds-certificate-list-link" href={certificate.credentialUrl} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
+          Verify credential <span aria-hidden="true">↗</span>
+        </a>
+      ) : (
+        <span className="ds-certificate-list-link is-muted">In progress</span>
+      )}
+    </li>
+  );
+}
+
+export default function CertificateGrid({
+  certificates,
+  ariaLabel = "Certificates",
+  featuredCount = 3,
+  listHeading = "More credentials",
+}: {
+  certificates: DevCertificate[];
+  ariaLabel?: string;
+  featuredCount?: number;
+  listHeading?: string;
+}) {
   if (!certificates.length) return null;
+
+  const featuredCertificates = certificates.slice(0, featuredCount);
+  const remainingCertificates = certificates.slice(featuredCount);
 
   return (
     <div className="ds-certificate-showcase">
-      <ul className="ds-certificate-grid" aria-label="Certificates">
-        {certificates.map((certificate) => {
-          const isPreview = !certificate.imageUrl;
-          const image = certificate.imageUrl || placeholderImage(certificate);
-          const externalCredential = certificate.credentialUrl.startsWith("http");
-
-          return (
-            <li className="ds-certificate-item" key={certificate.slug}>
-              <article className="ds-certificate-card">
-                <div className="ds-certificate-image-wrap">
-                  <Image
-                    className="ds-certificate-image"
-                    src={image}
-                    alt={isPreview ? `${certificate.name}, illustrative credential preview` : `${certificate.name} certificate scan`}
-                    width={960}
-                    height={740}
-                    unoptimized
-                  />
-                  {isPreview && <span className="ds-certificate-preview-label">Illustrative preview</span>}
-                </div>
-                <div className="ds-certificate-card-content">
-                  <div className="ds-certificate-card-meta">
-                    <span>{certificate.number} <i aria-hidden="true">/</i> CERTIFICATE</span>
-                    <span className="ds-certificate-card-year">{certificate.year}</span>
-                  </div>
-                  <h3>{certificate.name}</h3>
-                  <p className="ds-certificate-card-issuer">{certificate.issuer}</p>
-                  {certificate.description && <p className="ds-certificate-card-description">{certificate.description}</p>}
-                  {certificate.credentialUrl && (
-                    <a className="ds-certificate-verify" href={certificate.credentialUrl} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
-                      Verify credential <span aria-hidden="true">↗</span>
-                    </a>
-                  )}
-                </div>
-              </article>
-            </li>
-          );
-        })}
+      <ul className="ds-certificate-grid" aria-label={ariaLabel}>
+        {featuredCertificates.map((certificate) => <CertificateCard certificate={certificate} key={certificate.slug} />)}
       </ul>
+      {!!remainingCertificates.length && <div className="ds-certificate-list-wrap">
+        <div className="ds-certificate-list-heading">
+          <h4>{listHeading}</h4>
+          <span>{remainingCertificates.length} additional</span>
+        </div>
+        <ul className="ds-certificate-list" aria-label={listHeading}>
+          {remainingCertificates.map((certificate) => <CertificateListItem certificate={certificate} key={certificate.slug} />)}
+        </ul>
+      </div>}
     </div>
   );
 }

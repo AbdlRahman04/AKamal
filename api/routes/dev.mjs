@@ -50,6 +50,9 @@ export function normalizeDevProject(input, fallback = {}) {
     problem: String(project.problem || "").trim(),
     solution: String(project.solution || "").trim(),
     technologies: Array.isArray(project.technologies) ? project.technologies.map(String).map((item) => item.trim()).filter(Boolean) : [],
+    ...Object.fromEntries(["role", "frontend", "backend", "database", "deployment", "contribution", "keyFeature", "technicalChallenge"].map((field) => [field, String(project[field] ?? "").trim()])),
+    teamSize: Number.isInteger(Number(project.teamSize)) && Number(project.teamSize) > 0 ? Number(project.teamSize) : undefined,
+    stackBreakdown: Array.isArray(project.stackBreakdown) ? project.stackBreakdown.map(String).map((item) => item.trim()).filter(Boolean) : [],
     highlights: Array.isArray(project.highlights) ? project.highlights.map(String).map((item) => item.trim()).filter(Boolean) : [],
     githubUrl: String(project.githubUrl || "").trim(),
     liveUrl: String(project.liveUrl || "").trim(),
@@ -114,11 +117,12 @@ export function normalizeDevCollectionItem(collection, input, fallback = {}) {
 
   if (collection === "certificates") {
     return {
-      ...numberedRecord(record, fallback, record.name, { name: "Certificate", issuer: "", year: "", description: "", credentialUrl: "", imageUrl: "" }),
+      ...numberedRecord(record, fallback, record.name, { name: "Certificate", issuer: "", year: "", description: "", status: "in-progress", credentialUrl: "", imageUrl: "" }),
       name: String(record.name || "Certificate").trim(),
       issuer: String(record.issuer || "").trim(),
       year: String(record.year || "").trim(),
       description: String(record.description || "").trim(),
+      status: record.status === "completed" ? "completed" : "in-progress",
       credentialUrl: String(record.credentialUrl || "").trim(),
       imageUrl: String(record.imageUrl || "").trim(),
     };

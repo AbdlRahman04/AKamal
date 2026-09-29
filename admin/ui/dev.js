@@ -4,8 +4,8 @@ const state = { data: null };
 
 const config = {
   experience: { title: (item) => item.role, subtitle: (item) => `${item.company} · ${item.period}`, fields: ["company", "role", "period", "summary", "technologies"], lists: ["technologies"], checks: ["current"] },
-  projects: { title: (item) => item.title, subtitle: (item) => `${item.type} · ${item.year}`, fields: ["title", "type", "year", "status", "summary", "problem", "solution", "technologies", "highlights", "githubUrl", "liveUrl", "coverImageUrl", "accent"], lists: ["technologies"], lines: ["highlights"], checks: ["featured"] },
-  certificates: { title: (item) => item.name, subtitle: (item) => `${item.issuer} · ${item.year}`, fields: ["name", "issuer", "year", "credentialUrl", "description", "imageUrl"] },
+  projects: { title: (item) => item.title, subtitle: (item) => `${item.type} · ${item.year}`, fields: ["title", "type", "year", "status", "summary", "role", "teamSize", "frontend", "backend", "database", "deployment", "contribution", "keyFeature", "technicalChallenge", "problem", "solution", "technologies", "stackBreakdown", "highlights", "githubUrl", "liveUrl", "coverImageUrl", "accent"], lists: ["technologies"], lines: ["stackBreakdown", "highlights"], checks: ["featured"] },
+  certificates: { title: (item) => item.name, subtitle: (item) => `${item.issuer} · ${item.year}`, fields: ["name", "issuer", "year", "status", "credentialUrl", "description", "imageUrl"] },
   skills: { title: (item) => item.name, subtitle: () => "Capability group", fields: ["name", "description", "items"], lists: ["items"] },
 };
 
@@ -89,6 +89,12 @@ function fillCollection(collection, item) {
   (settings.fields || []).forEach((field) => {
     const input = form.elements.namedItem(field);
     if (!input) return;
+    const radioInputs = form.querySelectorAll(`input[name="${field}"][type="radio"]`);
+    if (radioInputs.length) {
+      const selectedValue = String(item?.[field] || (field === "status" ? "in-progress" : ""));
+      radioInputs.forEach((radio) => { radio.checked = radio.value === selectedValue; });
+      return;
+    }
     if ((settings.lists || []).includes(field)) input.value = (item?.[field] || []).join(", ");
     else if ((settings.lines || []).includes(field)) input.value = (item?.[field] || []).join("\n");
     else input.value = item?.[field] || "";
@@ -111,6 +117,7 @@ function payloadFor(collection) {
   (settings.lists || []).forEach((field) => { payload[field] = split(payload[field]); });
   (settings.lines || []).forEach((field) => { payload[field] = split(payload[field], "\n"); });
   (settings.checks || []).forEach((field) => { payload[field] = form.elements.namedItem(field).checked; });
+  if (collection === "projects") payload.teamSize = payload.teamSize ? Number(payload.teamSize) : "";
   const color = form.elements.namedItem("accent");
   if (color?.dataset.empty === "true") payload.accent = "";
   return payload;

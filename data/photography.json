@@ -2,9 +2,10 @@
   "profile": {
     "name": "Abdl Rahman Kamal",
     "role": "Photographer · UAE",
-    "intro": "I photograph the atmosphere around a subject—where light, motion, and place begin to tell a story.",
-    "about": "I started photography in 2019, learning through mistakes, experimentation, and a growing curiosity about what makes an image feel complete.\n\nThe Huawei P30 Pro was where that process became serious. Its 5x periscope lens, roughly equivalent to 125mm, taught me to look more carefully at distance, compression, and framing. Adobe Lightroom became part of the craft too, helping me refine color, recover detail, and bring the image closer to what I saw.\n\nMoving to the Huawei P60 Pro gave me more flexibility through improved color and its 3.5x periscope lens, roughly 95mm. But the real upgrade was in how I saw. I moved from casual, angled frames toward reading the atmosphere, finding the right subject, and letting the photograph tell its own story.\n\nThe tools have changed, but intention remains at the center of the work.",
+    "intro": "I’ve been exploring photography since 2019, using mobile cameras to study light, perspective, composition, and the small details that make an ordinary moment worth capturing.",
+    "about": "I started photography in 2019, learning through experimentation, mistakes, and a growing curiosity about what makes an image feel complete.\n\nOver 5+ years, I’ve explored mobile photography, composition, perspective, light, color, and visual storytelling — capturing everything from everyday moments to carefully composed scenes.\n\nThe Huawei P30 Pro was an important part of that journey, introducing me to different perspectives through its 5× periscope lens. Later, the Huawei P60 Pro gave me more flexibility, but the biggest change was in how I saw rather than what I used.\n\nAlongside photography, I’ve spent years developing my editing process in Adobe Lightroom, learning to refine color, light, and detail while keeping the original feeling of the photograph.\n\nToday, photography is less about the camera and more about observation, intention, and finding a different way to see the ordinary.",
     "email": "abdshawki@gmail.com",
+    "portraitSrc": "/dev/cv-image-cropped-0894141f-854b-498d-a004-1bb84d69db82.webp",
     "socialLinks": [
       {
         "label": "Instagram",
@@ -152,6 +153,27 @@
             "x": 50,
             "y": 50
           }
+        },
+        {
+          "id": "real-estate-1790511774132",
+          "title": "Ornate Dining Alcove",
+          "src": "/photography/full/img-20241207-130622.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20241207-130622.webp",
+          "alt": "Interior dining alcove with carved wooden grille, patterned stained-glass ceiling panels, alternating dark and light stone stripes, round upholstered chairs, and potted plants with orange fruit and red blossoms.",
+          "story": "A raised dining alcove is framed by an intricately carved wooden screen and a coffered ceiling of patterned stained-glass panels. Alternating dark and light stone bands, clustered seating and foreground foliage create layered depth and directional flow.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
         }
       ]
     },
@@ -164,98 +186,6 @@
       "coverImage": "",
       "section": "primary",
       "photos": [
-        {
-          "id": "automotive-1789413177862",
-          "title": "Dark Sedan on Highway",
-          "src": "/photography/full/img-20260619-181616-1.webp",
-          "thumbnailSrc": "/photography/thumbs/img-20260619-181616-1.webp",
-          "alt": "Dark sedan traveling on a multi-lane highway with blurred foreground, guardrail, hedgerow and trees under a hazy sky.",
-          "story": "Low-angle roadside shot of a dark sedan with subtle motion blur; guardrail and lane markings form strong leading lines while hedges and trees provide environmental framing under soft, atmospheric light.",
-          "tags": [
-            "Motion Blur",
-            "Atmospheric Light",
-            "Leading Lines",
-            "Reflection Control",
-            "Environmental Framing",
-            "Depth"
-          ],
-          "isPlaceholder": false,
-          "aspectRatio": "3/4",
-          "orientation": "portrait",
-          "focalPoint": {
-            "x": 49,
-            "y": 80
-          }
-        },
-        {
-          "id": "automotive-1789413192713",
-          "title": "Audi RS3 in motion",
-          "src": "/photography/full/img-20240627-160925-3.webp",
-          "thumbnailSrc": "/photography/thumbs/img-20240627-160925-3.webp",
-          "alt": "Rear three-quarter view of a gray Audi RS3 passing at speed, photographed from a neighboring car with background motion blur and visible transmission towers.",
-          "story": "Rear three-quarter of an Audi RS3 captured from inside a nearby vehicle; panning keeps the car relatively sharp while the road and utility towers blur, using compositional lines for environmental framing.",
-          "tags": [
-            "Panning",
-            "Motion Blur",
-            "Color Grading",
-            "Leading Lines",
-            "Environmental Framing",
-            "Depth"
-          ],
-          "isPlaceholder": false,
-          "aspectRatio": "3/4",
-          "orientation": "portrait",
-          "focalPoint": {
-            "x": 50,
-            "y": 72
-          }
-        },
-        {
-          "id": "automotive-1789413188741",
-          "title": "Ford Mustang rear in urban sunlight",
-          "src": "/photography/full/img-20240303-101904.webp",
-          "thumbnailSrc": "/photography/thumbs/img-20240303-101904.webp",
-          "alt": "Rear three-quarter view of a dark Ford Mustang driving past a sunlit stone building",
-          "story": "A Ford Mustang is captured in motion against a sunlit multi-story façade, highlighting strong shadow patterns and layered depth in the composition.",
-          "tags": [
-            "Motion Blur",
-            "Shutter Speed",
-            "Color Grading",
-            "Leading Lines",
-            "Environmental Framing",
-            "Depth"
-          ],
-          "isPlaceholder": false,
-          "aspectRatio": "9/16",
-          "orientation": "portrait",
-          "focalPoint": {
-            "x": 50,
-            "y": 88
-          }
-        },
-        {
-          "id": "automotive-1789413180709",
-          "title": "Red sports car beneath a golden-glass tower",
-          "src": "/photography/full/red-porsche-panning.webp",
-          "thumbnailSrc": "/photography/thumbs/red-porsche-panning.webp",
-          "alt": "Red sports car with prominent rear wing and black SUV on a city street, framed by trees and a high-rise reflecting warm golden light.",
-          "story": "A layered urban composition where foreground vegetation and roadside elements frame a red sports car and black SUV, leading the eye to a high-rise whose glass facade reflects warm, atmospheric light.",
-          "tags": [
-            "Color Grading",
-            "Leading Lines",
-            "Environmental Framing",
-            "Depth",
-            "Motion Blur",
-            "Atmospheric Light"
-          ],
-          "isPlaceholder": false,
-          "aspectRatio": "9/16",
-          "orientation": "portrait",
-          "focalPoint": {
-            "x": 50,
-            "y": 71
-          }
-        },
         {
           "id": "automotive-1789413184698",
           "title": "BMW sedan at desert horizon",
@@ -273,8 +203,8 @@
           "aspectRatio": "3/4",
           "orientation": "portrait",
           "focalPoint": {
-            "x": 50,
-            "y": 84
+            "x": 32,
+            "y": 91
           },
           "featuredRank": 1
         },
@@ -327,6 +257,52 @@
           "aspectRatio": "3/4"
         },
         {
+          "id": "automotive-1789413180709",
+          "title": "Red sports car beneath a golden-glass tower",
+          "src": "/photography/full/red-porsche-panning.webp",
+          "thumbnailSrc": "/photography/thumbs/red-porsche-panning.webp",
+          "alt": "Red sports car with prominent rear wing and black SUV on a city street, framed by trees and a high-rise reflecting warm golden light.",
+          "story": "A layered urban composition where foreground vegetation and roadside elements frame a red sports car and black SUV, leading the eye to a high-rise whose glass facade reflects warm, atmospheric light.",
+          "tags": [
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Motion Blur",
+            "Atmospheric Light"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 71
+          }
+        },
+        {
+          "id": "automotive-1789413188741",
+          "title": "Ford Mustang rear in urban sunlight",
+          "src": "/photography/full/img-20240303-101904.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240303-101904.webp",
+          "alt": "Rear three-quarter view of a dark Ford Mustang driving past a sunlit stone building",
+          "story": "A Ford Mustang is captured in motion against a sunlit multi-story façade, highlighting strong shadow patterns and layered depth in the composition.",
+          "tags": [
+            "Motion Blur",
+            "Shutter Speed",
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 88
+          }
+        },
+        {
           "id": "automotive-1789413174131",
           "title": "Century sedan on a commercial street",
           "src": "/photography/full/img-20250726-155122-1-1.webp",
@@ -342,11 +318,57 @@
             "Reflection Control"
           ],
           "isPlaceholder": false,
-          "aspectRatio": "4/5",
+          "aspectRatio": "9/16",
           "orientation": "portrait",
           "focalPoint": {
             "x": 48,
             "y": 74
+          }
+        },
+        {
+          "id": "automotive-1789413177862",
+          "title": "Dark Sedan on Highway",
+          "src": "/photography/full/img-20260619-181616-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260619-181616-1.webp",
+          "alt": "Dark sedan traveling on a multi-lane highway with blurred foreground, guardrail, hedgerow and trees under a hazy sky.",
+          "story": "Low-angle roadside shot of a dark sedan with subtle motion blur; guardrail and lane markings form strong leading lines while hedges and trees provide environmental framing under soft, atmospheric light.",
+          "tags": [
+            "Motion Blur",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 49,
+            "y": 80
+          }
+        },
+        {
+          "id": "automotive-1789413192713",
+          "title": "Audi RS3 in motion",
+          "src": "/photography/full/img-20240627-160925-3.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240627-160925-3.webp",
+          "alt": "Rear three-quarter view of a gray Audi RS3 passing at speed, photographed from a neighboring car with background motion blur and visible transmission towers.",
+          "story": "Rear three-quarter of an Audi RS3 captured from inside a nearby vehicle; panning keeps the car relatively sharp while the road and utility towers blur, using compositional lines for environmental framing.",
+          "tags": [
+            "Panning",
+            "Motion Blur",
+            "Color Grading",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 72
           }
         },
         {
@@ -386,7 +408,6 @@
             "Visual Balance"
           ],
           "isPlaceholder": false,
-          "aspectRatio": "4/3",
           "orientation": "landscape",
           "focalPoint": {
             "x": 49,
@@ -476,14 +497,58 @@
             "Depth"
           ],
           "isPlaceholder": false,
-          "aspectRatio": "3/4",
-          "orientation": "portrait",
+          "aspectRatio": "4/3",
+          "orientation": "square",
           "featuredRank": 1,
           "focalPoint": {
             "x": 50,
-            "y": 50
+            "y": 76
           },
           "location": "Schneider Electric Innovation Summit MEA - Abu Dhabi"
+        },
+        {
+          "id": "event-1790511833682",
+          "title": "Green-Lit Conference Auditorium",
+          "src": "/photography/full/img-20260916-152921.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260916-152921.webp",
+          "alt": "Central aisle leading to a green-lit stage in a large auditorium, rows of black-covered chairs and a few seated attendees; exposed ceiling and lighting rigs above.",
+          "story": "A symmetrical wide-angle view emphasizes the central aisle and converging rows of chairs toward a brightly lit green stage, with exposed ceiling infrastructure and a sparse audience providing scale.",
+          "tags": [
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "featuredRank": 2,
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "event-1790511842448",
+          "title": "Schneider Electric exhibition interior",
+          "src": "/photography/full/img-20260916-151612.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260916-151612.webp",
+          "alt": "Green-lit exhibition hall interior with illuminated Schneider Electric sign, groups of people on a green carpet and overhead trusses, and a reflective black floor.",
+          "story": "Wide-angle view of a green-lit exhibition hall focused on an illuminated Schneider Electric sign, with people clustered along a corridor of green carpet and visible overhead rigging. A glossy black floor produces strong reflections that emphasize depth and geometry.",
+          "tags": [
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "featuredRank": 3,
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
         }
       ]
     }
@@ -541,7 +606,7 @@
           "orientation": "portrait",
           "focalPoint": {
             "x": 50,
-            "y": 50
+            "y": 96
           }
         },
         {
@@ -552,11 +617,15 @@
           "alt": "Colorful glass building",
           "story": "A vibrant, multi-colored building exterior stands striking against a dramatic stormy sky.",
           "tags": [
-            "Visual Balance",
-            "Color Grading"
+            "Color Grading",
+            "Visual Balance"
           ],
           "aspectRatio": "3/4",
-          "orientation": "portrait"
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 52,
+            "y": 57
+          }
         },
         {
           "id": "land-4",
@@ -566,11 +635,15 @@
           "alt": "Skyscrapers through clouds",
           "story": "Massive skyscrapers pierce through the heavy, brooding cloud cover, emphasizing the city's monumental scale.",
           "tags": [
-            "Depth",
-            "Atmospheric Light"
+            "Atmospheric Light",
+            "Depth"
           ],
           "aspectRatio": "4/3",
-          "orientation": "landscape"
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 47,
+            "y": 80
+          }
         },
         {
           "id": "land-5",
@@ -646,6 +719,156 @@
           ],
           "aspectRatio": "3/4",
           "orientation": "portrait"
+        },
+        {
+          "id": "nature-mood-1790511289130",
+          "title": "Double Rainbow over Wet Promenade",
+          "src": "/photography/full/img-20250103-164542.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250103-164542.webp",
+          "alt": "Double rainbow arching over a wet waterfront promenade with reflective tiled walkway, lamp posts and trees under a cloudy sky.",
+          "story": "A bright primary rainbow and a fainter secondary rainbow span a cloudy sky above a wet waterfront promenade. The patterned walkway, lamp posts and clustered trees create converging lines and reflections that lead the eye toward the horizon.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "location": "Abu Dhabi, UAE",
+          "focalPoint": {
+            "x": 50,
+            "y": 69
+          }
+        },
+        {
+          "id": "nature-mood-1790511299521",
+          "title": "Bridge, Pond and Waterfall Framed by Palms",
+          "src": "/photography/full/img-20260101-164009.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260101-164009.webp",
+          "alt": "Stone bridge over a pond with three fountain jets, a narrow waterfall cascading down a rocky hillside in the background, and palm fronds arching across the top.",
+          "story": "Foreground fountain jets and a reflective pond lead toward a low stone bridge, with a narrow waterfall descending the rugged slope behind. Palm fronds at the top provide environmental framing and emphasize the layered depth from foreground to background.",
+          "tags": [
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 63
+          }
+        },
+        {
+          "id": "nature-mood-1790511787273",
+          "title": "Blue-glass facade with curved walkway",
+          "src": "/photography/full/img-20250225-122950.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250225-122950.webp",
+          "alt": "Low-rise blue glass building with mirrored facade, a red-brick S-shaped path and clipped hedges in the foreground under a cloudy sky.",
+          "story": "A reflective blue-glass building sits mid-frame while a sinuous red-brick path and trimmed hedges lead the eye from the foreground, punctuated by palm trees. Overcast light and cloud cover create a moody, low-contrast atmosphere that emphasizes depth and reflections.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "nature-mood-1790512397961",
+          "title": "Sunset over urban avenue",
+          "src": "/photography/full/img-20250316-183506.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250316-183506.webp",
+          "alt": "Urban street at sunset, parked cars along a road leading to a glowing horizon under a broad, dark cloud band.",
+          "story": "A tall, warmly lit tower anchors the right side while a wide cloud band and the road create strong leading lines toward the glowing horizon. The scene emphasizes depth and exposure balance between the cool blue sky and warm artificial light.",
+          "tags": [
+            "Golden Hour",
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Rule of Thirds",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 79
+          }
+        },
+        {
+          "id": "nature-mood-1790512498596",
+          "title": "AURAK facade with paved forecourt",
+          "src": "/photography/full/img-20250317-141056.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250317-141056.webp",
+          "alt": "Modern panelled building labeled AURAK, brick-paved forecourt and overcast sky",
+          "story": "Geometric, panelled facade with muted beige, blue and red accents sits behind a wet brick-paved forecourt; a single pedestrian in dark clothing crosses toward the entrance beneath a diffuse, cloud-filled sky.",
+          "tags": [
+            "Environmental Texture",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 66
+          }
+        },
+        {
+          "id": "nature-mood-1790512499972",
+          "title": "Modern Commercial Building Framed by Palms on a Rainy Day",
+          "src": "/photography/full/img-20250317-141047.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250317-141047.webp",
+          "alt": "Multi-story commercial building with blue and red panels, framed by palm trees, wet road and overcast sky.",
+          "story": "A modern multi-story commercial building sits midground with blue and red glazed panels against a cloudy sky. Palm trees and a wet roadway in the foreground provide framing, texture and leading lines toward the structure.",
+          "tags": [
+            "Environmental Texture",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 66
+          }
+        },
+        {
+          "id": "nature-mood-1790512547544",
+          "title": "Wet Curved Road with Lit Palms",
+          "src": "/photography/full/img-20260327-184004-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260327-184004-1.webp",
+          "alt": "SUV driving away on a rain-slick curved road lined with palm trees wrapped in string lights, taillight reflections on the wet pavement under a cloudy sky.",
+          "story": "An SUV moves along a rain-slick, curved roadway bordered by flower beds and palm trees wrapped in lights. The vehicle's taillights and the overhead clouds create strong reflections and textured atmospheric contrast on the wet surface.",
+          "tags": [
+            "Environmental Texture",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 53
+          }
         }
       ]
     },
@@ -671,7 +894,12 @@
             "Color Grading"
           ],
           "aspectRatio": "3/4",
-          "orientation": "portrait"
+          "orientation": "portrait",
+          "location": "AURAK Campus, RAK, UAE",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
         },
         {
           "id": "night-2",
@@ -698,14 +926,19 @@
           "title": "Illuminated Grandeur",
           "src": "/photography/full/img-20240323-211537.webp",
           "thumbnailSrc": "/photography/thumbs/img-20240323-211537.webp",
-          "alt": "Grand Mosque at night",
+          "alt": "Sheikh Zayed Grand Mosque at night",
           "story": "The intricate, ornate pillars of the Grand Mosque glow majestically into the night.",
           "tags": [
             "Environmental Texture",
             "Visual Balance"
           ],
           "aspectRatio": "3/4",
-          "orientation": "portrait"
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 66
+          },
+          "location": "Abu Dhabi, UAE"
         },
         {
           "id": "night-4",
@@ -720,6 +953,92 @@
           ],
           "aspectRatio": "3/4",
           "orientation": "portrait"
+        },
+        {
+          "id": "night-photography-1790511327332",
+          "title": "Curved Glass Facade and Canopy at Night",
+          "src": "/photography/full/img-20250413-225225-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250413-225225-1.webp",
+          "alt": "Empty roadway at night flanked by a sweeping curved canopy on the left and a large glass-grid facade on the right under a deep blue sky with starburst streetlights.",
+          "story": "A long, empty roadway leads the eye between a sinuous canopy and a repeating glass-grid facade, emphasizing geometric contrast and depth. Night lighting is balanced to retain interior glazing detail, exterior highlights, and the deep blue sky.",
+          "tags": [
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/5",
+          "orientation": "portrait",
+          "location": "Zayed International Airport, Abu Dhabi, UAE",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "night-photography-1790511333143",
+          "title": "Night waterfront with Four Seasons reflections",
+          "src": "/photography/full/img-20240806-215544-2.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240806-215544-2.webp",
+          "alt": "Illuminated high-rise buildings including a Four Seasons hotel beside a curved waterfront pathway, streetlamps and their reflections in calm water at night.",
+          "story": "A curved promenade and rows of lampposts lead past illuminated towers whose lights mirror in the still water; a lone pedestrian provides scale against the modern architecture. Vertical and horizontal building lights create a layered, atmospheric night scene.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "location": "Al Mariyah Island, Abu Dhabi, UAE",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "night-photography-1790512670748",
+          "title": "Arched Facade and Pool Reflections",
+          "src": "/photography/full/img-20240808-191510.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20240808-191510.webp",
+          "alt": "Multi-story building with arched windows and balconies lit from within, palm trees in front and a swimming pool reflecting the warm lights under a cloudy dusk sky.",
+          "story": "A multi-story building with decorative arches and crenellated parapets sits behind a row of palms, its illuminated windows mirrored in the pool. Overcast sky and mixed artificial light produce a moody, atmospheric scene with strong vertical symmetry.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Reflection Control",
+            "Symmetry"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "night-photography-1790512684354",
+          "title": "Framed Mountain Ridge through Lattice",
+          "src": "/photography/full/img-20260101-174739.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260101-174739.webp",
+          "alt": "View through a lattice-topped opening and wooden railing to a valley with mountains, transmission towers, and foreground flowering shrubs under a clear blue sky.",
+          "story": "A rectangular opening with a diamond-lattice transom and wooden balustrade frames a layered scene: flowering shrubs in the foreground, a small valley, and a rugged mountain ridgeline punctuated by transmission towers. The clear blue sky and even daylight emphasize the depth and geometric framing of the composition.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Environmental Framing",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 65
+          }
         }
       ]
     },
@@ -786,6 +1105,69 @@
             "x": 50,
             "y": 74
           }
+        },
+        {
+          "id": "cycling-mood-1790511923838",
+          "title": "Bicycle on Nighttime Cycle Path",
+          "src": "/photography/full/img-20260107-203006.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260107-203006.webp",
+          "alt": "Rear of a bicycle with red taillight illuminated, parked on a paved bike lane with painted markings and streetlights receding into the distance under a dark sky.",
+          "story": "A bicycle is parked slightly right of center on a marked cycle path at night, the red taillight providing a focal point against cool ambient street lighting. Strong lane markings and rows of lights create pronounced leading lines and depth into the dark sky.",
+          "tags": [
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 65
+          }
+        },
+        {
+          "id": "cycling-mood-1790512326310",
+          "title": "Bicycle on Wet Green Bike Lane",
+          "src": "/photography/full/img-20260327-024748-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260327-024748-1.webp",
+          "alt": "Bicycle with red rear light on a wet green bike lane on a bridge at night, city buildings and streetlights in the background with streaks of falling rain.",
+          "story": "A lone bicycle with a glowing rear light sits on a glossy green bike lane that leads across a bridge toward illuminated high-rise buildings. Street lamps and wet surfaces create strong reflections and diagonal streaks of falling rain, emphasizing depth and leading lines.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "9/16",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 78
+          }
+        },
+        {
+          "id": "cycling-mood-1790512843863",
+          "title": "Night Promenade with Bicycle and Skyline",
+          "src": "/photography/full/portfolio-img-20250426-191909-1.webp",
+          "thumbnailSrc": "/photography/thumbs/portfolio-img-20250426-191909-1.webp",
+          "alt": "Bicycle with red taillight on a riverside promenade at night, lamppost and benches in foreground and illuminated high-rise skyline beyond.",
+          "story": "A parked bicycle with a glowing red taillight anchors the foreground while the curved promenade and railing lead the eye toward illuminated high-rise buildings under a deep blue night sky. Street lamps and bench lighting create layered pools of color that emphasize depth and atmosphere.",
+          "tags": [
+            "Color Grading",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
         }
       ]
     },
@@ -807,11 +1189,15 @@
           "alt": "Fireworks over water",
           "story": "A breathtaking explosion of golden light reflects across the dark, rippling waters of the city.",
           "tags": [
-            "Exposure Balance",
-            "Shutter Speed"
+            "Shutter Speed",
+            "Exposure Balance"
           ],
           "aspectRatio": "9/16",
-          "orientation": "portrait"
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 90
+          }
         },
         {
           "id": "fire-2",
@@ -828,7 +1214,7 @@
           "aspectRatio": "3/4",
           "focalPoint": {
             "x": 43,
-            "y": 69
+            "y": 100
           },
           "orientation": "portrait"
         },
@@ -850,6 +1236,81 @@
             "x": 50,
             "y": 85
           }
+        },
+        {
+          "id": "fireworks-1790512648522",
+          "title": "Golden Bursts Over Waterfront",
+          "src": "/photography/full/img-20250101-000149.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250101-000149.webp",
+          "alt": "Night scene of large golden fireworks over a waterfront, city buildings at left and bright reflections on the water",
+          "story": "Large golden fireworks fill the sky above a dark waterfront while low arcing launches and bright reflections create horizontal leading lines across the water. Smoke and city lights soften highlights and add depth to the scene.",
+          "tags": [
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/3",
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "fireworks-1790512655161",
+          "title": "Golden Fireworks Over Waterfront Skyline",
+          "src": "/photography/full/img-20241202-210422-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20241202-210422-1.webp",
+          "alt": "Golden radial fireworks bursting above illuminated high-rise buildings with reflections on the water.",
+          "story": "Large golden fireworks fill the upper frame with radial trails and sparks above a band of illuminated buildings. Smoke, falling embers, and a vertical launch trail create atmospheric texture and layered depth with reflections on the water.",
+          "tags": [
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Depth",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "fireworks-1790512656029",
+          "title": "Fireworks over waterfront skyline",
+          "src": "/photography/full/img-20241202-210434.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20241202-210434.webp",
+          "alt": "Golden fireworks exploding above a lit waterfront skyline with illuminated buildings and a Ferris wheel, sparks and smoke reflected on the water at night.",
+          "story": "Golden bursts of fireworks fill the night sky above a waterfront skyline, with sparks and columns of smoke creating layered highlights. Illuminated buildings and a Ferris wheel reflect on the water, adding depth and atmospheric haze to the scene.",
+          "tags": [
+            "Environmental Texture",
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Reflection Control"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "16/9",
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "fireworks-1790512658018",
+          "title": "img 20241202 210516",
+          "src": "/photography/full/img-20241202-210516.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20241202-210516.webp",
+          "alt": "",
+          "story": "",
+          "tags": [],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait"
         }
       ]
     },
@@ -880,25 +1341,10 @@
           ],
           "orientation": "landscape",
           "focalPoint": {
-            "x": 48,
-            "y": 51
+            "x": 50,
+            "y": 66
           },
-          "aspectRatio": "2.4/1"
-        },
-        {
-          "id": "sun-2",
-          "title": "Grid Silhouette",
-          "featuredRank": 2,
-          "src": "/photography/full/transmission-towers.webp",
-          "thumbnailSrc": "/photography/thumbs/transmission-towers.webp",
-          "alt": "Power lines at sunset",
-          "story": "Massive power lines create a striking geometric pattern against the warm dusk sky.",
-          "tags": [
-            "Environmental Texture",
-            "Leading Lines"
-          ],
-          "aspectRatio": "9/16",
-          "orientation": "portrait"
+          "aspectRatio": "16/9"
         },
         {
           "id": "sun-3",
@@ -909,11 +1355,101 @@
           "alt": "Purple and red sunset over street",
           "story": "An unbelievable collision of purple and red dominates the sky, illuminating a peaceful evening walk.",
           "tags": [
-            "Atmospheric Light",
-            "Color Grading"
+            "Color Grading",
+            "Atmospheric Light"
           ],
           "aspectRatio": "1/1",
-          "orientation": "square"
+          "orientation": "square",
+          "focalPoint": {
+            "x": 50,
+            "y": 69
+          }
+        },
+        {
+          "id": "golden-hour-1790511351341",
+          "title": "Sunset Over Urban Skyline",
+          "src": "/photography/full/img-20250120-174213.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250120-174213.webp",
+          "alt": "City skyline at sunset with the low sun near the horizon, glowing orange-pink clouds and a tall rectangular concrete tower silhouetted at right.",
+          "story": "A low sun sinks behind a distant skyline, backlighting layered clouds that glow warm orange and pink. ",
+          "tags": [
+            "Golden Hour",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "1/1",
+          "orientation": "square",
+          "focalPoint": {
+            "x": 55,
+            "y": 68
+          },
+          "location": "RAK"
+        },
+        {
+          "id": "golden-hour-1790512356373",
+          "title": "Transmission Towers at Dusk",
+          "src": "/photography/full/portfolio-img-20240128-182200-1.webp",
+          "thumbnailSrc": "/photography/thumbs/portfolio-img-20240128-182200-1.webp",
+          "alt": "Silhouetted high-voltage transmission towers and power lines against a blue-to-pink dusk sky with distant city lights on the horizon.",
+          "story": "Lattice transmission towers recede across the scene with multiple power lines creating strong diagonal leading lines against a layered blue-to-pink dusk sky. Small city lights on the horizon add scale while foreground grasses and successive towers provide depth and visual balance.",
+          "tags": [
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth",
+            "Visual Balance"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "3/4",
+          "orientation": "portrait",
+          "focalPoint": {
+            "x": 50,
+            "y": 77
+          }
+        },
+        {
+          "id": "golden-hour-1790512508877",
+          "title": "Promenade at Sunset with Lamps",
+          "src": "/photography/full/img-20260117-182458-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20260117-182458-1.webp",
+          "alt": "Evening coastal promenade with lit decorative lampposts, pedestrians on a central walkway with tactile paving, roadway to the left, rocky seawall to the right, and a vivid sunset sky.",
+          "story": "Decorative lampposts and the patterned walkway create strong leading lines toward the glowing horizon; the rocky seawall and distant lights provide textural contrast and depth.",
+          "tags": [
+            "Environmental Texture",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "16/9",
+          "orientation": "landscape",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
+        },
+        {
+          "id": "golden-hour-1790513083070",
+          "title": "Transmission Towers at Orange Horizon",
+          "src": "/photography/full/img-20250914-181619-1.webp",
+          "thumbnailSrc": "/photography/thumbs/img-20250914-181619-1.webp",
+          "alt": "Silhouetted lattice transmission towers and power lines against an orange sky with the sun near the horizon above a sparse desert foreground.",
+          "story": "Layered lattice towers and converging power lines frame a low sun, creating strong silhouettes against a warm, hazy sky. Textured foreground vegetation and receding structures add depth and scale.",
+          "tags": [
+            "Environmental Texture",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Depth"
+          ],
+          "isPlaceholder": false,
+          "aspectRatio": "4/5",
+          "orientation": "portrait",
+          "featuredRank": 2,
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
         }
       ]
     }

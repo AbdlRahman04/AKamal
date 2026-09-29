@@ -12,24 +12,25 @@
 
   /* Obsidian Darkroom design tokens. Photography styles consume these
      semantic values so the visual system can be tuned in one place. */
-  --darkroom-canvas:#0a0a0b;
-  --darkroom-surface-lowest:#0e0e0f;
-  --darkroom-surface:#141416;
-  --darkroom-surface-low:#1c1b1c;
-  --darkroom-surface-mid:#201f20;
-  --darkroom-surface-high:#2a2a2b;
-  --darkroom-surface-highest:#353436;
-  --darkroom-bone:#f3f1ec;
-  --darkroom-text:#e5e2e3;
-  --darkroom-muted:#8e8d88;
-  --darkroom-muted-bright:#c7c7bf;
-  --darkroom-outline:rgba(142,141,136,.2);
-  --darkroom-outline-strong:rgba(142,141,136,.42);
-  --darkroom-amber:#d4a373;
-  --darkroom-red:#d9383a;
-  --darkroom-display:"Syne", Arial, sans-serif;
-  --darkroom-body:"Hanken Grotesk", Arial, sans-serif;
-  --darkroom-label:"JetBrains Mono", monospace;
+  --darkroom-canvas:#101817;
+  --darkroom-surface-lowest:#121d1d;
+  --darkroom-surface:#162525;
+  --darkroom-surface-low:#1c3030;
+  --darkroom-surface-mid:#24403f;
+  --darkroom-surface-high:#2d504d;
+  --darkroom-surface-highest:#39615b;
+  --darkroom-bone:#f3f4e9;
+  --darkroom-text:#dfe5d9;
+  --darkroom-muted:#89a19a;
+  --darkroom-muted-bright:#b8cbc3;
+  --darkroom-outline:rgba(184,203,195,.2);
+  --darkroom-outline-strong:rgba(184,203,195,.42);
+  --darkroom-teal:#2f7772;
+  --darkroom-amber:var(--orange);
+  --darkroom-red:#b94c34;
+  --darkroom-display:"Newsreader", Georgia, serif;
+  --darkroom-body:"Manrope", Arial, sans-serif;
+  --darkroom-label:"DM Mono", monospace;
   --darkroom-gutter:3rem;
   --darkroom-gutter-mobile:1.25rem;
   --darkroom-space-xs:.25rem;
@@ -39,7 +40,7 @@
   --darkroom-space-xl:3rem;
 }
 * { box-sizing:border-box; }
-html { scroll-behavior:smooth; background:var(--ink); }
+html { scroll-behavior:smooth; scroll-padding-top:96px; background:var(--ink); }
 body { margin:0; background:var(--ink); color:var(--paper); font-family:var(--sans); font-size:16px; overflow-x:hidden; }
 a { color:inherit; text-decoration:none; }
 button { font:inherit; }
@@ -47,9 +48,9 @@ button { font:inherit; }
 .reveal-ready [data-reveal].is-visible { opacity:1; transform:translateY(0); }
 
 /* Shared site chrome. Section pages supply the content and theme-specific surfaces. */
-.shared-site-header { position:fixed; inset:0 0 auto; z-index:30; padding:0 32px; color:var(--paper); background:rgba(12,12,11,.72); border-bottom:1px solid rgba(231,227,219,.12); backdrop-filter:blur(18px); }
-.shared-header-inner { width:min(1440px,100%); min-height:78px; margin:auto; display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:32px; }
-.shared-wordmark { display:flex; align-items:center; gap:12px; justify-self:start; font:600 11px var(--sans); letter-spacing:.02em; }
+.shared-site-header { position:fixed; inset:0 0 auto; z-index:30; padding:0 32px; color:var(--paper); background:rgba(12,12,11,.78); border-bottom:1px solid rgba(231,227,219,.14); backdrop-filter:blur(18px); }
+.shared-header-inner { width:min(1360px,100%); min-height:72px; margin:auto; display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:32px; }
+.shared-wordmark { display:flex; align-items:center; gap:12px; justify-self:start; font:600 11px var(--mono); letter-spacing:.02em; }
 .shared-wordmark img { display:block; flex:none; width:auto; max-width:40px; max-height:40px; object-fit:contain; transition:transform .25s cubic-bezier(.2,.8,.2,1),filter .25s ease; }
 .shared-wordmark span:last-child { color:rgba(231,227,219,.78); transition:color .2s ease; }
 .shared-wordmark:hover img,.shared-wordmark:focus-visible img { transform:translateY(-2px) rotate(-6deg) scale(1.08); filter:drop-shadow(0 3px 6px rgba(88,166,255,.42)); }
@@ -79,13 +80,16 @@ button { font:inherit; }
 .shared-site-footer { width:100%; max-width:none; margin:0; padding:76px 48px 28px; border-top:0; }
 .shared-footer-inner { width:min(1344px,100%); margin:auto; }
 .shared-site-footer p { margin:0; font-size:13px; line-height:1.5; }
-.shared-footer-email { display:inline-block; margin:24px 0 70px; font:400 clamp(2rem,4vw,4.3rem)/1 var(--serif); letter-spacing:-.05em; }
+.shared-footer-email { display:inline-block; margin:24px 0 70px; overflow-wrap:anywhere; font:400 clamp(2rem,4vw,4.3rem)/1 var(--serif); letter-spacing:-.05em; }
 .shared-footer-bottom { display:flex; justify-content:space-between; gap:20px; font:10px var(--mono); color:var(--soft); text-transform:uppercase; letter-spacing:.07em; }
 .shared-footer-bottom div { display:flex; gap:24px; }
 .shared-footer-bottom a:hover { color:var(--section-accent,var(--orange)); }
 .dev-footer { background:var(--cs-coral,#f26d51); color:var(--cs-ink,#10242d); }
 .dev-footer .shared-footer-bottom { color:rgba(16,36,45,.7); }
 .photography-footer { background:var(--ink); color:var(--paper); }
+
+/* A quiet grain keeps large dark surfaces from feeling synthetic. */
+body::after { position:fixed; z-index:60; inset:0; content:""; opacity:.028; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E"); mix-blend-mode:soft-light; }
 
 @media (max-width: 850px) {
   .shared-site-header { padding:0 26px; }
@@ -107,6 +111,7 @@ button { font:inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior:auto; }
   .shared-wordmark img,.shared-wordmark span:last-child { transition:none; }
   .shared-wordmark:hover img,.shared-wordmark:focus-visible img { transform:none; filter:none; }
 }
