@@ -39,14 +39,25 @@ Optional Azure OpenAI settings belong in the server-only root `.env` or
 The only deployment artifact is `out/`. Next.js uses `app/`, `components/`,
 `data/`, and `public/` to produce it; the source `data/` and `assets/` folders
 remain local authoring infrastructure alongside `admin/` and `api/` and are
-not deployed separately.
+not deployed separately. The Vercel project is connected to
+`AbdlRahman04/my-portfolio` and builds the site when changes are pushed to
+`main`.
 
 ```bash
 npm run build
 ```
 
-The static export is written to `out/`. The GitHub Actions workflow uploads
-only that directory as the build artifact; no hosting provider is assumed.
+The static export is written to `out/`. Vercel runs `npm run build` and serves
+that export. After changing the public portfolio, commit and push the intended
+source changes to GitHub to trigger a production deployment:
+
+```bash
+git add <changed-files>
+git commit -m "Describe the portfolio update"
+git push origin main
+```
+
+`out/` is generated during the build and stays out of Git.
 
 ## Photography assets
 
