@@ -341,7 +341,7 @@ export default function PhotographyHome() {
               <h1 id="hero-title">{heroContent.title}<br /><em>{heroContent.titleAccent}</em></h1>
             </div>
             <div className="hero-copy-bottom">
-              <p>{heroContent.description}</p>
+              <p>{profile.intro || heroContent.description}</p>
               <div className="hero-actions">
                 <a className="hero-button hero-button-primary" href="#work">{heroContent.primaryCta} <Arrow direction="right" /></a>
                 <a className="hero-button hero-button-secondary" href="#about">{heroContent.secondaryCta}</a>
