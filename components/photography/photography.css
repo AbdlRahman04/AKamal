@@ -588,12 +588,41 @@
 .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__moon { transform:translateX(0); }
 .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__clouds { bottom:-4.062em; }
 .theme-switch__checkbox:checked + .theme-switch__container .theme-switch__stars-container { top:50%; transform:translateY(-50%); }
-  .shared-mobile-menu .theme-switch { margin:auto 0 0; padding-top:22px; }
-  .shared-site-header.is-photography + .shared-mobile-backdrop .shared-mobile-menu > a {
-    min-height:44px;
-    margin-top:12px;
-    padding-top:12px;
-    border-top:1px solid var(--darkroom-outline);
+  .shared-site-header.is-photography + .shared-mobile-backdrop .photo-mobile-destinations {
+    display:flex;
+    flex-direction:column;
+    margin-top:var(--darkroom-space-lg);
+    border-top:1px solid var(--darkroom-outline-strong);
+  }
+  .shared-site-header.is-photography + .shared-mobile-backdrop .photo-mobile-destinations a {
+    display:flex;
+    align-items:center;
+    min-height:54px;
+    padding:10px 0;
+    border-bottom:1px solid var(--darkroom-outline);
+    color:var(--darkroom-bone);
+    font:400 clamp(1.4rem,6vw,1.75rem)/1.1 var(--darkroom-display);
+    letter-spacing:-.03em;
+    text-transform:none;
+  }
+  .shared-site-header.is-photography + .shared-mobile-backdrop .photo-mobile-destinations a:hover,
+  .shared-site-header.is-photography + .shared-mobile-backdrop .photo-mobile-destinations a:focus-visible {
+    color:var(--darkroom-amber);
+  }
+  .shared-site-header.is-photography + .shared-mobile-backdrop .photo-mobile-theme {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:var(--darkroom-space-md);
+    min-height:48px;
+    margin-top:auto;
+    padding-top:var(--darkroom-space-md);
+    color:var(--darkroom-muted-bright);
+    font:400 12px/1.4 var(--darkroom-body);
+  }
+  .shared-site-header.is-photography + .shared-mobile-backdrop .photo-mobile-theme .theme-switch { margin:0; padding:0; }
+  @media (max-height:700px) {
+    .shared-site-header.is-photography + .shared-mobile-backdrop .shared-mobile-menu nav a { padding:11px 0; }
   }
 
 body[data-photography-mode="light"] {

@@ -261,16 +261,22 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
               ))}
             </nav>
             {isPhotography && (
-              <PhotographyThemeSwitch theme={photographyTheme} onToggle={togglePhotographyTheme} ready={photographyThemeReady} />
+              <div className="photo-mobile-destinations">
+                <a href="#contact" onClick={() => setMenuOpen(false)}>Commission</a>
+                <Link href="/" onClick={() => setMenuOpen(false)}>Developer portfolio</Link>
+              </div>
             )}
-            {isPhotography && (
-              <a href="#contact" onClick={() => setMenuOpen(false)}>
-                Commission
-              </a>
+            {isPhotography ? (
+              <div className="photo-mobile-theme">
+                <span>Appearance</span>
+                <PhotographyThemeSwitch theme={photographyTheme} onToggle={togglePhotographyTheme} ready={photographyThemeReady} />
+              </div>
+            ) : (
+              <Link className="dev-mobile-photography-link" href="/photography" onClick={() => setMenuOpen(false)}>
+                <span>Photography</span>
+                <span>View the photo portfolio</span>
+              </Link>
             )}
-            <a href={isPhotography ? "/" : "/photography"} onClick={() => setMenuOpen(false)}>
-              {isPhotography ? "Dev" : "Photography"}
-            </a>
           </div>
         </div>
       )}

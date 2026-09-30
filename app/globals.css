@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,ital,wght@6..72,400;6..72,400&family=Syne:wght@400..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500&family=Manrope:wght@400;500;600;700&family=Newsreader:opsz,ital,wght@6..72,400;6..72,400&display=swap");
 
 :root {
   --ink:#11110f;
@@ -93,7 +93,7 @@ body::after { position:fixed; z-index:60; inset:0; content:""; opacity:.028; poi
 
 @media (max-width: 850px) {
   .shared-site-header { padding:0 26px; }
-  .shared-header-inner { min-height:76px; }
+  .shared-header-inner { min-height:76px; grid-template-columns:minmax(0,1fr) auto; }
   .shared-desktop-nav, .shared-header-actions { display:none; }
   .shared-menu-toggle { display:block; }
   .shared-site-footer { padding:70px 26px 25px; }

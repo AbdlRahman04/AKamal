@@ -75,12 +75,6 @@
       "summary": "LeafAI is a plant health application that classifies plant diseases from leaf images. It combines a fine-tuned MobileNetV2 model with a Flask REST API to make image-based predictions accessible through a web application.",
       "problem": "Identifying plant diseases from leaf images requires interpreting visual symptoms. The project explores how computer vision can make this process faster and more accessible through an image-based prediction workflow.",
       "solution": "A MobileNetV2 transfer-learning model was fine-tuned with TensorFlow and Keras, then integrated into a Flask REST API that accepts leaf images and returns disease predictions. CNN architectures were compared to guide model selection before integrating the selected model into the application.",
-      "role": "Machine learning and backend development",
-      "backend": "Python / Flask REST API",
-      "deployment": "Frontend hosted on Render",
-      "contribution": "Fine-tuned the MobileNetV2 model using TensorFlow and Keras, compared CNN architectures to guide model selection, and integrated the trained model into a Flask endpoint for leaf-image predictions.",
-      "keyFeature": "Image-based plant disease classification through a REST endpoint, connecting the trained computer vision model to an application workflow.",
-      "technicalChallenge": "Selecting a CNN architecture for plant disease classification and taking the model from training experiments to inference within a Flask application.",
       "technologies": [
         "Python",
         "TensorFlow",
@@ -88,6 +82,15 @@
         "MobileNetV2",
         "Flask"
       ],
+      "role": "Software Engineering & Model Integration",
+      "frontend": "React, built with Vite",
+      "backend": "Python / Flask REST API",
+      "database": "JSON file storage",
+      "deployment": "Frontend hosted on Render",
+      "contribution": "On our six-person senior design project, I was the sole Computer Science student, working with five AI teammates to bring the team’s MobileNetV2 plant disease model into a Flask application. I focused on connecting leaf-image input, model inference, and the prediction shown to the user.",
+      "keyFeature": "Image-based plant disease classification through a REST endpoint, connecting the trained computer vision model to an application workflow.",
+      "technicalChallenge": "Selecting a CNN architecture for plant disease classification and taking the model from training experiments to inference within a Flask application.",
+      "teamSize": 6,
       "stackBreakdown": [
         "Backend: Flask REST API",
         "AI model: TensorFlow, Keras, MobileNetV2"
