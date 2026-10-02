@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "../components/dev/dev.css";
+import "../components/dev/bento.css";
 import SiteChrome from "@/components/site/site-chrome";
 
 export const metadata: Metadata = {
@@ -29,10 +30,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body data-theme="dev" suppressHydrationWarning>
+      <body data-theme="dev" data-dev-mode="light" suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(window.location.pathname.indexOf("/photography")===0){var mode=window.localStorage.getItem("photography-theme");document.body.dataset.photographyMode=mode==="light"?"light":"dark";}}catch(_){document.body.dataset.photographyMode="dark";}})();`,
+            __html: `(function(){try{if(window.location.pathname.indexOf("/photography")===0){var mode=window.localStorage.getItem("photography-theme");document.body.dataset.photographyMode=mode==="light"?"light":"dark";}else{document.body.dataset.devMode=window.localStorage.getItem("dev-theme")==="dark"?"dark":"light";}}catch(_){document.body.dataset.photographyMode="dark";document.body.dataset.devMode="light";}})();`,
           }}
         />
         <SiteChrome>{children}</SiteChrome>

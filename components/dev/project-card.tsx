@@ -4,38 +4,23 @@ import { useId, useState, type CSSProperties, type PointerEvent } from "react";
 import Image from "next/image";
 import type { DevProject } from "@/data/dev";
 import ProjectCaseStudyDialog from "@/components/dev/project-case-study-dialog";
+import ProjectPreview, { type PreviewPhoto } from "@/components/dev/project-preview";
 
-function ProjectArtwork({ project }: { project: DevProject }) {
+function ProjectArtwork({ project, previewPhotos }: { project: DevProject; previewPhotos?: PreviewPhoto[] }) {
   if (project.coverImageUrl) {
     return <Image src={project.coverImageUrl} alt={`${project.title} project preview`} fill sizes="(max-width: 820px) 100vw, 50vw" unoptimized />;
   }
 
+  if (project.slug === "portfolio-platform" && previewPhotos?.length) {
+    return <ProjectPreview kind="portfolio" photos={previewPhotos} />;
+  }
+
   if (project.slug === "plant-health-monitoring-system") {
-    return (
-      <div className="ds-project-art ds-project-art--plant" aria-hidden="true">
-        <div className="ds-art-window-bar"><i /><i /><i /><span>LEAF HEALTH / ANALYSIS</span><b>LIVE MODEL</b></div>
-        <div className="ds-plant-stage">
-          <span className="ds-plant-orbit ds-plant-orbit-one" /><span className="ds-plant-orbit ds-plant-orbit-two" />
-          <svg viewBox="0 0 180 180" role="presentation"><path className="ds-plant-stem" d="M88 142c7-34 3-66-7-100" /><path className="ds-plant-leaf" d="M82 95C36 94 25 68 32 36c33 0 57 16 50 59Zm9 14c6-38 31-55 66-51 2 33-17 56-66 51Zm-8-39C70 55 57 46 42 43m46 57c20-19 39-27 58-28" /></svg>
-          <span className="ds-plant-point ds-plant-point-a" /><span className="ds-plant-point ds-plant-point-b" />
-        </div>
-        <div className="ds-plant-readout"><span>CLASSIFICATION</span><strong>Leaf analysis</strong><i><b /></i><small>MobileNetV2 <em>·</em> TensorFlow</small></div>
-        <div className="ds-art-caption"><span>01</span><b>Computer vision</b><span>01 / 03</span></div>
-      </div>
-    );
+    return <ProjectPreview kind="plant" />;
   }
 
   if (project.slug === "smart-cafeteria-ordering-system") {
-    return (
-      <div className="ds-project-art ds-project-art--cafe" aria-hidden="true">
-        <div className="ds-art-window-bar"><i /><i /><i /><span>CAFETERIA / ORDER DESK</span><b>OPEN</b></div>
-        <div className="ds-cafe-layout">
-          <div className="ds-cafe-menu"><span>Today&apos;s menu</span><strong>Made fresh,<br />ready when you are.</strong><div><i>01</i><b>Garden bowl</b><em>$8.50</em></div><div><i>02</i><b>Roasted wrap</b><em>$7.00</em></div><div><i>03</i><b>House lemonade</b><em>$3.00</em></div></div>
-          <div className="ds-cafe-ticket"><span>YOUR ORDER</span><div className="ds-cafe-ticket-mark">✓</div><strong>Pickup<br />confirmed</strong><i>ORDER #0248</i><b>12:30 <em>PM</em></b></div>
-        </div>
-        <div className="ds-art-caption"><span>02</span><b>Ordering · Payments · CMS</b><span>02 / 03</span></div>
-      </div>
-    );
+    return <ProjectPreview kind="dine" />;
   }
 
   return (
@@ -50,7 +35,7 @@ function ProjectArtwork({ project }: { project: DevProject }) {
   );
 }
 
-export default function ProjectCard({ project, delay, index, technologyLimit }: { project: DevProject; delay: number; index: number; technologyLimit?: number }) {
+export default function ProjectCard({ project, delay, index, technologyLimit, previewPhotos }: { project: DevProject; delay: number; index: number; technologyLimit?: number; previewPhotos?: PreviewPhoto[] }) {
   const [expanded, setExpanded] = useState(false);
   const detailsId = useId();
   const facts = [
@@ -105,13 +90,13 @@ export default function ProjectCard({ project, delay, index, technologyLimit }: 
 
   return (
     <article className={`ds-project-card${project.featured ? " is-featured" : ""}`} style={style} data-reveal onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
-      <div className="ds-project-visual">
-        <ProjectArtwork project={project} />
-        <span className="ds-project-category">{category}</span>
-      </div>
       <div className="ds-project-content">
         <div className="ds-project-meta"><span>{project.number} <i>/</i> {project.year}</span><span className={project.status.toLowerCase() === "completed" ? "is-complete" : "is-progress"}><i />{project.status}</span></div>
         <h3>{project.title}</h3>
+        <span className="ds-project-category">{category}</span>
+        <div className="ds-project-visual">
+          <ProjectArtwork project={project} previewPhotos={previewPhotos} />
+        </div>
         <p className="ds-project-summary">{project.summary}</p>
         {metadata && <p className="ds-project-role">{metadata}</p>}
         <div className="ds-chip-list" aria-label="Technologies used">{visibleTechnologies.map((item) => <span key={item}>{item}</span>)}{hiddenTechnologies.length > 0 && <span title={hiddenTechnologies.join(", ")}><span aria-hidden="true">+{hiddenTechnologies.length}</span><span className="ds-project-sr-only">Additional technologies: {hiddenTechnologies.join(", ")}</span></span>}</div>

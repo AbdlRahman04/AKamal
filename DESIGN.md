@@ -12,7 +12,7 @@ canonical data -> validator -> layout module -> route or admin editor -> targete
 
 ## Visual direction
 
-- Public developer portfolio: graphite surfaces, paper-like text, and one warm signal accent.
+- Public developer portfolio: Modern Bento, light by default with a remembered dark option. Cool white / graphite surfaces, teal / mint accents, bold sans-serif type, and generous project visuals.
 - Public photography portfolio: preserve its own route-specific visual language.
 - Admin tools: dark navy surfaces with the same control hierarchy across inputs, selects, toggles, panels, and focus states.
 - Display type is reserved for public section headings. Sans-serif supports reading. Monospace is limited to compact metadata and status.
@@ -31,7 +31,7 @@ Use the existing CSS custom properties before adding a new literal value.
 | Divider or border | `--ds-line` | `--line` |
 | Main accent | `--ds-blue` | `--blue` |
 
-- Public developer cards use the existing tight corner treatment.
+- Public developer tiles use `24px` corners, inner previews use `16px`, and controls use `12px`. Route-specific presentation lives in `components/dev/bento.css`; shared interaction and artwork styles remain in `dev.css`.
 - Admin panels use `10px` corners and controls use `7px` corners.
 - Every interactive control has visible hover, focus-visible, and active feedback.
 - Reduced-motion users receive the final static state.
@@ -97,7 +97,7 @@ The module owns the anchor ID, heading ID, semantic relationship, heading layout
 
 ## Approved shared case-study design
 
-Use the Plant Health project interface for all case studies, including AURAK Dine: the shared dark modal, serif headings, blue diagram nodes and connectors, and underlined active tab. Keep the four tabs: Overview, System Design, Data Flow, Decisions. System Design opens first.
+Use the Plant Health project interface for all case studies, including AURAK Dine: the shared theme-aware Modern Bento modal, sans-serif headings, rounded nodes, teal connectors, and filled active tab. Light and dark surfaces follow the developer page's selected mode. Keep the four tabs: Overview, System Design, Data Flow, Decisions. System Design opens first.
 
 On wide screens, show the interactive architecture canvas on the left and selected component details on the right. Preserve pan, zoom, Fit, node selection, and labelled connections. Show Tech Stack and Key Features below the viewer. Request Flow belongs exclusively in the Data Flow tab; do not render it in System Design.
 

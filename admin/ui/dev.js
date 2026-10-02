@@ -113,17 +113,14 @@ function fillCollection(collection, item) {
   }
   if (collection === "projects") {
     fillCaseStudy(form, item?.caseStudy);
-    $("[data-case-enabled]", form).closest("fieldset").hidden = item?.slug === "plant-health-monitoring-system";
+    $("[data-case-mode]", form).value = item?.architecture ? "architecture" : item?.caseStudy ? "form" : "none";
     $("[data-architecture-json]", form).value = item?.architecture ? JSON.stringify(item.architecture, null, 2) : "";
+    updateCaseStudyEditor(form);
   }
 }
 
 function fillCaseStudy(form, study) {
-  const enabled = $(`[data-case-enabled]`, form);
-  enabled.checked = Boolean(study);
-  const editor = $(`[data-case-editor]`, form);
-  editor.hidden = !study;
-  if (!study) return;
+  study = study || {};
   $(`[data-case-description]`, form).value = study.description || "";
   $(`[data-case-architecture]`, form).value = study.architectureDescription || "";
   $(`[data-case-deployment]`, form).value = study.deploymentLabel || "";
@@ -152,7 +149,7 @@ function renderCaseNodes() {
 }
 
 function caseStudyPayload(form) {
-  if (!$(`[data-case-enabled]`, form).checked) return null;
+  if ($("[data-case-mode]", form).value !== "form") return null;
   const nodes = Object.fromEntries(caseNodeKeys.map((key) => [key, {
     title: $(`[data-node-title="${key}"]`, form).value.trim(),
     icon: $(`[data-node-icon="${key}"]`, form).value.trim() || "server",
@@ -181,10 +178,20 @@ function payloadFor(collection) {
   (settings.checks || []).forEach((field) => { payload[field] = form.elements.namedItem(field).checked; });
   if (collection === "projects") payload.teamSize = payload.teamSize ? Number(payload.teamSize) : "";
   if (collection === "projects") {
-    if (!$("[data-case-enabled]", form).closest("fieldset").hidden) payload.caseStudy = caseStudyPayload(form);
-    const architectureJson = $("[data-architecture-json]", form).value.trim();
-    try { payload.architecture = architectureJson ? JSON.parse(architectureJson) : null; }
-    catch { throw new Error("Architecture data must be valid JSON. No changes were saved."); }
+    const mode = $("[data-case-mode]", form).value;
+    if (mode === "form") {
+      payload.caseStudy = caseStudyPayload(form);
+      payload.architecture = null;
+    } else if (mode === "architecture") {
+      const architectureJson = $("[data-architecture-json]", form).value.trim();
+      if (!architectureJson) throw new Error("Enter architecture JSON or choose No case study. No changes were saved.");
+      try { payload.architecture = JSON.parse(architectureJson); }
+      catch { throw new Error("Architecture data must be valid JSON. No changes were saved."); }
+      if (!payload.architecture || typeof payload.architecture !== "object" || Array.isArray(payload.architecture)) throw new Error("Architecture data must be a JSON object. No changes were saved.");
+    } else {
+      payload.caseStudy = null;
+      payload.architecture = null;
+    }
   }
   const color = form.elements.namedItem("accent");
   if (color?.dataset.empty === "true") payload.accent = "";
@@ -390,20 +397,24 @@ $("#profile-form").addEventListener("submit", async (event) => {
 
 $("#add-contact-link").addEventListener("click", () => addContactLink());
 const projectForm = $('[data-collection-form="projects"]');
-$("[data-case-enabled]", projectForm).addEventListener("change", (event) => {
-  const editor = $(`[data-case-editor]`, projectForm);
-  if (event.currentTarget.checked && !$("[data-case-description]", projectForm).value) {
-    const template = state.data?.projects.find((item) => item.slug === "smart-cafeteria-ordering-system")?.caseStudy;
-    if (template) fillCaseStudy(projectForm, template);
-  }
-  editor.hidden = !event.currentTarget.checked;
-});
+function updateCaseStudyEditor(form) {
+  const mode = $("[data-case-mode]", form).value;
+  $("[data-case-editor]", form).hidden = mode !== "form";
+  $("[data-architecture-editor]", form).hidden = mode !== "architecture";
+  $("[data-case-mode-help]", form).textContent = mode === "form"
+    ? "These fields control the public case study. Saving replaces any saved architecture JSON for this project."
+    : mode === "architecture"
+      ? "This JSON controls the public case study. Saved form content is kept as a fallback; it is not displayed while JSON is active."
+      : "Saving removes this project's case-study content. The project card and links remain visible.";
+}
+$("[data-case-mode]", projectForm).addEventListener("change", () => updateCaseStudyEditor(projectForm));
 $("[data-case-template]", projectForm).addEventListener("click", () => {
   const template = state.data?.projects.find((item) => item.slug === "smart-cafeteria-ordering-system")?.caseStudy;
-  if (template) fillCaseStudy(projectForm, template);
+  if (template) { fillCaseStudy(projectForm, template); updateCaseStudyEditor(projectForm); }
   toast(template ? "AURAK layout copied. Edit the details, then save this project." : "Save the AURAK case-study template first.", !template);
 });
 renderCaseNodes();
+updateCaseStudyEditor(projectForm);
 $$('[data-collection-form]').forEach((form) => form.addEventListener("submit", saveCollection));
 $$('[data-delete]').forEach((button) => button.addEventListener("click", () => deleteCollection(button.dataset.delete)));
 document.addEventListener("click", (event) => {

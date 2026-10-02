@@ -1302,15 +1302,27 @@
         },
         {
           "id": "fireworks-1790512658018",
-          "title": "img 20241202 210516",
+          "title": "Fireworks over Waterfront Skyline",
           "src": "/photography/full/img-20241202-210516.webp",
           "thumbnailSrc": "/photography/thumbs/img-20241202-210516.webp",
-          "alt": "",
-          "story": "",
-          "tags": [],
+          "alt": "Nighttime view of red-orange fireworks bursting above a lit city skyline with smoke plumes and their reflections rippling across the harbor; shoreline in the foreground.",
+          "story": "Large red-orange fireworks bloom above a brightly lit city skyline at night, while drifting smoke hugs the buildings and bright reflections stretch across the harbor. A narrow foreground shoreline anchors the lower edge of the frame.",
+          "tags": [
+            "Environmental Texture",
+            "Exposure Balance",
+            "Atmospheric Light",
+            "Leading Lines",
+            "Visual Balance",
+            "Reflection Control"
+          ],
           "isPlaceholder": false,
           "aspectRatio": "3/4",
-          "orientation": "portrait"
+          "orientation": "portrait",
+          "process": "Including the shoreline and reflective water in the lower frame emphasizes vertical movement from city to sky; low-lying smoke softens contrast and disperses the fireworks' glow, linking the bursts to their reflections.",
+          "focalPoint": {
+            "x": 50,
+            "y": 50
+          }
         }
       ]
     },

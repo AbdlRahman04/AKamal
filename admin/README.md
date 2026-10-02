@@ -129,3 +129,16 @@ with:
 ```bash
 npm run validate:dev
 ```
+
+### Project case-study editor
+
+Projects have one **Project case study** section. The editor selector loads
+AURAK Dine's existing content as **Form fields** and custom diagrams such as
+LeafAI as **Architecture JSON**. Only the selected editor is shown.
+
+Saving Form fields removes any overriding architecture JSON. Saving Architecture
+JSON preserves existing form content as an inactive fallback; technologies belong
+in the JSON and key features use the project's Highlights. Selecting No case
+study removes both formats on save. Switching editors without saving keeps the
+current form values. These settings edit canonical `data/dev.json`; rebuild and
+redeploy to publish changes to the static developer page.
