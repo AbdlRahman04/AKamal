@@ -35,6 +35,7 @@ export type Photo = {
   thumbnailSrc: string;
   alt: string;
   story: string;
+  process?: string;
   location?: string;
   tags: TechniqueTag[];
   isPlaceholder?: boolean;

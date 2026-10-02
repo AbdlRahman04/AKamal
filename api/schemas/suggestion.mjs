@@ -43,6 +43,7 @@ export function validatePhotoSuggestion(input, allowedTags, maxTags = 6) {
     title: requiredString(input.title, "title", 120, errors),
     alt: requiredString(input.alt, "alt", 300, errors),
     story: requiredString(input.story, "story", 2000, errors),
+    process: optionalString(input.process, "process", 1000, errors),
     tags: Array.isArray(tags) ? [...new Set(tags.filter((tag) => allowedTags.includes(tag)))] : [],
   }, errors);
 }

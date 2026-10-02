@@ -270,6 +270,21 @@
             <span class="field-label">Story</span>
             <textarea id="detail-story" class="field-input" rows="4" spellcheck="false"></textarea>
           </label>
+          <label class="field">
+            <span class="field-label">Process <span class="field-hint">Optional</span></span>
+            <textarea id="detail-process" class="field-input" rows="3" maxlength="1000"
+              aria-describedby="detail-process-help" spellcheck="false"></textarea>
+            <span id="detail-process-help" class="detail-field-help">Notes for this photo only. Analyze with AI drafts visible techniques; review before saving. Leave blank to hide Process.</span>
+          </label>
+        </section>
+
+        <section class="detail-section">
+          <label class="field">
+            <span class="field-label">AI guidance <span class="field-hint">Optional</span></span>
+            <textarea id="detail-ai-guidance" class="field-input" rows="3" maxlength="1000"
+              aria-describedby="detail-ai-guidance-help" placeholder="e.g. This is a mosque minaret; the objects at the top are speakers." spellcheck="false"></textarea>
+            <span id="detail-ai-guidance-help" class="detail-field-help">Give subject corrections or context before Analyze with AI. Used for this analysis only; not saved or shown on the portfolio.</span>
+          </label>
         </section>
 
         <section class="detail-section">

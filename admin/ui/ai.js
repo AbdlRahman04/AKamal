@@ -2,7 +2,7 @@
 
 (() => {
   async function request(path, controls = {}) {
-    const { button, status, loadingText = "Analyzing…", idleText } = controls;
+    const { button, status, loadingText = "Analyzing…", idleText, guidance } = controls;
     const previousText = button?.textContent || idleText || "Analyze with AI";
 
     if (button) {
@@ -15,7 +15,13 @@
     }
 
     try {
-      const response = await fetch(path, { method: "POST" });
+      const response = await fetch(path, {
+        method: "POST",
+        ...(guidance !== undefined ? {
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ guidance }),
+        } : {}),
+      });
       let payload = null;
       try {
         payload = await response.json();

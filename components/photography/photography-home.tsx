@@ -692,8 +692,8 @@ export default function PhotographyHome() {
               <p className="viewer-collection">{selected.collection.title}{TAG_SEP}{String(selected.index + 1).padStart(2, "0")} / {String(selected.collection.photos.length).padStart(2, "0")}</p>
               <h2 id="viewer-title">{selected.photo.title}</h2>
               <p id="viewer-story">{selected.photo.story}</p>
-              {selected.collection.skillsDemonstrated && (
-                <p className="viewer-process"><span>Process</span>{selected.collection.skillsDemonstrated}</p>
+              {selected.photo.process?.trim() && (
+                <p className="viewer-process"><span>Process</span>{selected.photo.process}</p>
               )}
               <ul aria-label="Photography techniques">{selected.photo.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
             </div>

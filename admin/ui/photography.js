@@ -85,6 +85,8 @@ const dom = {
   detailLocation: $("#detail-location"),
   detailAlt:      $("#detail-alt"),
   detailStory:    $("#detail-story"),
+  detailProcess:  $("#detail-process"),
+  detailAiGuidance: $("#detail-ai-guidance"),
   detailFeaturedRank: $("#detail-featuredRank"),
   detailRatio:    $("#detail-aspectRatio"),
   detailRatioCustom: $("#detail-aspectRatio-custom"),
@@ -855,6 +857,8 @@ function openDetail(photoId) {
   dom.detailLocation.value = photo.location || "";
   dom.detailAlt.value = photo.alt || "";
   dom.detailStory.value = photo.story || "";
+  dom.detailProcess.value = photo.process || "";
+  dom.detailAiGuidance.value = "";
   dom.detailFeaturedRank.value = photo.featuredRank ? String(photo.featuredRank) : "";
   const ratioIsPreset = [...dom.detailRatio.options].some((option) => option.value === photo.aspectRatio);
   dom.detailRatio.value = photo.aspectRatio && !ratioIsPreset ? "custom" : (photo.aspectRatio || "");
@@ -947,7 +951,7 @@ function markPhotoDraftDirty() {
 
 /* Photo metadata is saved explicitly from the detail footer. */
 function setupPhotoEditing() {
-  const fields = [dom.detailTitle, dom.detailLocation, dom.detailAlt, dom.detailStory];
+  const fields = [dom.detailTitle, dom.detailLocation, dom.detailAlt, dom.detailStory, dom.detailProcess];
   fields.forEach((el) => el.addEventListener("input", markPhotoDraftDirty));
 
   const selects = [dom.detailFeaturedRank, dom.detailRatio, dom.detailOrient];
@@ -972,6 +976,7 @@ async function savePhoto() {
       location: dom.detailLocation.value.trim() || null,
       alt: dom.detailAlt.value,
       story: dom.detailStory.value,
+      process: dom.detailProcess.value,
       featuredRank: dom.detailFeaturedRank.value ? Number(dom.detailFeaturedRank.value) : null,
       aspectRatio: (dom.detailRatio.value === "custom"
         ? dom.detailRatioCustom.value.trim()
@@ -1005,11 +1010,13 @@ async function analyzePhotoWithAI() {
 
   try {
     const suggestion = await window.PortfolioAI.analyzePhoto(activeSlug, selectedPhotoId, {
+      guidance: dom.detailAiGuidance.value.trim(),
       button: dom.analyzePhoto,
     });
     dom.detailTitle.value = suggestion.title;
     dom.detailAlt.value = suggestion.alt;
     dom.detailStory.value = suggestion.story;
+    dom.detailProcess.value = suggestion.process || "";
     const combinedTags = mergeTags(selectedTagValues(), suggestion.tags || []);
     renderTags(combinedTags);
     markPhotoDraftDirty();
@@ -1079,6 +1086,7 @@ async function analyzeAllPhotosWithAI() {
           title: suggestion.title,
           alt: suggestion.alt,
           story: suggestion.story,
+          process: suggestion.process || "",
           tags: mergeTags(photo.tags || [], suggestion.tags || []),
         });
         Object.assign(photo, saved);

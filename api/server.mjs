@@ -120,6 +120,14 @@ function normalizeLocation(value) {
   return location || undefined;
 }
 
+function normalizePhotoProcess(value) {
+  if (value === undefined || value === null || value === "") return undefined;
+  if (typeof value !== "string" || value.trim().length > 1000) {
+    throw Object.assign(new Error("process must be a string of 1000 characters or fewer."), { statusCode: 400 });
+  }
+  return value.trim() || undefined;
+}
+
 function applyFeaturedRank(collection, photo, value) {
   const rank = normalizeFeaturedRank(value);
   if (!rank) {
@@ -578,7 +586,7 @@ app.post(
     const result = findCollection(data, req.params.slug);
     if (!result) return res.status(404).json({ error: "Collection not found." });
 
-    const suggestion = await analyzePhoto(result.collection, req.params.id);
+    const suggestion = await analyzePhoto(result.collection, req.params.id, req.body?.guidance);
     res.json(suggestion);
   }),
 );
@@ -696,7 +704,9 @@ app.post(
 
     if (!req.file) return res.status(400).json({ error: "No image file uploaded." });
 
-    const { title, alt, story, location, tags, featuredRank, aspectRatio, orientation, focalPoint } = req.body;
+    const { title, alt, story, process: photoProcess, location, tags, featuredRank, aspectRatio, orientation, focalPoint } = req.body;
+
+    const normalizedProcess = normalizePhotoProcess(photoProcess);
 
     /* Process image through the Sharp pipeline */
     const imagePaths = await processImage(req.file.buffer, req.file.originalname, req.params.slug);
@@ -712,6 +722,7 @@ app.post(
       thumbnailSrc: imagePaths.thumbnailSrc,
       alt: alt || "",
       story: story || "",
+      ...(normalizedProcess ? { process: normalizedProcess } : {}),
       tags: normalizePhotoTags(parsedTags),
       isPlaceholder: false,
     };
@@ -753,10 +764,15 @@ app.put(
     const photo = result.collection.photos.find((p) => p.id === req.params.id);
     if (!photo) return res.status(404).json({ error: "Photo not found." });
 
-    const { title, alt, story, location, tags, featuredRank, aspectRatio, orientation, focalPoint } = req.body;
+    const { title, alt, story, process: photoProcess, location, tags, featuredRank, aspectRatio, orientation, focalPoint } = req.body;
     if (title !== undefined) photo.title = title;
     if (alt !== undefined) photo.alt = alt;
     if (story !== undefined) photo.story = story;
+    if (photoProcess !== undefined) {
+      const normalizedProcess = normalizePhotoProcess(photoProcess);
+      if (normalizedProcess) photo.process = normalizedProcess;
+      else delete photo.process;
+    }
     if (tags !== undefined) {
       photo.tags = normalizePhotoTags(tags);
     }

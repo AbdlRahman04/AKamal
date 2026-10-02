@@ -56,6 +56,9 @@ for (const collectionGroup of ["primaryCollections", "archiveCollections"]) {
   for (const collection of data[collectionGroup] ?? []) {
     const featuredRanks = [];
     for (const photo of collection.photos ?? []) {
+      if (photo.process !== undefined && (typeof photo.process !== "string" || photo.process.trim().length > 1000)) {
+        missing.push(`${collection.slug}/${photo.id}: process must be a string of 1000 characters or fewer`);
+      }
       if (photo.featuredRank !== undefined) {
         if (![1, 2, 3].includes(photo.featuredRank)) {
           missing.push(`${collection.slug}/${photo.id}: featuredRank must be 1, 2, or 3`);

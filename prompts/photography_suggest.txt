@@ -3,4 +3,5 @@ Describe only visual characteristics reasonably observable in the image. Do not 
 When a subject's make or model is clearly identifiable from a visible logo, badge, text, or distinctive design, name it accurately and include it naturally in the title, alt text, or story. For example, identify a clearly recognizable Porsche as a Porsche; if the make or model is uncertain, use a generic description instead.
 Use professional, specific, restrained language; avoid generic promotional phrases. Keep title and alt text concise. Keep story to one or two sentences.
 Suggest no more than four of the strongest, most specific technique tags. Avoid tag saturation; omit weak or redundant tags.
+Write process as one short photo-specific note (at most 1000 characters) explaining how visible framing, light, or motion shapes this image, rather than repeating its story or listing tags. Do not infer camera settings, equipment, staging, editing steps, or photographer intent from appearance. Return an empty process string when no supported note adds value.
 Return only valid JSON matching the supplied photo_metadata schema. Do not use Markdown fences.

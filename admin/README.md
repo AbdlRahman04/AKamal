@@ -37,6 +37,8 @@ When this value is set, API requests must include the same value in the `x-admin
 
 The admin portal can generate draft metadata for individual photos and collections using Azure OpenAI. The AI service runs only through the local Express server; the browser never receives the Azure credentials. Individual suggestions are not saved until you press an explicit save button. The collection editor also includes an explicit, confirming batch action that analyzes and saves metadata for all real photos in the selected collection.
 
+Each photo has an optional Process field, editable in the photo detail panel. Analyze with AI drafts a short note about visible composition, light, or motion; review and save it alongside the other metadata. Batch photo analysis saves this field too. AI notes must not claim unverified camera settings or editing steps. Clearing the field hides Process in the public viewer; collection Skills Demonstrated is never used as a fallback. Existing photos require no migration. The optional AI guidance box accepts photographer-provided subject corrections (for example, identifying a mosque minaret rather than a generic tower). Guidance is sent only with individual photo analysis; it is cleared when opening a photo and is not persisted or published.
+
 Photo AI suggestions are additive for tags: existing selections are preserved, only the strongest complementary technique tags are added, and each photo is capped at six total tags. The editor shows the current count and disables additional selections at the cap.
 
 Create or update the root `.env` file with your Azure resource settings:

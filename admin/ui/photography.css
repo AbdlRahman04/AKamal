@@ -1416,3 +1416,22 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+/* Keep the photo editor usable on narrow screens. */
+@media (max-width: 600px) {
+  .detail-panel {
+    position: fixed;
+    inset: 52px 0 0;
+    z-index: 30;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+}
+
+.detail-field-help {
+  color: var(--soft-2);
+  font-size: 11px;
+  line-height: 1.5;
+  font-weight: 400;
+}
