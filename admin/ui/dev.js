@@ -1,11 +1,14 @@
 const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
 const state = { data: null };
+const caseNodeKeys = ["customer", "staff", "frontend", "backend", "database", "payment"];
+const caseNodeLabels = { customer: "Customer", staff: "Staff", frontend: "Frontend", backend: "Backend API", database: "Database", payment: "Payments" };
 
 const config = {
   experience: { title: (item) => item.role, subtitle: (item) => `${item.company} · ${item.period}`, fields: ["company", "role", "period", "summary", "technologies"], lists: ["technologies"], checks: ["current"] },
   projects: { title: (item) => item.title, subtitle: (item) => `${item.type} · ${item.year}`, fields: ["title", "type", "year", "status", "summary", "role", "teamSize", "frontend", "backend", "database", "deployment", "contribution", "keyFeature", "technicalChallenge", "problem", "solution", "technologies", "stackBreakdown", "highlights", "githubUrl", "liveUrl", "coverImageUrl", "accent"], lists: ["technologies"], lines: ["stackBreakdown", "highlights"], checks: ["featured"] },
   certificates: { title: (item) => item.name, subtitle: (item) => `${item.issuer} · ${item.year}`, fields: ["name", "issuer", "year", "status", "credentialUrl", "description", "imageUrl"] },
+  education: { title: (item) => item.degree, subtitle: (item) => `${item.institution} · ${item.period}`, fields: ["degree", "institution", "period", "description", "focus", "imageUrl"], lists: ["focus"] },
   skills: { title: (item) => item.name, subtitle: () => "Capability group", fields: ["name", "description", "items"], lists: ["items"] },
 };
 
@@ -69,7 +72,7 @@ function renderOverview() {
   $("#stat-projects").textContent = String(publicProjects.length).padStart(2, "0");
   $("#stat-skills").textContent = String(state.data.skills.length).padStart(2, "0");
   $("#stat-experience").textContent = String(state.data.experience.length).padStart(2, "0");
-  $("#stat-learning").textContent = String(state.data.certificates.length).padStart(2, "0");
+  $("#stat-learning").textContent = String(state.data.certificates.length + state.data.education.length).padStart(2, "0");
 }
 
 function renderList(collection) {
@@ -108,6 +111,65 @@ function fillCollection(collection, item) {
     color.value = /^#[0-9a-f]{6}$/i.test(value) ? value : "#58a6ff";
     updateAccentValue(color);
   }
+  if (collection === "projects") {
+    fillCaseStudy(form, item?.caseStudy);
+    $("[data-case-enabled]", form).closest("fieldset").hidden = item?.slug === "plant-health-monitoring-system";
+    $("[data-architecture-json]", form).value = item?.architecture ? JSON.stringify(item.architecture, null, 2) : "";
+  }
+}
+
+function fillCaseStudy(form, study) {
+  const enabled = $(`[data-case-enabled]`, form);
+  enabled.checked = Boolean(study);
+  const editor = $(`[data-case-editor]`, form);
+  editor.hidden = !study;
+  if (!study) return;
+  $(`[data-case-description]`, form).value = study.description || "";
+  $(`[data-case-architecture]`, form).value = study.architectureDescription || "";
+  $(`[data-case-deployment]`, form).value = study.deploymentLabel || "";
+  caseNodeKeys.forEach((key) => {
+    const node = study.nodes?.[key] || {};
+    $(`[data-node-title="${key}"]`, form).value = node.title || "";
+    $(`[data-node-icon="${key}"]`, form).value = node.icon || "server";
+    $(`[data-node-lines="${key}"]`, form).value = (node.lines || []).join("\n");
+  });
+  ["frontendBackend", "backendDatabase", "backendPayment"].forEach((key) => {
+    $(`[data-case-label="${key}"]`, form).value = study.connectionLabels?.[key] || "";
+  });
+  $(`[data-case-technologies]`, form).value = (study.technologies || []).map((row) => `${row.logo} | ${row.title} | ${row.description}`).join("\n");
+  $(`[data-case-features]`, form).value = (study.features || []).join("\n");
+  $(`[data-case-flow-description]`, form).value = study.flowDescription || "";
+  $(`[data-case-flow]`, form).value = (study.flow || []).map((row) => `${row.icon} | ${row.title} | ${row.description}`).join("\n");
+}
+
+function readCaseRows(value, columns) {
+  return String(value || "").split("\n").map((line) => line.split("|").map((part) => part.trim())).filter((parts) => parts.length === columns && parts.every(Boolean));
+}
+
+function renderCaseNodes() {
+  const target = $(`[data-case-nodes]`);
+  target.innerHTML = caseNodeKeys.map((key) => `<fieldset class="aw-case-node"><legend>${caseNodeLabels[key]}</legend><label>Node title<input data-node-title="${key}" /></label><label>Icon name<input data-node-icon="${key}" placeholder="server, database, browser…" /></label><label>Node details <small>one per line</small><textarea rows="3" data-node-lines="${key}"></textarea></label></fieldset>`).join("");
+}
+
+function caseStudyPayload(form) {
+  if (!$(`[data-case-enabled]`, form).checked) return null;
+  const nodes = Object.fromEntries(caseNodeKeys.map((key) => [key, {
+    title: $(`[data-node-title="${key}"]`, form).value.trim(),
+    icon: $(`[data-node-icon="${key}"]`, form).value.trim() || "server",
+    lines: $(`[data-node-lines="${key}"]`, form).value.split("\n").map((line) => line.trim()).filter(Boolean),
+  }]));
+  const labels = Object.fromEntries(["frontendBackend", "backendDatabase", "backendPayment"].map((key) => [key, $(`[data-case-label="${key}"]`, form).value.trim()]));
+  return {
+    description: $(`[data-case-description]`, form).value.trim(),
+    architectureDescription: $(`[data-case-architecture]`, form).value.trim(),
+    techStackDescription: "Core technologies and services used in this project.",
+    deploymentLabel: $(`[data-case-deployment]`, form).value.trim(),
+    nodes, connectionLabels: labels,
+    technologies: readCaseRows($(`[data-case-technologies]`, form).value, 3).map(([logo, title, description]) => ({ logo, title, description })),
+    features: $(`[data-case-features]`, form).value.split("\n").map((line) => line.trim()).filter(Boolean),
+    flowDescription: $(`[data-case-flow-description]`, form).value.trim(),
+    flow: readCaseRows($(`[data-case-flow]`, form).value, 3).map(([icon, title, description]) => ({ icon, title, description })),
+  };
 }
 
 function payloadFor(collection) {
@@ -118,6 +180,12 @@ function payloadFor(collection) {
   (settings.lines || []).forEach((field) => { payload[field] = split(payload[field], "\n"); });
   (settings.checks || []).forEach((field) => { payload[field] = form.elements.namedItem(field).checked; });
   if (collection === "projects") payload.teamSize = payload.teamSize ? Number(payload.teamSize) : "";
+  if (collection === "projects") {
+    if (!$("[data-case-enabled]", form).closest("fieldset").hidden) payload.caseStudy = caseStudyPayload(form);
+    const architectureJson = $("[data-architecture-json]", form).value.trim();
+    try { payload.architecture = architectureJson ? JSON.parse(architectureJson) : null; }
+    catch { throw new Error("Architecture data must be valid JSON. No changes were saved."); }
+  }
   const color = form.elements.namedItem("accent");
   if (color?.dataset.empty === "true") payload.accent = "";
   return payload;
@@ -286,9 +354,9 @@ async function saveCollection(event) {
   event.preventDefault();
   const form = event.currentTarget;
   const collection = form.dataset.collectionForm;
-  const payload = payloadFor(collection);
   const currentSlug = form.elements.slug.value;
   try {
+    const payload = payloadFor(collection);
     const path = currentSlug ? `/api/dev/${collection}/${encodeURIComponent(currentSlug)}` : `/api/dev/${collection}`;
     const saved = await api(path, { method: currentSlug ? "PUT" : "POST", body: JSON.stringify(payload) });
     refreshCollection(collection, saved);
@@ -321,6 +389,21 @@ $("#profile-form").addEventListener("submit", async (event) => {
 });
 
 $("#add-contact-link").addEventListener("click", () => addContactLink());
+const projectForm = $('[data-collection-form="projects"]');
+$("[data-case-enabled]", projectForm).addEventListener("change", (event) => {
+  const editor = $(`[data-case-editor]`, projectForm);
+  if (event.currentTarget.checked && !$("[data-case-description]", projectForm).value) {
+    const template = state.data?.projects.find((item) => item.slug === "smart-cafeteria-ordering-system")?.caseStudy;
+    if (template) fillCaseStudy(projectForm, template);
+  }
+  editor.hidden = !event.currentTarget.checked;
+});
+$("[data-case-template]", projectForm).addEventListener("click", () => {
+  const template = state.data?.projects.find((item) => item.slug === "smart-cafeteria-ordering-system")?.caseStudy;
+  if (template) fillCaseStudy(projectForm, template);
+  toast(template ? "AURAK layout copied. Edit the details, then save this project." : "Save the AURAK case-study template first.", !template);
+});
+renderCaseNodes();
 $$('[data-collection-form]').forEach((form) => form.addEventListener("submit", saveCollection));
 $$('[data-delete]').forEach((button) => button.addEventListener("click", () => deleteCollection(button.dataset.delete)));
 document.addEventListener("click", (event) => {
@@ -338,9 +421,9 @@ async function load() {
     state.data = await api("/api/dev");
     const cvInfo = await api("/api/dev/cv");
     showCvInfo(cvInfo);
-    ["skills", "experience", "certificates"].forEach((collection) => { state.data[collection] ??= []; });
+    ["skills", "experience", "certificates", "education"].forEach((collection) => { state.data[collection] ??= []; });
     fillProfile();
-    ["skills", "projects", "experience", "certificates"].forEach(renderList);
+    ["skills", "projects", "experience", "certificates", "education"].forEach(renderList);
     renderOverview();
     $("#save-state").textContent = "Synced locally";
   } catch (error) { $("#save-state").textContent = "Connection error"; toast(error.message, true); }

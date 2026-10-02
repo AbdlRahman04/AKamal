@@ -55,6 +55,47 @@ export type DevProject = {
   featured: boolean;
   coverImageUrl?: string;
   accent?: string;
+  caseStudy?: DevCaseStudy;
+  architecture?: DevArchitecture;
+};
+
+export type ArchitectureNode = {
+  id: string;
+  title: string;
+  subtitle: string;
+  category: "runtime" | "support";
+  icon: "user" | "browser" | "server" | "image" | "model" | "check" | "results" | "book" | "file" | "chat" | "report" | "chart" | "database" | "card";
+  column: number;
+  row: number;
+  technology: string;
+  responsibilities: string[];
+  endpoints?: string[];
+  notes?: string[];
+};
+
+export type DevArchitecture = {
+  title: string;
+  subtitle: string;
+  description: string;
+  defaultNode: string;
+  nodes: ArchitectureNode[];
+  edges: { from: string; to: string; label?: string; kind: "runtime" | "support" | "response" }[];
+  requestPath: { title: string; description: string }[];
+  decisions: { title: string; description: string }[];
+  technologies?: { logo: string; title: string; description: string }[];
+};
+
+export type DevCaseStudy = {
+  description: string;
+  architectureDescription: string;
+  techStackDescription: string;
+  flowDescription: string;
+  deploymentLabel: string;
+  nodes: Record<"customer" | "staff" | "frontend" | "backend" | "database" | "payment", { title: string; lines: string[]; icon: string }>;
+  connectionLabels: { frontendBackend: string; backendDatabase: string; backendPayment: string };
+  technologies: { logo: string; title: string; description: string }[];
+  features: string[];
+  flow: { title: string; description: string; icon: string }[];
 };
 
 export type JourneyItem = {
@@ -104,6 +145,7 @@ export type DevEducation = {
   period: string;
   description: string;
   focus: string[];
+  imageUrl?: string;
 };
 
 export const devProfile = data.profile as DevProfile;

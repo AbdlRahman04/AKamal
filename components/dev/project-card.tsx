@@ -3,6 +3,7 @@
 import { useId, useState, type CSSProperties, type PointerEvent } from "react";
 import Image from "next/image";
 import type { DevProject } from "@/data/dev";
+import ProjectCaseStudyDialog from "@/components/dev/project-case-study-dialog";
 
 function ProjectArtwork({ project }: { project: DevProject }) {
   if (project.coverImageUrl) {
@@ -78,6 +79,7 @@ export default function ProjectCard({ project, delay, index, technologyLimit }: 
   const projectAccents = ["#4f8cff", "#8b5cf6", "#059669", "#dc2626"];
   const style = { "--project-accent": project.accent || projectAccents[index % projectAccents.length], "--reveal-delay": `${delay}ms` } as CSSProperties;
   const category = project.type.split("/")[0].trim();
+  const hasCaseStudyDialog = Boolean(project.caseStudy || project.architecture);
 
   function handlePointerMove(event: PointerEvent<HTMLElement>) {
     if (event.pointerType === "touch" || window.matchMedia("(prefers-reduced-motion: reduce)").matches || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
@@ -113,11 +115,12 @@ export default function ProjectCard({ project, delay, index, technologyLimit }: 
         <p className="ds-project-summary">{project.summary}</p>
         {metadata && <p className="ds-project-role">{metadata}</p>}
         <div className="ds-chip-list" aria-label="Technologies used">{visibleTechnologies.map((item) => <span key={item}>{item}</span>)}{hiddenTechnologies.length > 0 && <span title={hiddenTechnologies.join(", ")}><span aria-hidden="true">+{hiddenTechnologies.length}</span><span className="ds-project-sr-only">Additional technologies: {hiddenTechnologies.join(", ")}</span></span>}</div>
-        {(project.githubUrl || project.liveUrl) && <div className="ds-project-actions">
+        {(project.githubUrl || project.liveUrl || hasCaseStudyDialog) && <div className="ds-project-actions">
+          {hasCaseStudyDialog && <ProjectCaseStudyDialog project={project} />}
           {project.githubUrl && <a className="ds-project-action ds-project-action-source" href={project.githubUrl} aria-label={project.githubUrl.startsWith("http") ? `View source for ${project.title} (opens in a new tab)` : undefined} target={project.githubUrl.startsWith("http") ? "_blank" : undefined} rel={project.githubUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>View source <span aria-hidden="true">↗</span></a>}
           {project.liveUrl && <a className="ds-project-action ds-project-action-live" href={project.liveUrl} aria-label={project.liveUrl.startsWith("http") ? `Live demo for ${project.title} (opens in a new tab)` : undefined} target={project.liveUrl.startsWith("http") ? "_blank" : undefined} rel={project.liveUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>Live demo <span aria-hidden="true">↗</span></a>}
         </div>}
-        {hasDetails && <div className="ds-project-details">
+        {hasDetails && !hasCaseStudyDialog && <div className="ds-project-details">
           <button className="ds-project-toggle" type="button" aria-expanded={expanded} aria-controls={detailsId} onClick={() => setExpanded((value) => !value)}>
             Project details
             <svg aria-hidden="true" viewBox="0 0 20 20"><path d="m5 7.5 5 5 5-5" /></svg>

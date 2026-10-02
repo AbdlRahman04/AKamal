@@ -104,9 +104,10 @@ http://localhost:4000/dev-admin
 
 It manages the profile and contact details, skill groups, project case studies,
 work experience, and learning credentials in the same order as the public dev
-portfolio. All project records appear in the public showcase. Current-focus,
-toolkit, and education records remain in `data/dev.json` but are not shown on
-the public MVP page or in this workspace. Project cover and certificate images
+portfolio. All project records appear in the public showcase. Current-focus
+and toolkit records remain in `data/dev.json` but are not shown on the public
+MVP page or in this workspace. Education records are managed alongside
+credentials in the Learning view. Project cover and certificate images
 can be uploaded; dev workspace uploads are converted to WebP and saved under
 `public/dev/`.
 

@@ -8,42 +8,57 @@ import PortfolioSection from "@/components/dev/portfolio-section";
 import ProjectCard from "@/components/dev/project-card";
 import {
   devCertificates,
+  devEducation,
   devExperience,
   devProfile,
   devProjects,
   devSkills,
 } from "@/data/dev";
 
+// Small reusable helpers used by the sections below.
 function Arrow() {
   return <span aria-hidden="true">&rarr;</span>;
 }
 
+// Passes a delay to the CSS reveal animation. CSSProperties lets TypeScript
+// accept the custom CSS variable --reveal-delay.
 function revealStyle(delay = 0) {
   return { "--reveal-delay": `${delay}ms` } as CSSProperties;
 }
 
+// Renders a normal link and opens web addresses in a new tab. Email and
+// on-page links stay in the current tab.
 function ExternalLink({ href, children, className = "ds-text-link", showArrow = true }: { href: string; children: ReactNode; className?: string; showArrow?: boolean }) {
   if (!href) return null;
   const external = href.startsWith("http");
   return <a className={className} href={href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>{children}{showArrow && !href.startsWith("mailto:") && <> <span aria-hidden="true">{external ? "↗" : "→"}</span></>}</a>;
 }
 
+// Shows the profile photo when available; otherwise shows the person's initials.
 function Portrait({ className = "" }: { className?: string }) {
   const initials = devProfile.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("");
   return <div className={`ds-portrait ${className}`}>{devProfile.portraitUrl ? <Image src={devProfile.portraitUrl} alt={`${devProfile.name} portrait`} width={256} height={256} unoptimized /> : <span>{initials}</span>}<i aria-hidden="true" /></div>;
 }
 
 export default function DevHome() {
+  // Prepare the data used by the page. The source content and its TypeScript
+  // types are in data/dev.json and data/dev.ts.
   const profileSkills = devSkills.map((skill) => skill.items[0]).filter(Boolean).slice(0, 3);
   const showcasedProjects = devProjects;
+  // Split projects into alternating columns to create the staggered layout.
   const projectColumns = [showcasedProjects.filter((_, index) => index % 2 === 0), showcasedProjects.filter((_, index) => index % 2 === 1)];
+  // Put completed certificates first, followed by ones still in progress.
   const completedCertificates = devCertificates.filter((certificate) => certificate.status === "completed");
   const inProgressCertificates = devCertificates.filter((certificate) => certificate.status === "in-progress");
   const allCertificates = [...completedCertificates, ...inProgressCertificates];
 
   return (
     <main className="ds-site">
+      {/* Watches for sections entering view and enables their reveal animation. */}
       <MotionObserver />
+
+      {/* INTRO / PROFILE: name, role, summary, key skills, CV, and profile links. */}
+      {/* Styling for this section is in components/dev/dev.css (.ds-hero, .ds-profile-*). */}
       <section className="ds-hero" id="top" aria-labelledby="dev-hero-title">
         <div className="ds-hero-grid" aria-hidden="true" />
         <div className="ds-profile-wrap" data-reveal>
@@ -61,7 +76,7 @@ export default function DevHome() {
           <article className="ds-profile-card">
             <div className="ds-profile-copy">
               <p className="ds-index">01 / Profile</p>
-              <h1 id="dev-hero-title">{devProfile.name}</h1>
+              <h1 id="dev-hero-title"><span>Abdulrahman</span><span>Kamal</span></h1>
               <p className="ds-hero-role">{devProfile.role}</p>
               <p className="ds-lede">{devProfile.intro}</p>
               <div className="ds-profile-skills" aria-label="Key skills">{profileSkills.map((skill) => <span key={skill}>{skill}</span>)}</div>
@@ -86,20 +101,32 @@ export default function DevHome() {
         </div>
       </section>
 
+      {/* SKILLS: renders one card for each skill group from data/dev.json. */}
+      {/* Styling: components/dev/dev.css (.ds-skills, .ds-skill-* and .ds-chip-list). */}
       <PortfolioSection id="skills" index="02 / Skills" title="Skills for useful work." intro="Grouped technical capabilities across software development, data, and applied AI." className="ds-skills">
         <div className="ds-skill-groups">{devSkills.map((skill, index) => <article className="ds-skill-card" key={skill.slug} data-reveal style={revealStyle(index * 65)}><span>{skill.number} / Capability</span><h3>{skill.name}</h3><p>{skill.description}</p><div className="ds-chip-list" aria-label={`${skill.name} skills`}>{skill.items.map((item) => <span key={item}>{item}</span>)}</div></article>)}</div>
       </PortfolioSection>
 
+      {/* PROJECTS: each entry is rendered by ProjectCard; that component also
+          handles its expandable details and project links. */}
+      {/* Styling: components/dev/dev.css (.ds-project-*). */}
       <PortfolioSection headingClassName="ds-project-heading" id="projects" index="03 / Projects" title={<>Projects I&apos;ve <span>built.</span></>} intro="Selected application projects showing how I apply software engineering, AI, and data." className="ds-projects">
         <div className="ds-project-grid">{projectColumns.map((projects, columnIndex) => <div className="ds-project-column" key={`project-column-${columnIndex}`}>{projects.map((project) => <ProjectCard key={project.slug} project={project} delay={showcasedProjects.indexOf(project) * 70} index={showcasedProjects.indexOf(project)} />)}</div>)}</div>
       </PortfolioSection>
 
+      {/* EXPERIENCE: only appears when experience records exist in the data. */}
+      {/* Styling: components/dev/dev.css (.ds-experience); row markup is in ExperienceList. */}
       {!!devExperience.length && <PortfolioSection id="experience" index="04 / Experience" title="Experience in practice." intro="A concise record of teams, roles, and the work I contributed." className="ds-experience"><div data-reveal style={revealStyle(70)}><ExperienceList items={devExperience} /></div></PortfolioSection>}
 
-      {!!allCertificates.length && <PortfolioSection id="learning" index="05 / Learning" title="Learning with receipts." intro="Relevant credentials that support the work behind the screen." className="ds-certificates"><div className="ds-certificate-groups">
-        <div className="ds-certificate-group"><div className="ds-certificate-group-heading"><h3>Completed credentials</h3><span>Verified learning</span></div><CertificateGrid certificates={allCertificates} ariaLabel="Featured certificates" /></div>
+      {/* LEARNING / CERTIFICATES: only appears when certificate data is present. */}
+      {/* Styling: components/dev/dev.css (.ds-certificates and .ds-certificate-*). */}
+      {!!(allCertificates.length || devEducation.length) && <PortfolioSection id="learning" index="05 / Learning" title="Learning with receipts." intro="Relevant education and credentials that support the work behind the screen." className="ds-certificates"><div className="ds-learning-layout">
+        {!!allCertificates.length && <div className="ds-certificate-group"><div className="ds-certificate-group-heading"><h3>Completed credentials</h3><span>Verified learning</span></div><CertificateGrid certificates={allCertificates} ariaLabel="Featured certificates" /></div>}
+        {!!devEducation.length && <aside className="ds-education-panel" aria-labelledby="education-heading"><div className="ds-certificate-group-heading"><h3 id="education-heading">Education</h3><span>Academic</span></div><div className="ds-education-list">{devEducation.map((education) => <article key={education.slug}>{education.imageUrl && <Image className="ds-education-image" src={education.imageUrl} alt={`${education.degree} at ${education.institution}`} width={960} height={540} unoptimized />}<span>{education.number} / DEGREE</span><div><h4>{education.degree}</h4><p>{education.institution}</p><small>{education.period}</small><p className="ds-education-description">{education.description}</p></div><div className="ds-chip-list" aria-label="Areas of study">{education.focus.map((area) => <span key={area}>{area}</span>)}</div></article>)}</div></aside>}
       </div></PortfolioSection>}
 
+      {/* CONTACT: contact details, email-copy button, phone, and social links. */}
+      {/* Styling: components/dev/dev.css (.ds-contact and .ds-contact-*). */}
       <section className="ds-contact" id="contact" aria-labelledby="contact-title">
         <p className="ds-index" data-reveal>06 / Contact</p>
         <div className="ds-contact-grid">

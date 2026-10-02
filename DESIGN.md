@@ -95,6 +95,16 @@ The module owns the anchor ID, heading ID, semantic relationship, heading layout
 5. Add route-specific CSS only for content layout, using existing tokens.
 6. Verify desktop and narrow layouts, then run the relevant validator and build or lint check.
 
+## Approved shared case-study design
+
+Use the Plant Health project interface for all case studies, including AURAK Dine: the shared dark modal, serif headings, blue diagram nodes and connectors, and underlined active tab. Keep the four tabs: Overview, System Design, Data Flow, Decisions. System Design opens first.
+
+On wide screens, show the interactive architecture canvas on the left and selected component details on the right. Preserve pan, zoom, Fit, node selection, and labelled connections. Show Tech Stack and Key Features below the viewer. Request Flow belongs exclusively in the Data Flow tab; do not render it in System Design.
+
+On narrow screens, preserve the Canvas / Details switch and component selector, stack supporting content, and stack request steps in Data Flow. Keep native dialog dismissal, focus restoration, keyboard tabs, visible focus rings, and reduced-motion support.
+
+`components/dev/project-case-study-dialog.tsx`, `components/dev/architecture/architecture-viewer.tsx`, and `architecture.css` own this presentation. Content stays in the existing `caseStudy` and `architecture` schemas, adapted through `getProjectCaseStudy`. The `architecture` format takes precedence when both are supplied. Do not introduce a separate interface for Dine without a new design request.
+
 ## Ownership
 
 - `components/dev/portfolio-section.tsx`: top-level developer portfolio section structure.

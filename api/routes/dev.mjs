@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { PROJECT_ROOT } from "./photography.mjs";
+import { validateArchitecture } from "../../scripts/architecture-schema.mjs";
 
 export const DEV_DATA_FILE = path.join(PROJECT_ROOT, "data", "dev.json");
 export const DEV_COLLECTIONS = new Set(["skills", "journey", "experience", "certificates", "toolkits", "education"]);
@@ -39,6 +40,12 @@ export function slugifyDevTitle(value) {
 
 export function normalizeDevProject(input, fallback = {}) {
   const project = { ...fallback, ...input };
+  const architecture = project.architecture ?? null;
+  if (architecture !== null) {
+    const errors = validateArchitecture(architecture);
+    if (errors.length) throw new Error(`Invalid architecture: ${errors.join("; ")}`);
+  }
+  const caseStudy = project.caseStudy && typeof project.caseStudy === "object" ? project.caseStudy : null;
   return {
     slug: slugifyDevTitle(project.slug || project.title),
     number: String(project.number || "01"),
@@ -59,6 +66,8 @@ export function normalizeDevProject(input, fallback = {}) {
     featured: Boolean(project.featured),
     coverImageUrl: String(project.coverImageUrl || "").trim(),
     accent: String(project.accent || "").trim(),
+    ...(caseStudy ? { caseStudy } : {}),
+    ...(architecture ? { architecture } : {}),
   };
 }
 

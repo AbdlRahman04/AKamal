@@ -230,7 +230,8 @@
 .ds-experience-detail-inner { min-height:0; display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,.7fr); grid-gap:38px; gap:38px; padding:22px 0 4px; border-top:1px dashed var(--ds-line); }
 .ds-experience-detail-inner > p { max-width:590px; margin:0; color:var(--ds-muted); font-size:14px; line-height:1.65; }
 .ds-project-heading { display:block; margin-bottom:46px; }
-.ds-project-heading > .ds-index,.ds-project-heading > .ds-pulse-trace { display:none; }
+.ds-project-heading > .ds-index { display:block; margin:0 0 18px 40px; }
+.ds-project-heading > .ds-pulse-trace { display:none; }
 .ds-project-heading > div { max-width:690px; }
 .ds-project-heading h2 { font-size:clamp(2.5rem,5vw,3.65rem); line-height:1.05; letter-spacing:-.075em; }
 .ds-project-heading h2 span { background:linear-gradient(100deg,#58a6ff 5%,#71e5ff 48%,#a78bfa 95%); -webkit-background-clip:text; background-clip:text; color:transparent; }
@@ -488,6 +489,16 @@
   border-color:rgba(88,166,255,.62);
   box-shadow:0 0 0 1px rgba(88,166,255,.14),0 0 24px rgba(88,166,255,.12),0 14px 32px rgba(0,0,0,.22);
 }
+.ds-learning-layout { display:grid; grid-template-columns:minmax(0,1.7fr) minmax(280px,.8fr); align-items:start; gap:36px; max-width:1200px; margin:0 auto; }
+.ds-learning-layout > * { min-width:0; }
+.ds-education-panel .ds-certificate-group-heading { margin-bottom:20px; }
+.ds-education-panel .ds-education-list article { display:block; padding:22px; }
+.ds-education-panel .ds-education-list article > span { display:block; margin-bottom:18px; }
+.ds-education-image { display:block; width:100%; height:auto; max-height:260px; margin-bottom:20px; object-fit:cover; }
+.ds-education-panel .ds-education-list h4 { margin:0; color:var(--ds-text); font:600 21px/1.18 var(--sans); letter-spacing:-.04em; }
+.ds-education-panel .ds-education-list p,.ds-education-panel .ds-education-list small { margin-top:9px; line-height:1.5; }
+.ds-education-panel .ds-education-list .ds-education-description { margin-top:18px; }
+.ds-education-panel .ds-education-list .ds-chip-list { margin-top:20px; }
 .ds-certificate-showcase { max-width:1200px; margin:0 auto; }
 .ds-certificate-groups { display:grid; gap:64px; max-width:1200px; margin:0 auto; }
 .ds-certificate-group-heading { display:flex; align-items:baseline; justify-content:space-between; gap:24px; margin:0 0 20px; padding:0 0 14px; border-bottom:1px solid var(--ds-line); }
@@ -525,6 +536,7 @@
 .ds-certificate-list-link { justify-self:end; color:var(--ds-cyan); font-size:11px; white-space:nowrap; transition:color .2s ease; }
 .ds-certificate-list-link:hover,.ds-certificate-list-link:focus-visible { color:#fff; }
 .ds-certificate-list-link.is-muted { color:var(--ds-muted); }
+@media (max-width:1000px) { .ds-learning-layout { grid-template-columns:1fr; gap:44px; } }
 @media (max-width:900px) { .ds-certificate-showcase { max-width:100%; } .ds-certificate-grid { max-width:100%; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; } }
 @media (max-width:760px) { .ds-certificate-list-item { grid-template-columns:32px minmax(0,1fr) auto; gap:10px; } .ds-certificate-list-status { grid-column:2; grid-row:2; } .ds-certificate-list-year { grid-column:3; grid-row:2; text-align:right; } .ds-certificate-list-link { grid-column:3; grid-row:1; } }
 @media (max-width:560px) { .ds-certificate-grid { grid-template-columns:1fr; gap:14px; } .ds-certificate-image-wrap { aspect-ratio:4/2.8; } .ds-certificate-card-content { padding:16px; } .ds-certificate-list-wrap { margin-top:34px; } .ds-certificate-list-heading { align-items:flex-start; gap:10px; } .ds-certificate-list-heading span { padding-top:3px; text-align:right; } }
@@ -590,7 +602,8 @@
 .ds-profile-card { display:grid; grid-template-columns:minmax(0,1fr) minmax(235px,.38fr); grid-gap:clamp(30px,5vw,74px); gap:clamp(30px,5vw,74px); padding:clamp(28px,5vw,68px); border:1px solid rgba(123,176,237,.32); border-radius:24px; background:linear-gradient(135deg,rgba(17,29,46,.98),rgba(9,15,25,.98) 68%); box-shadow:0 30px 90px rgba(0,0,0,.32),inset 0 1px rgba(255,255,255,.04); }
 .ds-profile-copy { min-width:0; }
 .ds-profile-copy > .ds-index { margin:0 0 27px; }
-.ds-profile-card h1 { max-width:720px; margin:0; font:600 clamp(3.1rem,7vw,6.4rem)/.92 var(--sans); letter-spacing:-.075em; overflow-wrap:anywhere; }
+.ds-profile-card h1 { max-width:720px; margin:0; font:600 clamp(3.1rem,7vw,5.4rem)/.92 var(--sans); letter-spacing:-.075em; }
+.ds-profile-card h1 span { display:block; white-space:nowrap; }
 .ds-profile-card .ds-hero-role { margin-top:17px; }
 .ds-profile-card .ds-lede { max-width:650px; margin:20px 0 0; }
 .ds-profile-skills { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; }
@@ -606,7 +619,7 @@
 .ds-profile-aside strong { margin-top:7px; font-size:14px; line-height:1.5; }
 .ds-profile-aside > p { margin:7px 0 0; color:var(--ds-muted); font-size:14px; line-height:1.5; }
 .ds-profile-availability { display:flex; align-items:flex-start; gap:9px; margin-top:23px; padding-top:17px; border-top:1px solid var(--ds-line); color:#b7c8dc; font-size:11px; line-height:1.5; }
-.ds-profile-availability i { width:7px; height:7px; flex:none; margin-top:4px; border-radius:50%; background:var(--ds-green); box-shadow:0 0 12px rgba(88,226,154,.45); }
+.ds-profile-availability i { width:2px; height:15px; flex:none; margin-top:2px; border-radius:0; background:var(--ds-blue); }
 .ds-skill-groups { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-gap:14px; gap:14px; }
 .ds-skill-groups .ds-skill-card { min-height:0; padding:25px; border-radius:16px; }
 .ds-skill-groups .ds-skill-card h3 { margin:34px 0 11px; font-size:clamp(1.6rem,2.5vw,2.2rem); }
@@ -640,7 +653,7 @@
   .ds-hero { padding:104px 18px 52px; }
   .ds-profile-wrap > .ds-presence { align-items:flex-start; font-size:9px; }
   .ds-profile-card { padding:21px; }
-  .ds-profile-card h1 { font-size:clamp(2.8rem,14vw,4rem); }
+  .ds-profile-card h1 { font-size:clamp(2.5rem,12vw,3rem); }
   .ds-profile-card .ds-lede { font-size:14px; }
   .ds-profile-links { gap:15px; }
   .ds-profile-aside { grid-template-columns:60px minmax(0,1fr); column-gap:13px; padding:15px; }
@@ -921,3 +934,4 @@
 @media (prefers-reduced-motion:reduce) {
   .ds-project-panel,.ds-project-toggle,.ds-project-toggle svg { transition:none; }
 }
+

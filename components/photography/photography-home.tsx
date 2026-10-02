@@ -173,10 +173,25 @@ export default function PhotographyHome() {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const projectCloseButtonRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef<number | null>(null);
+  const viewerHistoryEntry = useRef(false);
+  const projectHistoryEntry = useRef(false);
 
   const closeViewer = useCallback(() => {
+    if (viewerHistoryEntry.current) {
+      window.history.back();
+      return;
+    }
     setSelected(null);
     window.setTimeout(() => openerRef.current?.focus(), 0);
+  }, []);
+
+  const closeProject = useCallback(() => {
+    if (projectHistoryEntry.current) {
+      window.history.back();
+      return;
+    }
+    setSelectedProject(null);
+    window.setTimeout(() => projectCloseButtonRef.current?.blur(), 0);
   }, []);
 
   const movePhoto = useCallback((step: number) => {
@@ -212,6 +227,30 @@ export default function PhotographyHome() {
   }, [selected]);
 
   useEffect(() => {
+    if (!selectedProject) return;
+    const onPopState = () => {
+      if (!projectHistoryEntry.current || window.history.state?.photographyProject) return;
+      projectHistoryEntry.current = false;
+      setSelectedProject(null);
+      window.setTimeout(() => projectCloseButtonRef.current?.blur(), 0);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [selectedProject]);
+
+  useEffect(() => {
+    if (!selected) return;
+    const onPopState = () => {
+      if (!viewerHistoryEntry.current) return;
+      viewerHistoryEntry.current = false;
+      setSelected(null);
+      window.setTimeout(() => openerRef.current?.focus(), 0);
+    };
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, [selected]);
+
+  useEffect(() => {
     if (!selected) return;
     closeButtonRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
@@ -229,11 +268,11 @@ export default function PhotographyHome() {
     if (!selectedProject || selected) return;
     projectCloseButtonRef.current?.focus();
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedProject(null);
+      if (event.key === "Escape") closeProject();
     };
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [selectedProject, selected]);
+  }, [selectedProject, selected, closeProject]);
 
   useEffect(() => {
     if (!selected && !selectedProject) return;
@@ -286,11 +325,19 @@ export default function PhotographyHome() {
 
   const openViewer = (collection: Collection, photo: Photo, index: number, opener: HTMLButtonElement) => {
     openerRef.current = opener;
+    if (!viewerHistoryEntry.current) {
+      window.history.pushState({ ...window.history.state, photographyViewer: true }, "");
+      viewerHistoryEntry.current = true;
+    }
     setViewerDirection("next");
     setSelected({ collection, photo, index });
   };
 
   const openProject = (collection: Collection) => {
+    if (!projectHistoryEntry.current) {
+      window.history.pushState({ ...window.history.state, photographyProject: true }, "");
+      projectHistoryEntry.current = true;
+    }
     setSelectedProject(collection);
   };
 
@@ -575,7 +622,7 @@ export default function PhotographyHome() {
         <div
           className="project-backdrop"
           role="presentation"
-          onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedProject(null); }}
+          onMouseDown={(event) => { if (event.target === event.currentTarget) closeProject(); }}
         >
           <section className="project-modal" role="dialog" aria-modal="true" aria-labelledby="project-modal-title">
             <div className="project-modal-header">
@@ -588,7 +635,7 @@ export default function PhotographyHome() {
                 className="project-modal-close"
                 ref={projectCloseButtonRef}
                 type="button"
-                onClick={() => setSelectedProject(null)}
+                onClick={closeProject}
                 aria-label="Close project"
               >
                 Close

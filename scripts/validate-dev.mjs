@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateArchitecture } from "./architecture-schema.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const file = path.join(root, "data", "dev.json");
@@ -41,11 +42,19 @@ for (const [collection, required] of Object.entries({
 }
 
 for (const [index, project] of (data.projects || []).entries()) {
+  if (project.architecture !== undefined) errors.push(...validateArchitecture(project.architecture).map(error => `projects[${index}].architecture: ${error}`));
   for (const field of ["role", "frontend", "backend", "database", "deployment", "contribution", "keyFeature", "technicalChallenge"]) {
     if (project[field] !== undefined && typeof project[field] !== "string") errors.push(`projects[${index}].${field} must be a string`);
   }
   if (project.teamSize !== undefined && (!Number.isInteger(project.teamSize) || project.teamSize <= 0)) {
     errors.push(`projects[${index}].teamSize must be a positive integer`);
+  }
+  if (project.caseStudy) {
+    const study = project.caseStudy;
+    if (!study.description || !study.architectureDescription || !study.deploymentLabel || !study.nodes || !Array.isArray(study.technologies) || !Array.isArray(study.features) || !Array.isArray(study.flow)) errors.push(`projects[${index}].caseStudy is incomplete`);
+    for (const key of ["customer", "staff", "frontend", "backend", "database", "payment"]) {
+      if (!study.nodes?.[key]?.title || !Array.isArray(study.nodes?.[key]?.lines)) errors.push(`projects[${index}].caseStudy.nodes.${key} is incomplete`);
+    }
   }
   if (Array.isArray(project.stackBreakdown) && (!project.stackBreakdown.length || project.stackBreakdown.some((line) => typeof line !== "string" || !line.trim()))) {
     errors.push(`projects[${index}].stackBreakdown needs at least one non-empty line`);
@@ -57,8 +66,8 @@ for (const [index, link] of (data.profile?.links || []).entries()) {
   if (link.href && !/^https?:\/\//.test(link.href) && !/^mailto:/.test(link.href)) errors.push(`profile.links[${index}].href must be http(s) or mailto`);
 }
 
-for (const collection of ["projects", "certificates", "toolkits"]) {
-  const urlFields = collection === "projects" ? ["githubUrl", "liveUrl", "coverImageUrl"] : collection === "certificates" ? ["credentialUrl", "imageUrl"] : ["url"];
+for (const collection of ["projects", "certificates", "toolkits", "education"]) {
+  const urlFields = collection === "projects" ? ["githubUrl", "liveUrl", "coverImageUrl"] : collection === "certificates" ? ["credentialUrl", "imageUrl"] : collection === "education" ? ["imageUrl"] : ["url"];
   for (const [index, item] of (data[collection] || []).entries()) {
     for (const field of urlFields) {
       if (item[field] && !/^(https?:\/\/|\/)/.test(item[field])) errors.push(`${collection}[${index}].${field} must be an http(s) URL or site path`);
