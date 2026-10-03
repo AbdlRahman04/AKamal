@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import Image from "next/image";
+import localFont from "next/font/local";
 import CopyEmailButton from "@/components/dev/copy-email-button";
 import BackgroundOverview from "@/components/dev/background-overview";
 import MotionObserver from "@/components/dev/motion-observer";
@@ -14,6 +15,13 @@ import {
   devProjects,
   devSkills,
 } from "@/data/dev";
+
+const nameFont = localFont({
+  src: "../../public/fonts/sora-latin-600.woff2",
+  weight: "600",
+  display: "swap",
+  variable: "--font-dev-name",
+});
 
 // Small reusable helpers used by the sections below.
 function Arrow() {
@@ -64,7 +72,7 @@ export default function DevHome() {
           <div className="ds-intro-tile" data-reveal>
               <p className="ds-bento-presence"><i aria-hidden="true" />Available for opportunities <span>/ {devProfile.location}</span></p>
               <p className="ds-index">01 / Profile</p>
-              <h1 id="dev-hero-title">{devProfile.name}</h1>
+              <h1 id="dev-hero-title" className={nameFont.variable}><span className="ds-profile-name">{devProfile.name}</span></h1>
               <p className="ds-hero-role">{devProfile.role}</p>
               <p className="ds-bento-statement">{devProfile.title}</p>
               <p className="ds-lede">{devProfile.intro}</p>

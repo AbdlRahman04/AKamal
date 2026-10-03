@@ -654,40 +654,36 @@
     {
       "slug": "portfolio-platform",
       "number": "03",
-      "title": "Personal Portfolio",
-      "type": "Personal website / Photography",
+      "title": "Photography Portfolio",
+      "type": "Photography / Visual storytelling",
       "year": "2026",
       "status": "In progress",
-      "summary": "A personal website to share my software projects, experience, and photography in one place.",
-      "problem": "I wanted a simple way to present my technical work and photography skills, with content I could easily update.",
-      "solution": "Built a responsive Next.js website with separate sections for software projects and photography. Content is stored in JSON files and updated through local admin tools, and the site is deployed on Vercel.",
+      "summary": "A curated collection of my photography, showcasing composition, light, motion, and color through visual storytelling.",
+      "problem": "I wanted to show the creative decisions behind my photographs, from intentional framing and exposure to the mood of the final edit.",
+      "solution": "Curated themed galleries with notes on the story, shooting process, and techniques behind each image.",
       "technologies": [
-        "Next.js",
-        "TypeScript",
-        "React",
-        "Express",
-        "Sharp"
+        "Composition",
+        "Light & Exposure",
+        "Color Grading",
+        "Motion Control",
+        "Visual Storytelling"
       ],
-      "role": "Website development",
-      "frontend": "Next.js / React / TypeScript",
-      "backend": "Express for local admin tools",
-      "database": "JSON files",
-      "deployment": "Vercel / Static export",
-      "contribution": "Built the project and photography pages, organized the content, and added local tools to update text and images.",
-      "keyFeature": "Software projects and a photography gallery in one responsive website.",
-      "technicalChallenge": "Keeping photo-heavy pages fast and making the layout work well on desktop and mobile.",
+      "role": "Photography, editing & curation",
+      "contribution": "Photographed, edited, and selected the images, using leading lines, natural light, controlled motion, and color grading to shape each collection.",
+      "keyFeature": "Themed photo collections with image stories, process notes, and the photography skills demonstrated.",
+      "technicalChallenge": "Balancing highlights and shadows in mixed light, controlling motion blur, and keeping color and mood consistent across a collection.",
       "stackBreakdown": [
-        "Frontend: Next.js, React, TypeScript",
-        "Local admin: Express",
-        "Content: JSON files"
+        "Composition: leading lines, visual balance, and intentional framing",
+        "Camera control: exposure balance, panning, and motion blur",
+        "Editing: highlight recovery, contrast, and color grading"
       ],
       "highlights": [
-        "Separate sections for software projects and photography",
-        "Optimized photos and thumbnails for the gallery",
-        "Responsive layouts with keyboard-accessible controls"
+        "Photography across architecture, automotive, landscapes, and everyday scenes",
+        "Creative process and techniques documented alongside the images",
+        "Curated collections shaped by light, atmosphere, and visual storytelling"
       ],
       "githubUrl": "",
-      "liveUrl": "https://abdlr7man-portfolio.vercel.app/",
+      "liveUrl": "/photography",
       "featured": true,
       "coverImageUrl": "",
       "accent": ""

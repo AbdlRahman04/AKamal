@@ -43,8 +43,8 @@ function resolveHeroPhotoTarget(image: HeroImage): SelectedPhoto | null {
 
 const fallbackHero = {
   eyebrow: "Visual journal / UAE",
-  title: "Frames that let",
-  titleAccent: "the world breathe.",
+  title: "The world,",
+  titleAccent: "through my lens.",
   description: profile.intro,
   primaryCta: "Explore selected work",
   secondaryCta: "About the photographer",
@@ -443,7 +443,7 @@ export default function PhotographyHome() {
       {/* Legacy hero markup is intentionally kept unreachable for compatibility with older authored content. */}
       {false && <section className="hero legacy-reference" id="legacy-hero" aria-labelledby="legacy-hero-title">
         <div className="hero-kicker"><span /> Visual journal{TAG_SEP}UAE</div>
-        <h1 id="hero-title">Frames that let<br /><em>the world breathe.</em></h1>
+        <h1 id="hero-title">The world,<br /><em>through my lens.</em></h1>
         <div className="hero-bottom">
           <p>{profile.intro}</p>
           <a className="scroll-link" href="#work" aria-label="Explore selected work">Scroll to explore</a>
@@ -607,7 +607,7 @@ export default function PhotographyHome() {
           )}
         </div>
         <div className="about-copy">
-          <h2 id="about-title">Looking closely is<br />a way of <em>remembering.</em></h2>
+          <h2 id="about-title">Everyday moments,<br /><em>seen differently.</em></h2>
           <div className="about-body">
             {profile.about.split(/\n\s*\n/).filter(Boolean).map((paragraph, index) => (
               <p key={`${index}-${paragraph.slice(0, 16)}`}>{paragraph}</p>

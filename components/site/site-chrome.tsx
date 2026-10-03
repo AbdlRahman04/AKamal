@@ -58,7 +58,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   }, [isPhotography]);
 
   function toggleDevTheme() {
-    const next = !devDark;
+    const next = document.body.dataset.devMode !== "dark";
     document.body.dataset.devMode = next ? "dark" : "light";
     setDevDark(next);
     try { window.localStorage.setItem("dev-theme", next ? "dark" : "light"); } catch { /* Theme changes still work for this session. */ }
@@ -245,7 +245,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
           <div className="shared-header-actions">
             {!isPhotography && <DevThemeSwitch dark={devDark} onToggle={toggleDevTheme} />}
             {isPhotography && (
-              <DevThemeSwitch dark={photographyTheme === "dark"} onToggle={togglePhotographyTheme} />
+              <DevThemeSwitch dark={photographyTheme === "dark"} onToggle={togglePhotographyTheme} section="photography" />
             )}
             <Link href={isPhotography ? "/" : "/photography"}>
               {isPhotography ? "Dev" : "Photography"}
@@ -278,7 +278,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
               <span>Navigate</span>
               <div className="shared-mobile-controls">
                 {!isPhotography && <DevThemeSwitch dark={devDark} onToggle={toggleDevTheme} />}
-                {isPhotography && <DevThemeSwitch dark={photographyTheme === "dark"} onToggle={togglePhotographyTheme} />}
+                {isPhotography && <DevThemeSwitch dark={photographyTheme === "dark"} onToggle={togglePhotographyTheme} section="photography" />}
                 <button ref={mobileCloseRef} type="button" onClick={() => setMenuOpen(false)} aria-label="Close navigation menu">Close <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
               </div>
             </div>

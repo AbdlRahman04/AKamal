@@ -1,9 +1,14 @@
 "use client";
 
-export default function DevThemeSwitch({ dark, onToggle }: { dark: boolean; onToggle: () => void }) {
+export default function DevThemeSwitch({ dark, onToggle, section = "dev" }: {
+  dark: boolean;
+  onToggle: () => void;
+  section?: "dev" | "photography";
+}) {
   return (
     <button
       className="dev-theme-switch"
+      data-theme-section={section}
       type="button"
       aria-label={`Switch to ${dark ? "light" : "dark"} mode`}
       aria-pressed={dark}

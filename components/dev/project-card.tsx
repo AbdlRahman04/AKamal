@@ -38,6 +38,8 @@ function ProjectArtwork({ project, previewPhotos }: { project: DevProject; previ
 export default function ProjectCard({ project, delay, index, technologyLimit, previewPhotos }: { project: DevProject; delay: number; index: number; technologyLimit?: number; previewPhotos?: PreviewPhoto[] }) {
   const [expanded, setExpanded] = useState(false);
   const detailsId = useId();
+  const isPhotographyPortfolio = project.slug === "portfolio-platform";
+  const liveActionLabel = isPhotographyPortfolio ? "View photography" : "Live demo";
   const facts = [
     ["Role", project.role],
     ["Team", project.teamSize ? `${project.teamSize} members` : undefined],
@@ -47,11 +49,11 @@ export default function ProjectCard({ project, delay, index, technologyLimit, pr
     ["Deployment", project.deployment],
   ].filter(([, value]) => value?.trim());
   const narratives = [
-    ["Problem", project.problem],
-    ["Solution", project.solution],
+    [isPhotographyPortfolio ? "Intent" : "Problem", project.problem],
+    [isPhotographyPortfolio ? "Approach" : "Solution", project.solution],
     ["My Contribution", project.contribution],
-    ["Key Feature", project.keyFeature],
-    ["Technical Challenge", project.technicalChallenge],
+    [isPhotographyPortfolio ? "Gallery" : "Key Feature", project.keyFeature],
+    [isPhotographyPortfolio ? "Creative Challenge" : "Technical Challenge", project.technicalChallenge],
   ].filter(([, value]) => value?.trim());
   const hasStructuredDetails = facts.length > 0 || narratives.length > 0;
   const legacyStack = project.stackBreakdown.filter((line) => line.trim());
@@ -99,15 +101,15 @@ export default function ProjectCard({ project, delay, index, technologyLimit, pr
         </div>
         <p className="ds-project-summary">{project.summary}</p>
         {metadata && <p className="ds-project-role">{metadata}</p>}
-        <div className="ds-chip-list" aria-label="Technologies used">{visibleTechnologies.map((item) => <span key={item}>{item}</span>)}{hiddenTechnologies.length > 0 && <span title={hiddenTechnologies.join(", ")}><span aria-hidden="true">+{hiddenTechnologies.length}</span><span className="ds-project-sr-only">Additional technologies: {hiddenTechnologies.join(", ")}</span></span>}</div>
+        <div className="ds-chip-list" aria-label={isPhotographyPortfolio ? "Photography skills" : "Technologies used"}>{visibleTechnologies.map((item) => <span key={item}>{item}</span>)}{hiddenTechnologies.length > 0 && <span title={hiddenTechnologies.join(", ")}><span aria-hidden="true">+{hiddenTechnologies.length}</span><span className="ds-project-sr-only">{isPhotographyPortfolio ? "Additional skills" : "Additional technologies"}: {hiddenTechnologies.join(", ")}</span></span>}</div>
         {(project.githubUrl || project.liveUrl || hasCaseStudyDialog) && <div className="ds-project-actions">
           {hasCaseStudyDialog && <ProjectCaseStudyDialog project={project} />}
           {project.githubUrl && <a className="ds-project-action ds-project-action-source" href={project.githubUrl} aria-label={project.githubUrl.startsWith("http") ? `View source for ${project.title} (opens in a new tab)` : undefined} target={project.githubUrl.startsWith("http") ? "_blank" : undefined} rel={project.githubUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" /></svg>View source <span aria-hidden="true">↗</span></a>}
-          {project.liveUrl && <a className="ds-project-action ds-project-action-live" href={project.liveUrl} aria-label={project.liveUrl.startsWith("http") ? `Live demo for ${project.title} (opens in a new tab)` : undefined} target={project.liveUrl.startsWith("http") ? "_blank" : undefined} rel={project.liveUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>Live demo <span aria-hidden="true">↗</span></a>}
+          {project.liveUrl && <a className="ds-project-action ds-project-action-live" href={project.liveUrl} aria-label={project.liveUrl.startsWith("http") ? `${liveActionLabel} for ${project.title} (opens in a new tab)` : undefined} target={project.liveUrl.startsWith("http") ? "_blank" : undefined} rel={project.liveUrl.startsWith("http") ? "noopener noreferrer" : undefined}><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 3h7v7m-1-6-9 9"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></svg>{liveActionLabel} <span aria-hidden="true">↗</span></a>}
         </div>}
         {hasDetails && !hasCaseStudyDialog && <div className="ds-project-details">
           <button className="ds-project-toggle" type="button" aria-expanded={expanded} aria-controls={detailsId} onClick={() => setExpanded((value) => !value)}>
-            Project details
+            {isPhotographyPortfolio ? "Photography details" : "Project details"}
             <svg aria-hidden="true" viewBox="0 0 20 20"><path d="m5 7.5 5 5 5-5" /></svg>
           </button>
           <div id={detailsId} className={`ds-project-panel${expanded ? " is-expanded" : ""}`} aria-hidden={!expanded} inert={!expanded}>
