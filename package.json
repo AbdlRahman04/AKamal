@@ -10,6 +10,7 @@
     "images:optimize": "node scripts/optimize-images.mjs",
     "images:sync-presentation": "node scripts/sync-photo-presentation.mjs",
     "admin": "node api/server.mjs",
+    "admin:dev": "node scripts/admin-dev.mjs",
     "validate:photography": "node scripts/validate-photography.mjs",
     "validate:dev": "node scripts/validate-dev.mjs"
   },
@@ -19,6 +20,7 @@
     "@types/react": "19.0.2",
     "@types/react-dom": "19.0.2",
     "gsap": "^3.15.0",
+    "motion": "^14.0.0",
     "next": "15.5.26",
     "openai": "^7.15.0",
     "react": "19.0.0",

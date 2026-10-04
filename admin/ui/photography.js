@@ -24,12 +24,50 @@ let photoDraftDirty = false;
 let profileDraftDirty = false;
 let heroDraft = [];
 let heroDraftDirty = false;
+let overviewEvents = [];
+let overviewActivityFilter = "all";
+let overviewAiStatus = null;
+let aiConfigDirty = false;
 
 /* ── DOM refs ── */
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
 
 const dom = {
+  overview:       $("#overview-panel"),
+  overviewButton: $("#btn-overview"),
+  overviewUpdated: $("#overview-updated"),
+  overviewPhotoCount: $("#overview-photo-count"),
+  overviewCollectionCount: $("#overview-collection-count"),
+  overviewCollectionBreakdown: $("#overview-collection-breakdown"),
+  overviewStorageSize: $("#overview-storage-size"),
+  overviewStorageBreakdown: $("#overview-storage-breakdown"),
+  overviewActivitySummary: $("#overview-activity-summary"),
+  overviewErrorCount: $("#overview-error-count"),
+  overviewAuditCount: $("#overview-audit-count"),
+  overviewActivityEvents: $("#overview-activity-events"),
+  overviewAiReadiness: $("#overview-ai-readiness"),
+  overviewAiState: $("#overview-ai-state"),
+  overviewAiDetail: $("#overview-ai-detail"),
+  overviewAiProvider: $("#overview-ai-provider"),
+  overviewAiDeployment: $("#overview-ai-deployment"),
+  overviewAiEndpoint: $("#overview-ai-endpoint"),
+  overviewAiRetries: $("#overview-ai-retries"),
+  overviewAiImageCap: $("#overview-ai-image-cap"),
+  overviewAiPrompts: $("#overview-ai-prompts"),
+  overviewAiChecked: $("#overview-ai-checked"),
+  refreshOverview: $("#btn-refresh-overview"),
+  refreshOverviewAi: $("#btn-refresh-overview-ai"),
+  aiConfigEditor: $("#ai-config-editor"),
+  aiConfigForm: $("#ai-config-form"),
+  aiConfigEndpoint: $("#ai-config-endpoint"),
+  aiConfigDeployment: $("#ai-config-deployment"),
+  aiConfigVersion: $("#ai-config-version"),
+  aiConfigKey: $("#ai-config-key"),
+  aiConfigKeyHelp: $("#ai-config-key-help"),
+  aiConfigFeedback: $("#ai-config-feedback"),
+  saveAiConfig: $("#btn-save-ai-config"),
+  cancelAiConfig: $("#btn-cancel-ai-config"),
   listPrimary:    $("#list-primary"),
   listArchive:    $("#list-archive"),
   profileEditor:  $("#profile-editor"),
@@ -47,20 +85,6 @@ const dom = {
   heroSlots: $("#hero-slots"),
   heroStatus: $("#hero-status"),
   saveHero: $("#btn-save-hero"),
-  aiServiceDot:   $("#ai-service-dot"),
-  aiServiceState: $("#ai-service-state"),
-  aiDeployment:   $("#ai-deployment"),
-  aiRetries:      $("#ai-retries"),
-  aiImageCap:     $("#ai-image-cap"),
-  aiPrompts:      $("#ai-prompts"),
-  refreshAiStatus: $("#btn-refresh-ai-status"),
-  activityStatusDot: $("#activity-status-dot"),
-  activityStatus: $("#activity-status"),
-  activityErrorCount: $("#activity-error-count"),
-  activityAuditCount: $("#activity-audit-count"),
-  activityLatest: $("#activity-latest"),
-  activityToggle: $("#btn-toggle-activity"),
-  activityEvents: $("#activity-events"),
   emptyState:     $("#empty-state"),
   editor:         $("#collection-editor"),
   editorTitle:    $("#editor-title"),
@@ -184,7 +208,7 @@ function photographyAssetUrl(value) {
 
 /* ── Toast ── */
 
-function toast(msg, type = "success") {
+function toast(msg, type = "success", duration = 2800) {
   const el = document.createElement("div");
   el.className = `toast toast-${type}`;
   el.textContent = msg;
@@ -193,7 +217,7 @@ function toast(msg, type = "success") {
   setTimeout(() => {
     el.classList.add("toast-out");
     el.addEventListener("animationend", () => el.remove());
-  }, 2800);
+  }, duration);
 }
 
 /* ── Confirm modal ── */
@@ -228,38 +252,261 @@ async function loadData() {
     if (activeSlug) {
       selectCollection(activeSlug);
     } else {
-      openProfileEditor();
+      openOverview();
     }
     $("#status-indicator").className = "status-dot status-connected";
   } catch (err) {
     toast("Failed to load data: " + err.message, "error");
     $("#status-indicator").className = "status-dot status-error";
-  } finally {
-    await loadActivity();
   }
 }
+
+function formatStorageSize(bytes) {
+  const size = Math.max(0, Number(bytes) || 0);
+  if (size < 1024) return `${size} B`;
+  const units = ["KB", "MB", "GB", "TB"];
+  let value = size / 1024;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  return `${value.toLocaleString(undefined, { maximumFractionDigits: 1 })} ${units[unit]}`;
+}
+
+function setOverviewUnavailable(message) {
+  dom.overviewPhotoCount.textContent = "—";
+  dom.overviewCollectionCount.textContent = "—";
+  dom.overviewStorageSize.textContent = "Unavailable";
+  dom.overviewStorageBreakdown.textContent = message;
+}
+
+async function loadOverview() {
+  const [metricsResult, activityResult] = await Promise.allSettled([
+    apiGet("/api/photography/overview"),
+    apiGet("/api/activity?limit=50"),
+  ]);
+
+  if (metricsResult.status === "fulfilled") {
+    const result = metricsResult.value;
+    const storage = result.storage || {};
+    dom.overviewPhotoCount.textContent = Number(result.photoCount || 0).toLocaleString();
+    dom.overviewCollectionCount.textContent = Number(result.collectionCount || 0).toLocaleString();
+    dom.overviewCollectionBreakdown.textContent = `${Number(result.primaryCollectionCount || 0).toLocaleString()} primary · ${Number(result.archiveCollectionCount || 0).toLocaleString()} archive`;
+    dom.overviewStorageSize.textContent = formatStorageSize(storage.bytes);
+    dom.overviewStorageBreakdown.textContent = `${Number(storage.imageCount || 0).toLocaleString()} generated files · ${formatStorageSize(storage.fullBytes)} full-size · ${formatStorageSize(storage.thumbnailBytes)} thumbnails`;
+  } else {
+    setOverviewUnavailable(metricsResult.reason?.message || "Storage measurements are unavailable.");
+  }
+
+  if (activityResult.status === "fulfilled") renderOverviewActivity(activityResult.value);
+  else {
+    overviewEvents = [];
+    dom.overviewActivitySummary.textContent = activityResult.reason?.message || "Activity history unavailable.";
+    dom.overviewActivityEvents.innerHTML = '<p class="overview-empty">Could not load the activity log.</p>';
+  }
+
+  await loadAiStatus();
+
+  dom.overviewUpdated.textContent = `Updated ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+}
+
+function renderOverviewActivity(payload) {
+  overviewEvents = Array.isArray(payload?.events) ? payload.events : [];
+  const summary = payload?.summary || {};
+  dom.overviewErrorCount.textContent = Number(summary.errorCount || 0).toLocaleString();
+  dom.overviewAuditCount.textContent = Number(summary.auditCount || 0).toLocaleString();
+  dom.overviewActivitySummary.textContent = overviewEvents.length
+    ? `Latest ${overviewEvents.length} events from the local admin log.`
+    : "No workspace activity has been recorded yet.";
+  renderOverviewActivityEvents();
+}
+
+function renderOverviewActivityEvents() {
+  const events = overviewActivityFilter === "error"
+    ? overviewEvents.filter((event) => event.kind === "error" || event.status === "error")
+    : overviewEvents;
+  dom.overviewActivityEvents.replaceChildren();
+  if (!events.length) {
+    const empty = document.createElement("p");
+    empty.className = "overview-empty";
+    empty.textContent = overviewActivityFilter === "error" ? "No errors in the latest activity." : "No activity to show.";
+    dom.overviewActivityEvents.appendChild(empty);
+    return;
+  }
+
+  for (const event of events) {
+    const row = document.createElement("article");
+    const isError = event.kind === "error" || event.status === "error";
+    row.className = `overview-event${isError ? " is-error" : ""}`;
+    const head = document.createElement("div");
+    head.className = "overview-event-head";
+    const kind = document.createElement("span");
+    kind.className = "overview-event-kind";
+    kind.textContent = isError ? "Error" : "Activity";
+    const action = document.createElement("strong");
+    action.textContent = event.action || "Admin activity";
+    const time = document.createElement("time");
+    time.dateTime = event.timestamp || "";
+    time.textContent = formatActivityTime(event.timestamp);
+    head.append(kind, action, time);
+    const message = document.createElement("p");
+    message.textContent = event.message || "Admin operation completed.";
+    row.append(head, message);
+    const context = [event.collection, event.photo].filter(Boolean);
+    if (context.length) {
+      const meta = document.createElement("span");
+      meta.className = "overview-event-context";
+      meta.textContent = context.join(" · ");
+      row.appendChild(meta);
+    }
+    dom.overviewActivityEvents.appendChild(row);
+  }
+}
+
+function renderOverviewAi(status) {
+  overviewAiStatus = status;
+  const ready = Boolean(status.configured);
+  dom.overviewAiReadiness.dataset.state = ready ? "ready" : "missing";
+  dom.overviewAiState.textContent = ready ? "Configuration ready" : "Configuration incomplete";
+  dom.overviewAiDetail.textContent = ready
+    ? "Required provider settings are present on the local admin server."
+    : "Add the missing Azure OpenAI settings to the local environment file.";
+  dom.overviewAiProvider.textContent = status.provider || "Azure OpenAI";
+  dom.overviewAiDeployment.textContent = status.deployment || "Not configured";
+  dom.overviewAiEndpoint.textContent = status.endpointHost || "Not configured";
+  dom.overviewAiRetries.textContent = String(status.retries ?? "—");
+  dom.overviewAiImageCap.textContent = status.imageMaxPixels
+    ? `${(status.imageMaxPixels / 1_000_000).toFixed(1)} megapixels · ${status.imageJpegQuality ?? "—"}% JPEG`
+    : "—";
+  dom.overviewAiPrompts.textContent = status.prompts || "—";
+  dom.overviewAiChecked.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  if (!aiConfigDirty) populateAiConfiguration();
+}
+
+function populateAiConfiguration() {
+  const status = overviewAiStatus || {};
+  dom.aiConfigEndpoint.value = status.endpoint || "";
+  dom.aiConfigDeployment.value = status.deployment === "Not configured" ? "" : status.deployment || "";
+  dom.aiConfigVersion.value = status.apiVersion === "Not configured" ? "" : status.apiVersion || "";
+  dom.aiConfigKey.value = "";
+  dom.aiConfigKey.required = !status.apiKeyConfigured;
+  dom.aiConfigKeyHelp.textContent = status.apiKeyConfigured
+    ? "A key is saved. Leave blank to keep it, or enter a replacement."
+    : "Enter an API key to configure the service.";
+}
+
+dom.aiConfigForm.addEventListener("input", () => {
+  aiConfigDirty = true;
+  dom.aiConfigFeedback.textContent = "Unsaved settings";
+  dom.aiConfigFeedback.classList.remove("is-error");
+});
+
+dom.aiConfigForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  dom.saveAiConfig.disabled = true;
+  dom.cancelAiConfig.disabled = true;
+  dom.aiConfigForm.setAttribute("aria-busy", "true");
+  dom.aiConfigFeedback.classList.remove("is-error");
+  dom.aiConfigFeedback.textContent = "Saving settings…";
+  try {
+    const status = await apiPut("/api/ai/config", {
+      endpoint: dom.aiConfigEndpoint.value,
+      deployment: dom.aiConfigDeployment.value,
+      apiVersion: dom.aiConfigVersion.value,
+      apiKey: dom.aiConfigKey.value,
+    });
+    aiConfigDirty = false;
+    renderOverviewAi(status);
+    dom.aiConfigFeedback.textContent = "Settings saved and applied.";
+    await loadActivity();
+  } catch (err) {
+    dom.aiConfigFeedback.classList.add("is-error");
+    dom.aiConfigFeedback.textContent = `${err.message || "Could not save the settings."} Re-enter the API key if you were replacing it.`;
+  } finally {
+    dom.aiConfigKey.value = "";
+    dom.saveAiConfig.disabled = false;
+    dom.cancelAiConfig.disabled = false;
+    dom.aiConfigForm.removeAttribute("aria-busy");
+  }
+});
+
+dom.cancelAiConfig.addEventListener("click", () => {
+  aiConfigDirty = false;
+  populateAiConfiguration();
+  dom.aiConfigFeedback.textContent = "";
+  dom.aiConfigEditor.open = false;
+  dom.aiConfigEditor.querySelector("summary").focus();
+});
+
+function renderOverviewAiError(message) {
+  dom.overviewAiReadiness.dataset.state = "error";
+  dom.overviewAiState.textContent = "Status unavailable";
+  dom.overviewAiDetail.textContent = message;
+}
+
+function openOverview() {
+  if (!data) return;
+  activeSlug = null;
+  selectedPhotoId = null;
+  closeDetail();
+  dom.emptyState.style.display = "none";
+  dom.profileEditor.style.display = "none";
+  dom.editor.style.display = "none";
+  dom.overview.style.display = "block";
+  renderSidebar();
+  loadOverview();
+}
+
+dom.overviewButton.addEventListener("click", openOverview);
+dom.refreshOverview.addEventListener("click", loadOverview);
+dom.refreshOverviewAi.addEventListener("click", checkAiService);
+$$('[data-activity-filter]').forEach((button) => {
+  button.addEventListener("click", () => {
+    overviewActivityFilter = button.dataset.activityFilter;
+    $$('[data-activity-filter]').forEach((filter) => {
+      const active = filter === button;
+      filter.classList.toggle("is-active", active);
+      filter.setAttribute("aria-pressed", String(active));
+    });
+    renderOverviewActivityEvents();
+  });
+});
 
 async function loadAiStatus() {
+  if (dom.refreshOverviewAi.disabled) return;
   try {
-    const status = await apiGet("/api/ai/status");
-    const configured = Boolean(status.configured);
-    dom.aiServiceDot.className = `status-dot ${configured ? "status-connected" : "status-error"}`;
-    dom.aiServiceState.textContent = configured
-      ? "Configured · key stays server-side"
-      : "Not configured · add Azure settings";
-    dom.aiDeployment.textContent = status.deployment || "—";
-    dom.aiRetries.textContent = String(status.retries ?? "—");
-    dom.aiImageCap.textContent = status.imageMaxPixels
-      ? `${(status.imageMaxPixels / 1_000_000).toFixed(1)} MP`
-      : "—";
-    dom.aiPrompts.textContent = status.prompts || "—";
+    renderOverviewAi(await apiGet("/api/ai/status"));
   } catch (err) {
-    dom.aiServiceDot.className = "status-dot status-error";
-    dom.aiServiceState.textContent = "Status unavailable";
+    renderOverviewAiError(err.message || "Status could not be loaded.");
   }
 }
 
-dom.refreshAiStatus.addEventListener("click", loadAiStatus);
+async function checkAiService() {
+  if (dom.refreshOverviewAi.disabled) return;
+  dom.refreshOverviewAi.disabled = true;
+  dom.refreshOverviewAi.textContent = "Checking…";
+  dom.overviewAiReadiness.dataset.state = "loading";
+  dom.overviewAiState.textContent = "Checking connection";
+  dom.overviewAiDetail.textContent = "Sending a small test request to OpenAI…";
+  try {
+    const status = await apiPost("/api/ai/check", {});
+    renderOverviewAi(status);
+    dom.overviewAiState.textContent = "Service responding";
+    dom.overviewAiDetail.textContent = `Connection check succeeded in ${(status.latencyMs / 1000).toFixed(1)} seconds.`;
+    toast("OpenAI service is working.", "success", 6000);
+    void loadActivity();
+  } catch (err) {
+    const message = err.message || "OpenAI connection check failed.";
+    renderOverviewAiError(message);
+    dom.overviewAiState.textContent = "Connection check failed";
+    toast(message, "error", 6000);
+  } finally {
+    dom.overviewAiChecked.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    dom.refreshOverviewAi.disabled = false;
+    dom.refreshOverviewAi.textContent = "Refresh status";
+  }
+}
 
 function formatActivityTime(timestamp) {
   const date = new Date(timestamp);
@@ -267,63 +514,17 @@ function formatActivityTime(timestamp) {
   return date.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
-function renderActivity(payload) {
-  const summary = payload?.summary || {};
-  const events = Array.isArray(payload?.events) ? payload.events : [];
-  const hasErrors = Number(summary.errorCount) > 0;
-
-  dom.activityStatusDot.className = `status-dot ${hasErrors ? "status-error" : "status-connected"}`;
-  dom.activityStatusDot.title = hasErrors ? "Recent admin errors" : "No recent admin errors";
-  dom.activityStatus.textContent = hasErrors
-    ? `${summary.errorCount} recent error${summary.errorCount === 1 ? "" : "s"} in the activity history.`
-    : "No recent errors in the activity history.";
-  dom.activityErrorCount.textContent = String(summary.errorCount || 0);
-  dom.activityAuditCount.textContent = String(summary.auditCount || 0);
-
-  const latest = events[0];
-  dom.activityLatest.textContent = latest
-    ? `${latest.kind === "error" ? "Error" : "Latest"}: ${latest.message || latest.action}`
-    : "No activity recorded yet.";
-
-  dom.activityEvents.replaceChildren();
-  for (const event of events) {
-    const row = document.createElement("article");
-    row.className = `activity-event${event.kind === "error" ? " is-error" : ""}`;
-
-    const head = document.createElement("div");
-    head.className = "activity-event-head";
-    const action = document.createElement("span");
-    action.textContent = event.action || "Admin activity";
-    const time = document.createElement("time");
-    time.dateTime = event.timestamp || "";
-    time.textContent = formatActivityTime(event.timestamp);
-    head.append(action, time);
-
-    const message = document.createElement("p");
-    message.className = "activity-event-message";
-    message.textContent = event.message || "Admin operation completed.";
-    row.append(head, message);
-    dom.activityEvents.appendChild(row);
-  }
-}
-
 async function loadActivity() {
   try {
-    renderActivity(await apiGet("/api/activity?limit=8"));
+    renderOverviewActivity(await apiGet("/api/activity?limit=50"));
   } catch (err) {
-    dom.activityStatusDot.className = "status-dot status-warning";
-    dom.activityStatusDot.title = "Activity status unavailable";
-    dom.activityStatus.textContent = "Activity history unavailable.";
-    dom.activityLatest.textContent = err.message || "Could not load activity history.";
+    overviewEvents = [];
+    dom.overviewErrorCount.textContent = "—";
+    dom.overviewAuditCount.textContent = "—";
+    dom.overviewActivitySummary.textContent = err.message || "Activity history unavailable.";
+    dom.overviewActivityEvents.innerHTML = '<p class="overview-empty">Could not load the activity log.</p>';
   }
 }
-
-dom.activityToggle.addEventListener("click", () => {
-  const expanded = dom.activityToggle.getAttribute("aria-expanded") === "true";
-  dom.activityToggle.setAttribute("aria-expanded", String(!expanded));
-  dom.activityToggle.textContent = expanded ? "Show recent" : "Hide recent";
-  dom.activityEvents.hidden = expanded;
-});
 
 /* ─────────────────────────────────────────────
    Sidebar
@@ -332,6 +533,10 @@ dom.activityToggle.addEventListener("click", () => {
 function renderSidebar() {
   renderList(dom.listPrimary, data.primaryCollections);
   renderList(dom.listArchive, data.archiveCollections);
+  const isOverview = dom.overview.style.display !== "none";
+  dom.overviewButton.classList.toggle("active", isOverview);
+  if (isOverview) dom.overviewButton.setAttribute("aria-current", "page");
+  else dom.overviewButton.removeAttribute("aria-current");
 }
 
 function renderList(ul, collections) {
@@ -490,6 +695,7 @@ function openProfileEditor() {
   selectedPhotoId = null;
   closeDetail();
   dom.emptyState.style.display = "none";
+  dom.overview.style.display = "none";
   dom.editor.style.display = "none";
   dom.profileEditor.style.display = "block";
   renderProfileEditor();
@@ -640,6 +846,7 @@ function selectCollection(slug) {
   const coll = getCollection(slug);
   if (!coll) {
     activeSlug = null;
+    dom.overview.style.display = "none";
     dom.profileEditor.style.display = "none";
     dom.editor.style.display = "none";
     dom.emptyState.style.display = "flex";
@@ -647,6 +854,7 @@ function selectCollection(slug) {
   }
 
   dom.emptyState.style.display = "none";
+  dom.overview.style.display = "none";
   dom.profileEditor.style.display = "none";
   dom.editor.style.display = "block";
 
@@ -1388,4 +1596,3 @@ setupPhotoEditing();
 setupProfileEditing();
 setupUpload();
 loadData();
-loadAiStatus();

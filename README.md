@@ -34,6 +34,30 @@ assets under `assets/` and `public/`.
 Optional Azure OpenAI settings belong in the server-only root `.env` or
 `.env.local` files. See [`admin/README.md`](admin/README.md).
 
+## Editing workflow
+
+Keep `npm run dev` running for public-site edits. Next.js hot reloads components,
+styles, and canonical `data/` JSON; config and environment changes can restart
+Next automatically. Development output uses `.next-dev/`, while production
+builds use `.next/`, so a build can run without replacing the dev server's files.
+
+When editing the local backend, run this in a second terminal:
+
+```bash
+npm run admin:dev
+```
+
+The Node watcher restarts only the admin server when backend code changes.
+On Windows and macOS it also watches the API's shared script helpers and existing
+`.env` / `.env.local` files. If you create a new env file after starting the
+watcher, restart that command once to include it. On Linux, Node watches imported
+backend modules; env changes require restarting the admin watcher.
+
+Content JSON is read fresh by the API on each request, so saving content does not
+restart the backend. Admin HTML, CSS, and browser JavaScript are served directly;
+refresh the admin browser after editing them. Prompt files are also read on demand.
+The regular `npm run admin` command remains available without a watcher.
+
 ## Build and deployment boundary
 
 The only deployment artifact is `out/`. Next.js uses `app/`, `components/`,
@@ -93,6 +117,7 @@ npm run validate:photography
 | --- | --- |
 | `npm run dev` | Start the public Next.js development server |
 | `npm run admin` | Start the local API/admin server on port 4000 |
+| `npm run admin:dev` | Watch backend edits and restart only the local admin server |
 | `npm run images:optimize` | Generate gallery and viewer WebP assets |
 | `npm run images:sync-presentation` | Sync photo dimensions and orientation into data |
 | `npm run validate:photography` | Validate photography data and generated assets |

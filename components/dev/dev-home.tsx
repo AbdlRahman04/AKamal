@@ -51,7 +51,7 @@ function Portrait({ className = "", priority = false }: { className?: string; pr
 export default function DevHome() {
   // Prepare the data used by the page. The source content and its TypeScript
   // types are in data/dev.json and data/dev.ts.
-  const profileSkills = devSkills.map((skill) => skill.items[0]).filter(Boolean).slice(0, 3);
+  const professionalFocus = ["Computer Vision Integration", "Python API Development", "AI Application Engineering"];
   const showcasedProjects = devProjects;
   const portfolioPhotos = primaryCollections.flatMap((collection) => collection.photos.filter((photo) => !photo.isPlaceholder && photo.src).slice(0, 2))
     .slice(0, 4).map((photo) => ({ src: photo.thumbnailSrc || photo.src, alt: photo.alt }));
@@ -91,7 +91,7 @@ export default function DevHome() {
               <span className="ds-identity-label">Based in</span>
               <strong>{devProfile.location}</strong>
               <span className="ds-identity-label">Professional focus</span>
-              <div className="ds-profile-skills" aria-label="Key skills">{profileSkills.map((skill) => <span key={skill}>{skill}</span>)}</div>
+              <div className="ds-profile-skills" aria-label="Professional scope">{professionalFocus.map((focus) => <span key={focus}>{focus}</span>)}</div>
               <span className="ds-profile-availability"><i aria-hidden="true" />{devProfile.availability}</span>
               </div>
           </aside>

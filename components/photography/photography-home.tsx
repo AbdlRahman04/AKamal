@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent, type TouchEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent, type TouchEvent, useCallback, useEffect, useId, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   primaryCollections,
   archiveCollections,
@@ -63,6 +64,34 @@ const blockPhotoAction = (event: SyntheticEvent<HTMLElement>) => {
   event.preventDefault();
 };
 
+function getFeaturedPhotos(collection: Collection) {
+  const ranked = collection.photos.filter(photo => photo.featuredRank)
+    .sort((a, b) => (a.featuredRank ?? 99) - (b.featuredRank ?? 99));
+  return (ranked.length ? ranked : collection.photos).slice(0, 3);
+}
+
+function CollectionPhoto({ photo, featured, eager, animate }: { photo: Photo; featured: boolean; eager: boolean; animate: boolean }) {
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+
+  return <>
+    <Image
+      className="collection-photo-image"
+      data-ready={status === "ready" ? "true" : undefined}
+      data-motion={animate ? "true" : undefined}
+      src={photo.thumbnailSrc}
+      alt={photo.alt}
+      fill
+      draggable={false}
+      loading={eager ? "eager" : "lazy"}
+      sizes={featured ? "(max-width: 900px) 100vw, 58vw" : "(max-width: 560px) 50vw, (max-width: 900px) 33vw, 25vw"}
+      // Next's Image calls onLoad after decoding, including images in the browser cache.
+      onLoad={() => setStatus("ready")}
+      onError={() => setStatus("error")}
+    />
+    {status !== "ready" && <span className="photo-load-status" aria-hidden="true">{status === "error" ? "Photograph unavailable" : "Loading photograph"}</span>}
+  </>;
+}
+
 /* Shared collection renderer used by both primary and archive sections */
 function CollectionCard({
   collection,
@@ -71,18 +100,19 @@ function CollectionCard({
   isArchive,
   isFocused,
   startProject,
+  skipReveal,
+  animateImages = false,
 }: {
   collection: Collection;
   collectionIndex: number;
-  openViewer: (c: Collection, p: Photo, i: number, el: HTMLButtonElement) => void;
+  openViewer: (c: Collection, p: Photo, i: number, el: HTMLButtonElement, animate: boolean) => void;
   isArchive?: boolean;
   isFocused?: boolean;
   startProject?: (collection: Collection) => void;
+  skipReveal?: boolean;
+  animateImages?: boolean;
 }) {
-  const rankedPhotos = collection.photos
-    .filter((photo) => photo.featuredRank)
-    .sort((a, b) => (a.featuredRank ?? 99) - (b.featuredRank ?? 99));
-  const featuredPhotos = (rankedPhotos.length > 0 ? rankedPhotos : collection.photos.slice(0, 3)).slice(0, 3);
+  const featuredPhotos = getFeaturedPhotos(collection);
   const featuredIds = new Set(featuredPhotos.map((photo) => photo.id));
 
   return (
@@ -90,7 +120,7 @@ function CollectionCard({
       className={`collection reveal${isArchive ? " archive-collection" : ""}${isFocused ? " focused-collection" : ""}`}
       key={collection.slug}
       id={collection.slug}
-      data-reveal
+      data-reveal={skipReveal ? undefined : true}
       style={{ "--reveal-delay": `${Math.min(collectionIndex, 3) * 70}ms` } as CSSProperties}
     >
         <div className="collection-header">
@@ -115,11 +145,11 @@ function CollectionCard({
               photo.orientation && `photo-orient-${photo.orientation}`,
             ].filter(Boolean).join(" ")}
             key={photo.id}
-            onClick={(event) => openViewer(collection, photo, index, event.currentTarget)}
+            onClick={(event) => openViewer(collection, photo, index, event.currentTarget, event.detail > 0)}
             onContextMenu={blockPhotoAction}
             onDragStart={blockPhotoAction}
             aria-label={`View ${photo.title}: ${photo.story}`}
-            data-reveal
+            data-reveal={skipReveal ? undefined : true}
             style={{
               "--reveal-delay": `${Math.min(index, 4) * 55}ms`,
               ...(photo.aspectRatio && !featuredIds.has(photo.id) && { aspectRatio: photo.aspectRatio }),
@@ -134,16 +164,7 @@ function CollectionCard({
                 <p>Replace with<br />your photograph</p>
               </div>
             ) : (
-              <Image
-                src={photo.thumbnailSrc}
-                alt={photo.alt}
-                fill
-                draggable={false}
-                loading="lazy"
-                sizes={featuredIds.has(photo.id)
-                  ? "(max-width: 900px) 100vw, 58vw"
-                  : "(max-width: 560px) 50vw, (max-width: 900px) 33vw, 25vw"}
-              />
+              <CollectionPhoto key={photo.thumbnailSrc} photo={photo} featured={featuredIds.has(photo.id)} eager={Boolean(isFocused && featuredIds.has(photo.id))} animate={animateImages} />
             )}
             <span className="card-shade" aria-hidden="true" />
             <span className="photo-meta"><strong>{photo.title}</strong><small>{photo.tags.slice(0, 2).join(TAG_SEP)}</small></span>
@@ -165,25 +186,56 @@ export default function PhotographyHome() {
   const heroContent = hero ?? fallbackHero;
   const heroImages = heroContent.images.map(resolveHeroImage);
   const [selected, setSelected] = useState<SelectedPhoto | null>(null);
-  const [viewerDirection, setViewerDirection] = useState<"next" | "previous">("next");
+  const [viewerDirection, setViewerDirection] = useState<"next" | "previous" | null>(null);
+  const [viewerMotion, setViewerMotion] = useState(false);
+  const [viewerClosing, setViewerClosing] = useState(false);
   const [selectedProject, setSelectedProject] = useState<Collection | null>(null);
   const [revealReady, setRevealReady] = useState(false);
   const [activeWorkSlug, setActiveWorkSlug] = useState(visiblePrimaryCollections[0]?.slug ?? "");
+  const [visitedWorkSlugs, setVisitedWorkSlugs] = useState([visiblePrimaryCollections[0]?.slug ?? ""]);
+  const warmedThumbnails = useRef(new Map<string, HTMLImageElement>());
+  const [workDirection, setWorkDirection] = useState(0);
+  const [workHasChanged, setWorkHasChanged] = useState(false);
+  const reduceMotion = useReducedMotion();
+  const workTabsId = useId();
+  const animateWork = workDirection !== 0 && reduceMotion === false;
   const openerRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const projectCloseButtonRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef<number | null>(null);
   const viewerHistoryEntry = useRef(false);
+  const viewerCloseRequested = useRef(false);
+  const viewerClosingRef = useRef(false);
+  const viewerCloseTimer = useRef<number | null>(null);
   const projectHistoryEntry = useRef(false);
 
-  const closeViewer = useCallback(() => {
-    if (viewerHistoryEntry.current) {
-      window.history.back();
-      return;
-    }
+  const finishViewerClose = useCallback(() => {
+    if (viewerCloseTimer.current !== null) window.clearTimeout(viewerCloseTimer.current);
+    viewerCloseTimer.current = null;
+    viewerClosingRef.current = false;
+    setViewerClosing(false);
+    setViewerMotion(false);
+    setViewerDirection(null);
     setSelected(null);
     window.setTimeout(() => openerRef.current?.focus(), 0);
   }, []);
+
+  const closeViewer = useCallback((animate = false) => {
+    if (viewerClosingRef.current) return;
+    const hasHistoryEntry = viewerHistoryEntry.current;
+    if (hasHistoryEntry) {
+      viewerCloseRequested.current = true;
+      window.history.back();
+    }
+    const shouldAnimate = animate && viewerMotion && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (shouldAnimate) {
+      viewerClosingRef.current = true;
+      setViewerClosing(true);
+      viewerCloseTimer.current = window.setTimeout(finishViewerClose, 200);
+    } else {
+      if (!hasHistoryEntry) finishViewerClose();
+    }
+  }, [finishViewerClose, viewerMotion]);
 
   const closeProject = useCallback(() => {
     if (projectHistoryEntry.current) {
@@ -194,11 +246,11 @@ export default function PhotographyHome() {
     window.setTimeout(() => projectCloseButtonRef.current?.blur(), 0);
   }, []);
 
-  const movePhoto = useCallback((step: number) => {
+  const movePhoto = useCallback((step: number, animate = false) => {
     if (!selected) return;
     const photos = selected.collection.photos;
     const nextIndex = (selected.index + step + photos.length) % photos.length;
-    setViewerDirection(step > 0 ? "next" : "previous");
+    setViewerDirection(animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches ? (step > 0 ? "next" : "previous") : null);
     setSelected({ collection: selected.collection, photo: photos[nextIndex], index: nextIndex });
   }, [selected]);
 
@@ -211,7 +263,7 @@ export default function PhotographyHome() {
     const delta = event.changedTouches[0]?.clientX - touchStartX.current;
     touchStartX.current = null;
     if (Math.abs(delta) < 48) return;
-    movePhoto(delta > 0 ? -1 : 1);
+    movePhoto(delta > 0 ? -1 : 1, true);
   }, [movePhoto]);
 
   useEffect(() => {
@@ -243,12 +295,16 @@ export default function PhotographyHome() {
     const onPopState = () => {
       if (!viewerHistoryEntry.current) return;
       viewerHistoryEntry.current = false;
-      setSelected(null);
-      window.setTimeout(() => openerRef.current?.focus(), 0);
+      if (viewerCloseRequested.current) {
+        viewerCloseRequested.current = false;
+        if (!viewerClosingRef.current) finishViewerClose();
+        return;
+      }
+      finishViewerClose();
     };
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
-  }, [selected]);
+  }, [selected, finishViewerClose]);
 
   useEffect(() => {
     if (!selected) return;
@@ -282,6 +338,10 @@ export default function PhotographyHome() {
       document.body.style.overflow = previousOverflow;
     };
   }, [selected, selectedProject]);
+
+  useEffect(() => () => {
+    if (viewerCloseTimer.current !== null) window.clearTimeout(viewerCloseTimer.current);
+  }, []);
 
   useEffect(() => {
     const revealItems = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
@@ -323,13 +383,19 @@ export default function PhotographyHome() {
     }
   }, [activeWorkSlug]);
 
-  const openViewer = (collection: Collection, photo: Photo, index: number, opener: HTMLButtonElement) => {
+  const openViewer = (collection: Collection, photo: Photo, index: number, opener: HTMLButtonElement, animate: boolean) => {
     openerRef.current = opener;
     if (!viewerHistoryEntry.current) {
       window.history.pushState({ ...window.history.state, photographyViewer: true }, "");
       viewerHistoryEntry.current = true;
     }
-    setViewerDirection("next");
+    setViewerDirection(null);
+    setViewerMotion(animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setViewerClosing(false);
+    viewerClosingRef.current = false;
+    viewerCloseRequested.current = false;
+    if (viewerCloseTimer.current !== null) window.clearTimeout(viewerCloseTimer.current);
+    viewerCloseTimer.current = null;
     setSelected({ collection, photo, index });
   };
 
@@ -367,9 +433,32 @@ export default function PhotographyHome() {
         : (index + (key === "ArrowRight" ? 1 : -1) + visiblePrimaryCollections.length) % visiblePrimaryCollections.length;
     const nextCollection = visiblePrimaryCollections[nextIndex];
     if (!nextCollection) return;
-    setActiveWorkSlug(nextCollection.slug);
+    selectWork(nextIndex, false);
     event.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>("[role=tab]")[nextIndex]?.focus();
   };
+
+  function selectWork(index: number, animate: boolean) {
+    const collection = visiblePrimaryCollections[index];
+    if (!collection || collection.slug === activeWork?.slug) return;
+    const currentIndex = visiblePrimaryCollections.findIndex(item => item.slug === activeWork?.slug);
+    setWorkDirection(animate ? (index > currentIndex ? 1 : -1) : 0);
+    setWorkHasChanged(true);
+    setVisitedWorkSlugs(slugs => slugs.includes(collection.slug) ? slugs : [...slugs, collection.slug]);
+    setActiveWorkSlug(collection.slug);
+  }
+
+  function warmWork(index: number) {
+    const collection = visiblePrimaryCollections[index];
+    if (!collection || visitedWorkSlugs.includes(collection.slug)) return;
+    // Warm only the featured thumbnails on intent; the rest remain lazy-loaded.
+    for (const photo of getFeaturedPhotos(collection)) {
+      if (photo.isPlaceholder || warmedThumbnails.current.has(photo.thumbnailSrc)) continue;
+      const image = new window.Image();
+      image.decoding = "async";
+      image.src = photo.thumbnailSrc;
+      warmedThumbnails.current.set(photo.thumbnailSrc, image);
+    }
+  }
 
   return (
     <main className={revealReady ? "reveal-ready" : ""}>
@@ -422,7 +511,7 @@ export default function PhotographyHome() {
                   type="button"
                   className={`${frameClass} hero-frame-button`}
                   key={image.src}
-                  onClick={(event) => openViewer(target.collection, target.photo, target.index, event.currentTarget)}
+                  onClick={(event) => openViewer(target.collection, target.photo, target.index, event.currentTarget, event.detail > 0)}
                   onContextMenu={blockPhotoAction}
                   onDragStart={blockPhotoAction}
                   aria-label={`View photograph: ${image.alt}`}
@@ -475,13 +564,14 @@ export default function PhotographyHome() {
                 aria-selected={isActive}
                 aria-controls="work-panel"
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => {
-                  setActiveWorkSlug(collection.slug);
-                }}
+                onClick={event => selectWork(collectionIndex, event.detail > 0)}
+                onPointerEnter={event => { if (event.pointerType === "mouse") warmWork(collectionIndex); }}
+                onFocus={() => warmWork(collectionIndex)}
                 onKeyDown={(event) => handleWorkTabKeyDown(event, collectionIndex)}
               >
-                <span>0{collectionIndex + 1}</span>
-                {collection.title}
+                {isActive && <motion.span className="work-tab-highlight" aria-hidden="true" layoutId={`${workTabsId}-active-tab`} transition={animateWork ? { duration: 0.26, ease: [0.16, 1, 0.3, 1] } : { duration: 0 }} />}
+                <span className="work-tab-number">0{collectionIndex + 1}</span>
+                <span className="work-tab-label">{collection.title}</span>
               </button>
             );
           })}
@@ -495,16 +585,22 @@ export default function PhotographyHome() {
             aria-labelledby={`work-tab-${activeWork.slug}`}
             tabIndex={0}
           >
-            <div className="collections work-collections">
-              <CollectionCard
-                key={activeWork.slug}
-                collection={activeWork}
-                collectionIndex={visiblePrimaryCollections.findIndex((collection) => collection.slug === activeWork.slug)}
-                openViewer={openViewer}
-                isFocused
-                startProject={startProject}
-              />
-            </div>
+            {visiblePrimaryCollections.filter(collection => visitedWorkSlugs.includes(collection.slug)).map(collection => {
+              const isActive = collection.slug === activeWork.slug;
+              return <div key={collection.slug} hidden={!isActive}>
+                <motion.div className="collections work-collections" initial={animateWork ? { opacity: 0, x: workDirection * 12 } : false} animate={{ opacity: isActive ? 1 : 0, x: isActive ? 0 : workDirection * 12 }} transition={isActive && animateWork ? { duration: 0.2, ease: [0.16, 1, 0.3, 1] } : { duration: 0 }}>
+                  <CollectionCard
+                    collection={collection}
+                    collectionIndex={visiblePrimaryCollections.findIndex(item => item.slug === collection.slug)}
+                    openViewer={openViewer}
+                    isFocused
+                    skipReveal={workHasChanged}
+                    animateImages={isActive && animateWork}
+                    startProject={startProject}
+                  />
+                </motion.div>
+              </div>;
+            })}
           </div>
         )}
 
@@ -651,7 +747,7 @@ export default function PhotographyHome() {
                   className="project-gallery-card"
                   type="button"
                   key={photo.id}
-                  onClick={(event) => openViewer(selectedProject, photo, index, event.currentTarget)}
+                  onClick={(event) => openViewer(selectedProject, photo, index, event.currentTarget, event.detail > 0)}
                   onContextMenu={blockPhotoAction}
                   onDragStart={blockPhotoAction}
                   aria-label={`View ${photo.title}: ${photo.story}`}
@@ -674,11 +770,11 @@ export default function PhotographyHome() {
       )}
 
       {selected && (
-        <div className="viewer-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) closeViewer(); }}>
+        <div className="viewer-backdrop" role="presentation" data-motion={viewerMotion ? "true" : undefined} data-closing={viewerClosing ? "true" : undefined} onMouseDown={(event) => { if (event.target === event.currentTarget) closeViewer(event.detail > 0); }}>
           <section className="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" aria-describedby="viewer-story">
-            <button className="viewer-close" ref={closeButtonRef} onClick={closeViewer} aria-label="Close photo viewer">Close</button>
+            <button className="viewer-close" ref={closeButtonRef} onClick={event => closeViewer(event.detail > 0)} aria-label="Close photo viewer">Close</button>
             <div
-              className={`viewer-image viewer-image-${viewerDirection}${selected.photo.isPlaceholder ? ` placeholder placeholder-${(collections.indexOf(selected.collection) % 3) + 1}` : ""}`}
+              className={`viewer-image${viewerDirection ? ` viewer-image-${viewerDirection}` : ""}${selected.photo.isPlaceholder ? ` placeholder placeholder-${(collections.indexOf(selected.collection) % 3) + 1}` : ""}`}
               key={`image-${selected.photo.id}`}
               onTouchStart={handleViewerTouchStart}
               onTouchEnd={handleViewerTouchEnd}
@@ -698,8 +794,11 @@ export default function PhotographyHome() {
               <ul aria-label="Photography techniques">{selected.photo.tags.map((tag) => <li key={tag}>{tag}</li>)}</ul>
             </div>
             <div className="viewer-nav">
-              <button onClick={() => movePhoto(-1)} aria-label="Previous photo"><Arrow direction="left" /></button>
-              <button onClick={() => movePhoto(1)} aria-label="Next photo"><Arrow direction="right" /></button>
+              <button onClick={event => movePhoto(-1, event.detail > 0)} aria-label="Previous photo"><Arrow direction="left" /></button>
+              <button onClick={event => movePhoto(1, event.detail > 0)} aria-label="Next photo"><Arrow direction="right" /></button>
+            </div>
+            <div className="viewer-progress" aria-hidden="true">
+              <motion.span initial={false} animate={{ scaleX: (selected.index + 1) / selected.collection.photos.length }} transition={viewerDirection && reduceMotion === false ? { duration: 0.24, ease: [0.16, 1, 0.3, 1] } : { duration: 0 }} />
             </div>
           </section>
         </div>

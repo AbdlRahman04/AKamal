@@ -4,8 +4,9 @@ import express from "express";
 import multer from "multer";
 import { readData, writeData, findCollection, PROJECT_ROOT } from "./routes/photography.mjs";
 import { processImage, deleteImageFiles, processDevImage, deleteDevImage } from "./routes/images.mjs";
-import { analyzePhoto, analyzeCollection, analyzePortfolioProfile, getAiStatus, normalizePhotoTags } from "./routes/ai.mjs";
+import { analyzePhoto, analyzeCollection, analyzePortfolioProfile, getAiStatus, checkAiService, normalizePhotoTags } from "./routes/ai.mjs";
 import { getActivity, recordActivity } from "./activity-log.mjs";
+import { saveAiConfiguration } from "./routes/ai-config.mjs";
 import { normalizeFocalPoint } from "../scripts/image-presentation.mjs";
 import {
   DEV_COLLECTIONS,
@@ -222,6 +223,63 @@ app.get(
   "/api/activity",
   asyncHandler(async (req, res) => {
     res.json(await getActivity(req.query.limit));
+  }),
+);
+
+/** Return photography counts and generated image storage for the workspace overview. */
+app.get(
+  "/api/photography/overview",
+  asyncHandler(async (_req, res) => {
+    const data = await readData();
+    const collections = [...data.primaryCollections, ...data.archiveCollections];
+    const photos = collections.flatMap((collection) => collection.photos);
+    const imageExtensions = new Set([".webp", ".jpg", ".jpeg", ".png", ".tif", ".tiff"]);
+
+    async function measureDirectory(directory) {
+      let bytes = 0;
+      let files = 0;
+      let entries = [];
+      try {
+        entries = await fs.promises.readdir(directory, { withFileTypes: true });
+      } catch (error) {
+        if (error.code === "ENOENT") return { bytes, files };
+        throw error;
+      }
+
+      for (const entry of entries) {
+        const entryPath = path.join(directory, entry.name);
+        if (entry.isDirectory()) {
+          const nested = await measureDirectory(entryPath);
+          bytes += nested.bytes;
+          files += nested.files;
+        } else if (entry.isFile() && imageExtensions.has(path.extname(entry.name).toLowerCase())) {
+          const stat = await fs.promises.stat(entryPath);
+          bytes += stat.size;
+          files += 1;
+        }
+      }
+      return { bytes, files };
+    }
+
+    const imageRoot = path.join(PROJECT_ROOT, "public", "photography");
+    const [full, thumbs] = await Promise.all([
+      measureDirectory(path.join(imageRoot, "full")),
+      measureDirectory(path.join(imageRoot, "thumbs")),
+    ]);
+    res.json({
+      photoCount: photos.filter((photo) => !photo.isPlaceholder && (photo.src || photo.thumbnailSrc)).length,
+      collectionCount: collections.length,
+      primaryCollectionCount: data.primaryCollections.length,
+      archiveCollectionCount: data.archiveCollections.length,
+      storage: {
+        bytes: full.bytes + thumbs.bytes,
+        imageCount: full.files + thumbs.files,
+        fullBytes: full.bytes,
+        thumbnailBytes: thumbs.bytes,
+        fullImageCount: full.files,
+        thumbnailCount: thumbs.files,
+      },
+    });
   }),
 );
 
@@ -561,6 +619,27 @@ app.get(
 app.get(
   "/api/ai/status",
   asyncHandler(async (_req, res) => {
+    res.set("Cache-Control", "no-store");
+    res.json(getAiStatus());
+  }),
+);
+
+app.post(
+  "/api/ai/check",
+  asyncHandler(async (_req, res) => {
+    const status = await checkAiService();
+    await recordActivity({ action: "ai.service.checked", message: "OpenAI service connection check succeeded." });
+    res.set("Cache-Control", "no-store");
+    res.json(status);
+  }),
+);
+
+app.put(
+  "/api/ai/config",
+  asyncHandler(async (req, res) => {
+    await saveAiConfiguration(req.body);
+    await recordActivity({ action: "ai.configuration.updated", message: "Azure OpenAI settings saved and applied." });
+    res.set("Cache-Control", "no-store");
     res.json(getAiStatus());
   }),
 );

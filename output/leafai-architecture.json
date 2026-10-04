@@ -1,0 +1,110 @@
+{
+  "title": "LeafAI — Plant Health Monitoring",
+  "subtitle": "How a leaf photo becomes a plant health result.",
+  "description": "The image moves from the browser through the prediction API and model, then returns with a readable result. Select a component to see its role.",
+  "defaultNode": "api",
+  "nodes": [
+    {
+      "id": "user", "title": "User", "subtitle": "Take or upload a photo", "category": "runtime", "icon": "user", "column": 1, "row": 1,
+      "technology": "Browser camera or image upload",
+      "responsibilities": ["Take a leaf photo with the browser camera or choose one from a device.", "Check the image before sending it for analysis.", "Read the result and any warning that the prediction needs a closer look."]
+    },
+    {
+      "id": "frontend", "title": "React / Vite", "subtitle": "Photo input and results", "category": "runtime", "icon": "browser", "column": 2, "row": 1,
+      "technology": "React 19 · Vite · Render static hosting",
+      "responsibilities": ["Shows the camera, upload, image preview and result screens.", "Sends the selected image to the Flask API for prediction.", "Displays the predicted condition, confidence, care advice and follow-up tools."]
+    },
+    {
+      "id": "api", "title": "Flask REST API", "subtitle": "Connects the application", "category": "runtime", "icon": "server", "column": 3, "row": 1,
+      "technology": "Python · Flask · Render web service",
+      "responsibilities": ["Accepts a leaf image through POST /predict.", "Prepares the image, runs the model and builds the response.", "Provides separate routes for plant guidance, reports, scan history and location information."],
+      "endpoints": ["POST /predict", "POST /chatbot", "POST /generate-pdf", "GET /dashboard-data", "GET /plant-geography/<plant_name>"],
+      "notes": ["The API returns a structured result so the interface can show the diagnosis, supporting information and review warnings together."]
+    },
+    {
+      "id": "preprocessing", "title": "Preprocessing", "subtitle": "Prepare the image", "category": "runtime", "icon": "image", "column": 4, "row": 1,
+      "technology": "Pillow · NumPy · TensorFlow",
+      "responsibilities": ["Converts the uploaded image to RGB and resizes it to 128 × 128 pixels.", "Applies the input processing expected by the MobileNetV2 model.", "Adds a batch dimension so the model can process the image."],
+      "notes": ["The image must be prepared in the same way as the model's training inputs; a different scaling method can change its predictions."]
+    },
+    {
+      "id": "classifier", "title": "MobileNetV2", "subtitle": "Classify the leaf", "category": "runtime", "icon": "model", "column": 5, "row": 1,
+      "technology": "TensorFlow / Keras · Transfer learning",
+      "responsibilities": ["Loads the trained model when the API starts.", "Scores the prepared image against 38 plant health classes across 14 species.", "Passes class probabilities to the next step for interpretation."],
+      "notes": ["MobileNetV2 was adapted through transfer learning for this classification task.", "Model training and evaluation happen separately from a visitor's scan. An upload uses the saved model for inference."]
+    },
+    {
+      "id": "processing", "title": "Prediction processing", "subtitle": "Explain the model output", "category": "runtime", "icon": "check", "column": 4, "row": 2,
+      "technology": "Python · Class mapping · Confidence review",
+      "responsibilities": ["Keeps the three highest scoring classes and translates them into readable plant and condition names.", "Checks the leading score and its gap from the next result.", "Adds severity and care information to the prediction."],
+      "notes": ["A result is marked for review if its leading score is below 70% or less than 15 percentage points ahead of the runner-up.", "The result is still shown, with a warning to try a clearer photo or consider similar conditions."]
+    },
+    {
+      "id": "results", "title": "Results interface", "subtitle": "Present the diagnosis", "category": "runtime", "icon": "results", "column": 2, "row": 2,
+      "technology": "Flask JSON response · React results UI",
+      "responsibilities": ["Shows the likely plant condition, confidence score and severity.", "Includes alternative predictions and a warning when the result is uncertain.", "Provides care guidance, a healthy leaf reference, follow-up chat and report export."]
+    },
+    {
+      "id": "knowledge", "title": "Knowledge base", "subtitle": "Plant care context", "category": "support", "icon": "book", "column": 5, "row": 2,
+      "technology": "Python knowledge dictionaries · Reference image files",
+      "responsibilities": ["Supplies condition descriptions, treatment and prevention guidance.", "Adds plant information such as climate, soil and suitable regions.", "Provides healthy reference images and material for follow-up questions."]
+    },
+    {
+      "id": "chat", "title": "Plant Doctor", "subtitle": "Ask about a result", "category": "support", "icon": "chat", "column": 1, "row": 3,
+      "technology": "Local knowledge responses · Optional Groq",
+      "responsibilities": ["Uses the current scan and the visitor's question as context.", "Draws on plant care information to answer follow-up questions.", "Can use an optional Groq service for explanations and falls back to local responses when it is unavailable."],
+      "endpoints": ["POST /chatbot"],
+      "notes": ["The external explanation service is optional; plant guidance remains available without it."]
+    },
+    {
+      "id": "pdf", "title": "PDF reports", "subtitle": "Save a scan summary", "category": "support", "icon": "report", "column": 2, "row": 3,
+      "technology": "Frontend PDF export · Backend ReportLab",
+      "responsibilities": ["Lets visitors export the result from the report preview.", "Includes the condition, confidence, severity and guidance in the report.", "Also provides a separate API route for generating a PDF."],
+      "endpoints": ["POST /generate-pdf"],
+      "notes": ["The report preview exports a PDF in the browser. The API's PDF route is a separate option."]
+    },
+    {
+      "id": "dashboard", "title": "Performance", "subtitle": "Metrics and scan history", "category": "support", "icon": "chart", "column": 3, "row": 3,
+      "technology": "React · Recharts · Flask metrics",
+      "responsibilities": ["Shows available model performance information and a confusion matrix.", "Summarizes previous scans by confidence, severity and predicted condition.", "Keeps monitoring views separate from the steps used to make one prediction."],
+      "endpoints": ["GET /dashboard-data"],
+      "notes": ["Performance figures belong to the model version they were measured on. They should not be read as accuracy for a different saved model."]
+    },
+    {
+      "id": "storage", "title": "File storage", "subtitle": "Scans and uploads", "category": "support", "icon": "file", "column": 4, "row": 3,
+      "technology": "JSON files · Local filesystem",
+      "responsibilities": ["Saves prediction records in a JSON file and uploaded photos on the server's filesystem.", "Keeps cached performance information and scan history in JSON files."],
+      "notes": ["The application uses local files for this data. The current Render configuration does not specify a persistent disk, so scan history may not survive a redeployment."]
+    }
+  ],
+  "edges": [
+    {"from": "user", "to": "frontend", "kind": "runtime"},
+    {"from": "frontend", "to": "api", "kind": "runtime", "label": "HTTP"},
+    {"from": "api", "to": "preprocessing", "kind": "runtime"},
+    {"from": "preprocessing", "to": "classifier", "kind": "runtime"},
+    {"from": "classifier", "to": "processing", "kind": "runtime"},
+    {"from": "processing", "to": "results", "kind": "runtime", "label": "Validate & enrich"},
+    {"from": "results", "to": "frontend", "kind": "response", "label": "JSON"},
+    {"from": "knowledge", "to": "processing", "kind": "support"},
+    {"from": "api", "to": "chat", "kind": "support"},
+    {"from": "knowledge", "to": "chat", "kind": "support"},
+    {"from": "results", "to": "pdf", "kind": "support"},
+    {"from": "frontend", "to": "dashboard", "kind": "support"},
+    {"from": "api", "to": "storage", "kind": "support"}
+  ],
+  "requestPath": [
+    {"title": "Choose a leaf photo", "description": "Upload an image or take one with the browser camera."},
+    {"title": "Send it for analysis", "description": "The browser sends the image to POST /predict."},
+    {"title": "Run the model", "description": "The API prepares the image and MobileNetV2 scores its possible conditions."},
+    {"title": "Interpret the scores", "description": "The API checks uncertainty and adds plant care information."},
+    {"title": "Review the result", "description": "The interface shows the likely condition, alternatives and any warning."}
+  ],
+  "decisions": [
+    {"title": "Use MobileNetV2 for image classification", "description": "Transfer learning let the team adapt an existing image model to 38 plant health classes instead of training a new network from scratch. The saved model scores each photo submitted for analysis."},
+    {"title": "Prepare every image the same way", "description": "The API converts photos to RGB, resizes them to 128 × 128 pixels and applies MobileNetV2's expected input processing. Consistent input keeps the live prediction path aligned with the trained model."},
+    {"title": "Show uncertainty alongside a prediction", "description": "The interface keeps the top three possibilities. A leading score below 70%, or a gap under 15 percentage points to the next class, adds a review warning so visitors can judge how much confidence to place in the result."},
+    {"title": "Add care information after classification", "description": "The model identifies a likely condition; separate plant knowledge supplies treatment, prevention and environmental context. This keeps the prediction result useful without presenting the model as a source of care advice."},
+    {"title": "Use files for project data", "description": "Uploaded photos and scan records are stored as files, with prediction history in JSON. This keeps the project simple, but the current hosting setup does not guarantee that local files persist across deployments."},
+    {"title": "Keep model evaluation separate from scanning", "description": "Training and evaluation happen before the model is deployed. A visitor's scan runs inference only, and performance figures should be tied to the exact model version that produced them."}
+  ]
+}

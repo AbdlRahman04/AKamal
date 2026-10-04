@@ -447,32 +447,7 @@
       "skillsDemonstrated": "Window-light exposure, clean studio-style backgrounds, lifestyle context shooting, and brand-level consistency.",
       "coverImage": "",
       "section": "primary",
-      "photos": [
-        {
-          "id": "product-1789412025052",
-          "featuredRank": 1,
-          "title": "Two pink polishes with dried florals",
-          "src": "/photography/full/img-20241201-152736.webp",
-          "thumbnailSrc": "/photography/thumbs/img-20241201-152736.webp",
-          "alt": "Two small pink nail polish bottles on a wooden ledge with a faint reflection, framed by yellow flowers, baby’s breath and eucalyptus in soft focus.",
-          "story": "Two pink nail polish bottles are centered on a textured wooden surface and visually framed by yellow blooms, baby’s breath and eucalyptus. Shallow depth of field and warm color grading emphasize texture and a subtle foreground reflection.",
-          "tags": [
-            "Environmental Texture",
-            "Color Grading",
-            "Environmental Framing",
-            "Depth",
-            "Visual Balance",
-            "Reflection Control"
-          ],
-          "isPlaceholder": false,
-          "aspectRatio": "9/16",
-          "orientation": "portrait",
-          "focalPoint": {
-            "x": 50,
-            "y": 95
-          }
-        }
-      ]
+      "photos": []
     },
     {
       "slug": "event",
@@ -566,7 +541,7 @@
         {
           "id": "land-1",
           "featuredRank": 1,
-          "title": "Glass towers framed by palms",
+          "title": "Etihad towers framed by palms",
           "src": "/photography/full/2025-12-19-201533673.webp",
           "thumbnailSrc": "/photography/thumbs/2025-12-19-201533673.webp",
           "alt": "Three curved glass towers rising behind palm trees and a low arched walkway under a moody overcast sky.",
@@ -593,7 +568,7 @@
           "src": "/photography/full/birds-etihad.webp",
           "thumbnailSrc": "/photography/thumbs/birds-etihad.webp",
           "alt": "Cluster of glass-clad skyscrapers under a dramatic pink-orange sunset sky with scattered birds.",
-          "story": "A vertical cluster of reflective towers rises into a vibrant sunset, framed by layered clouds and a flock of birds that emphasize the composition's balance and scale.",
+          "story": "A vertical cluster of reflective Etihad towers rises into a vibrant sunset, framed by layered clouds and a flock of birds that emphasize the composition's balance and scale.",
           "tags": [
             "Golden Hour",
             "Atmospheric Light",

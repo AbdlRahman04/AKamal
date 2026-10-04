@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import type { DevArchitecture } from "@/data/dev";
 import ArchitectureDetails from "./architecture-details";
 import ArchitectureIcon from "./architecture-icon";
@@ -31,17 +31,21 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
     setView({ x: (width - WIDTH * scale) / 2, y: (height - HEIGHT * scale) / 2, scale });
   }
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const element = viewport.current;
     if (!element) return;
-    const observer = new ResizeObserver(() => {
-      const { clientWidth: width, clientHeight: height } = element;
+    function measure() {
+      const current = viewport.current;
+      if (!current) return;
+      const { clientWidth: width, clientHeight: height } = current;
       if (!width || !height) return;
       const narrow = width < 600;
       const scale = narrow ? .9 : Math.min(width / WIDTH, height / HEIGHT, 1);
       const initial = nodeRefs.current[architecture.defaultNode];
       setView({ x: narrow && initial ? width / 2 - (initial.offsetLeft + initial.offsetWidth / 2) * scale : (width - WIDTH * scale) / 2, y: narrow && initial ? height / 2 - (initial.offsetTop + initial.offsetHeight / 2) * scale : (height - HEIGHT * scale) / 2, scale });
-    });
+    }
+    measure();
+    const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => observer.disconnect();
   }, [architecture.defaultNode, WIDTH, HEIGHT]);

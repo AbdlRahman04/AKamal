@@ -195,6 +195,7 @@ GitHub Actions uploads only `out/` as build artifact.
 |---------|---------|
 | `npm run dev` | Next.js dev server (public site) |
 | `npm run admin` | Express admin server (port 4000) |
+| `npm run admin:dev` | Express admin server with automatic restart on backend edits |
 | `npm run build` | Static export to `out/` |
 | `npm run images:optimize` | Batch WebP generation |
 | `npm run images:sync-presentation` | Extract image metadata |

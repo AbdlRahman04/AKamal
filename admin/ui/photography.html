@@ -11,7 +11,7 @@
 <body>
 
   <!-- ── Toast notifications ── -->
-  <div id="toast-container"></div>
+  <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
 
   <!-- ── Top bar ── -->
   <header class="topbar">
@@ -38,6 +38,12 @@
 
     <!-- ── Sidebar: collection list ── -->
     <aside id="sidebar" class="sidebar">
+      <div class="sidebar-section sidebar-overview-section">
+        <button id="btn-overview" class="collection-list-btn overview-nav-btn" type="button" aria-current="page">
+          <span>Overview</span>
+          <span class="overview-nav-indicator" aria-hidden="true"></span>
+        </button>
+      </div>
       <div class="sidebar-section">
         <h2 class="sidebar-heading">Primary</h2>
         <ul id="list-primary" class="collection-list"></ul>
@@ -52,52 +58,117 @@
           <span aria-hidden="true">↗</span>
         </button>
       </div>
-      <section class="activity-card" aria-labelledby="activity-heading">
-        <div class="activity-heading-row">
-          <h2 id="activity-heading" class="sidebar-heading">Recent activity</h2>
-          <span id="activity-status-dot" class="status-dot status-connected" title="Activity status"></span>
-        </div>
-        <p id="activity-status" class="activity-status">Checking activity history…</p>
-        <div class="activity-counts">
-          <span><strong id="activity-error-count">0</strong> errors</span>
-          <span><strong id="activity-audit-count">0</strong> actions</span>
-        </div>
-        <p id="activity-latest" class="activity-latest">No activity recorded yet.</p>
-        <button id="btn-toggle-activity" class="btn btn-outline btn-sm activity-toggle" aria-expanded="false">
-          Show recent
-        </button>
-        <div id="activity-events" class="activity-events" hidden></div>
-      </section>
-      <section class="ai-service-card" aria-labelledby="ai-service-heading">
-        <div class="ai-service-heading-row">
-          <h2 id="ai-service-heading" class="sidebar-heading">AI Service</h2>
-          <span id="ai-service-dot" class="status-dot status-error" title="AI status"></span>
-        </div>
-        <p id="ai-service-state" class="ai-service-state">Checking configuration…</p>
-        <dl class="ai-service-details">
-          <div>
-            <dt>Deployment</dt>
-            <dd id="ai-deployment">—</dd>
-          </div>
-          <div>
-            <dt>Retries</dt>
-            <dd id="ai-retries">—</dd>
-          </div>
-          <div>
-            <dt>Vision cap</dt>
-            <dd id="ai-image-cap">—</dd>
-          </div>
-          <div>
-            <dt>Prompts</dt>
-            <dd id="ai-prompts">—</dd>
-          </div>
-        </dl>
-        <button id="btn-refresh-ai-status" class="btn btn-outline btn-sm ai-refresh">Refresh status</button>
-      </section>
     </aside>
 
     <!-- ── Main content area ── -->
     <main id="main" class="main">
+
+      <!-- Workspace overview: portfolio totals, generated image storage, activity and AI configuration. -->
+      <section id="overview-panel" class="overview-panel" aria-labelledby="overview-title" style="display:none">
+        <header class="overview-header">
+          <div>
+            <h2 id="overview-title">Workspace overview</h2>
+            <p>Photography portfolio status, local media footprint, and service activity.</p>
+          </div>
+          <div class="overview-header-actions">
+            <span id="overview-updated" class="overview-updated">Waiting for data</span>
+            <button id="btn-refresh-overview" class="btn btn-outline" type="button">Refresh overview</button>
+          </div>
+        </header>
+
+        <section class="overview-metrics" aria-label="Portfolio totals">
+          <div class="overview-metric">
+            <span class="overview-metric-label">Published photographs</span>
+            <strong id="overview-photo-count">—</strong>
+            <span class="overview-metric-note">Real images across primary and archive collections</span>
+          </div>
+          <div class="overview-metric">
+            <span class="overview-metric-label">Collections</span>
+            <strong id="overview-collection-count">—</strong>
+            <span id="overview-collection-breakdown" class="overview-metric-note">Primary and archive</span>
+          </div>
+          <div class="overview-metric overview-storage-metric">
+            <span class="overview-metric-label">Published image storage</span>
+            <strong id="overview-storage-size">—</strong>
+            <span id="overview-storage-breakdown" class="overview-metric-note">Full-size images and thumbnails</span>
+          </div>
+        </section>
+        <p class="overview-storage-note">Storage reflects generated public image files; source originals are excluded.</p>
+
+        <div class="overview-columns">
+          <section class="overview-section overview-activity" aria-labelledby="overview-activity-title">
+            <div class="overview-section-head">
+              <div>
+                <h3 id="overview-activity-title">Activity &amp; errors</h3>
+                <p id="overview-activity-summary">Loading recent workspace events…</p>
+              </div>
+              <div class="activity-filters" role="group" aria-label="Filter activity">
+                <button class="activity-filter is-active" type="button" data-activity-filter="all" aria-pressed="true">All</button>
+                <button class="activity-filter" type="button" data-activity-filter="error" aria-pressed="false">Errors</button>
+              </div>
+            </div>
+            <div class="overview-activity-counts" aria-label="Activity totals">
+              <span><strong id="overview-error-count">—</strong> errors recorded</span>
+              <span><strong id="overview-audit-count">—</strong> actions recorded</span>
+            </div>
+            <div id="overview-activity-events" class="overview-activity-events" aria-live="polite">
+              <p class="overview-empty">Loading activity log…</p>
+            </div>
+          </section>
+
+          <section class="overview-section overview-ai" aria-labelledby="overview-ai-title">
+            <div class="overview-section-head">
+              <div>
+                <h3 id="overview-ai-title">OpenAI service</h3>
+                <p>Server-side configuration used for metadata suggestions.</p>
+              </div>
+              <button id="btn-refresh-overview-ai" class="btn btn-outline btn-sm" type="button">Refresh status</button>
+            </div>
+            <div id="overview-ai-readiness" class="ai-readiness" data-state="loading" aria-live="polite">
+              <span class="ai-readiness-mark" aria-hidden="true"></span>
+              <div><strong id="overview-ai-state">Checking configuration</strong><span id="overview-ai-detail">Credentials remain on the local admin server.</span></div>
+            </div>
+            <dl class="overview-ai-details">
+              <div><dt>Provider</dt><dd id="overview-ai-provider">—</dd></div>
+              <div><dt>Deployment</dt><dd id="overview-ai-deployment">—</dd></div>
+              <div><dt>Endpoint</dt><dd id="overview-ai-endpoint">—</dd></div>
+              <div><dt>Retries</dt><dd id="overview-ai-retries">—</dd></div>
+              <div><dt>Image limit</dt><dd id="overview-ai-image-cap">—</dd></div>
+              <div><dt>Prompt source</dt><dd id="overview-ai-prompts">—</dd></div>
+              <div><dt>Last checked</dt><dd id="overview-ai-checked">Not checked yet</dd></div>
+            </dl>
+            <p class="overview-ai-note">Refresh status sends a small text request to check the connection. Normal API usage charges apply; no photos are sent.</p>
+            <details id="ai-config-editor" class="ai-config-editor">
+              <summary>Edit OpenAI settings</summary>
+              <form id="ai-config-form" autocomplete="off">
+                <label class="field">
+                  <span class="field-label">Azure endpoint</span>
+                  <input id="ai-config-endpoint" class="field-input" type="url" required maxlength="2048" placeholder="https://your-resource.openai.azure.com/" />
+                </label>
+                <label class="field">
+                  <span class="field-label">Deployment name</span>
+                  <input id="ai-config-deployment" class="field-input" type="text" required maxlength="128" spellcheck="false" />
+                </label>
+                <label class="field">
+                  <span class="field-label">API version</span>
+                  <input id="ai-config-version" class="field-input" type="text" required maxlength="32" placeholder="YYYY-MM-DD-preview" spellcheck="false" />
+                </label>
+                <label class="field">
+                  <span class="field-label">API key</span>
+                  <input id="ai-config-key" class="field-input" type="password" maxlength="2048" autocomplete="new-password" aria-describedby="ai-config-key-help" />
+                  <span id="ai-config-key-help" class="ai-config-help">Leave blank to keep the saved key.</span>
+                </label>
+                <p class="ai-config-help">Saved to the local environment file and applied immediately.</p>
+                <div class="ai-config-actions">
+                  <button id="btn-save-ai-config" class="btn btn-accent btn-sm" type="submit">Save settings</button>
+                  <button id="btn-cancel-ai-config" class="btn btn-outline btn-sm" type="button">Cancel</button>
+                </div>
+                <p id="ai-config-feedback" class="ai-config-feedback" role="status" aria-live="polite"></p>
+              </form>
+            </details>
+          </section>
+        </div>
+      </section>
 
       <!-- Empty state (shown when no collection is selected) -->
       <div id="empty-state" class="empty-state">

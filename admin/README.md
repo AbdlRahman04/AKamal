@@ -52,12 +52,13 @@ AZURE_OPENAI_API_VERSION=2024-12-01-preview
 
 `.env.local` may be used for private overrides and takes precedence over `.env`. Keep both files out of source control. The Azure deployment must support image input and structured JSON output.
 
-The admin sidebar includes a read-only AI Service status card. It shows whether the server-side configuration is usable, the deployment name, retry count, image pixel cap, and prompt source. It never displays the API key.
+The Overview page includes OpenAI configuration status and an Edit OpenAI settings form. Update the Azure endpoint, deployment name, API version, and optionally the API key here. Saving preserves other environment entries, writes the supported settings to `.env.local`, and applies them immediately. Leave the API key blank to retain the saved key; its value is never returned to the browser. Recent activity and OpenAI service details are shown in Overview.
 
 Optional reliability settings are documented in the root `.env.example`. The AI service supports bounded image preprocessing, external prompt files under `prompts/`, exponential retries for rate limits/transient failures, JSON repair plus schema validation, and append-only usage records at `logs/llm_usage.jsonl`.
 
 ## What It Manages
 
+- Opens to a workspace overview with real photo and collection totals, generated full-size and thumbnail storage, recent activity and errors, and Azure OpenAI configuration status
 - Reads and writes portfolio data in `data/photography.json`
 - Adds, edits, reorders, and deletes photos inside collections
 - Updates collection metadata such as title, theme, intro, and skills demonstrated
@@ -66,6 +67,8 @@ Optional reliability settings are documented in the root `.env.example`. The AI 
 
 After making content or image changes, run `npm run validate:photography` to verify
 that every non-placeholder photo references existing generated assets.
+
+The overview reports storage for generated image files under `public/photography/full/` and `public/photography/thumbs/`; source originals are excluded. Its activity feed shows the latest 50 events, while the error and action totals cover the retained activity log. Loading Overview reads OpenAI configuration only. Clicking OpenAI's Refresh status sends a small text request, with a 20-second timeout and no retries, and shows a success or failure notification. No photo evaluation is needed. Normal provider usage charges apply; checks are recorded in the activity and usage logs.
 
 ## Folder Structure
 

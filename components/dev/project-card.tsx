@@ -80,18 +80,22 @@ export default function ProjectCard({ project, delay, index, technologyLimit, pr
     style.setProperty("--pointer-y", `${y}px`);
     style.setProperty("--parallax-x", `${offsetX}px`);
     style.setProperty("--parallax-y", `${offsetY}px`);
+    style.setProperty("--preview-rotate-x", `${offsetY * 0.7}deg`);
+    style.setProperty("--preview-rotate-y", `${-offsetX * 0.7}deg`);
   }
 
-  function handlePointerLeave(event: PointerEvent<HTMLElement>) {
-    const style = event.currentTarget.style;
+  function resetPointer(element: HTMLElement) {
+    const style = element.style;
     style.setProperty("--pointer-x", "50%");
     style.setProperty("--pointer-y", "50%");
     style.setProperty("--parallax-x", "0px");
     style.setProperty("--parallax-y", "0px");
+    style.setProperty("--preview-rotate-x", "0deg");
+    style.setProperty("--preview-rotate-y", "0deg");
   }
 
   return (
-    <article className={`ds-project-card${project.featured ? " is-featured" : ""}`} style={style} data-reveal onPointerMove={handlePointerMove} onPointerLeave={handlePointerLeave}>
+    <article className={`ds-project-card${project.featured ? " is-featured" : ""}`} style={style} data-reveal onPointerMove={handlePointerMove} onPointerLeave={event => resetPointer(event.currentTarget)} onFocusCapture={event => resetPointer(event.currentTarget)}>
       <div className="ds-project-content">
         <div className="ds-project-meta"><span>{project.number} <i>/</i> {project.year}</span><span className={project.status.toLowerCase() === "completed" ? "is-complete" : "is-progress"}><i />{project.status}</span></div>
         <h3>{project.title}</h3>

@@ -210,12 +210,19 @@ export function getAiStatus() {
   const deployment = process.env.AZURE_OPENAI_DEPLOYMENT || process.env.LLM_MODEL || "";
   const settings = getSettings();
   let endpointHost = "";
-  try { endpointHost = new URL(endpoint).host; } catch { /* invalid/missing endpoint is reported as not configured */ }
+  let endpointUrl = "";
+  try {
+    const url = new URL(endpoint);
+    endpointHost = url.host;
+    endpointUrl = `${url.origin}${url.pathname}`;
+  } catch { /* invalid/missing endpoint is reported as not configured */ }
   return {
     configured: configured(endpoint, "your-resource") && configured(apiKey, "replace-with") && configured(deployment, "your-deployment") && configured(process.env.AZURE_OPENAI_API_VERSION || "", "your-supported"),
     provider: "Azure OpenAI",
     deployment: deployment || "Not configured",
     endpointHost: endpointHost || "Not configured",
+    endpoint: endpointUrl,
+    apiKeyConfigured: configured(apiKey, "replace-with"),
     apiVersion: process.env.AZURE_OPENAI_API_VERSION || "Not configured",
     retries: settings.maxRetries,
     imageMaxPixels: settings.imageMaxPixels,
@@ -253,6 +260,48 @@ function usesReasoningModel(deployment) {
 }
 
 function errorStatus(error) { return Number(error?.status || error?.statusCode || 0); }
+
+/** Explicit, bounded connection check; no portfolio images or metadata are sent. */
+export async function checkAiService() {
+  if (!getAiStatus().configured) {
+    throw new AiServiceError("OpenAI is not configured. Complete Edit OpenAI settings first.", 503);
+  }
+  const { client, deployment } = getClient();
+  const started = Date.now();
+  try {
+    const response = await client.chat.completions.create({
+      model: deployment,
+      messages: [{ role: "user", content: "Reply with OK." }],
+      ...(usesReasoningModel(deployment) ? { max_completion_tokens: 128 } : { max_tokens: 8 }),
+    }, { timeout: 20_000, maxRetries: 0 });
+    if (!response.choices?.length) {
+      throw new AiServiceError("OpenAI returned an unexpected response. Check the configured deployment.", 502);
+    }
+    const latencyMs = Date.now() - started;
+    const usage = response.usage || {};
+    await recordLlmUsage({ model: deployment, callKind: "service_check", promptTokens: usage.prompt_tokens, completionTokens: usage.completion_tokens, totalTokens: usage.total_tokens, usageReported: Boolean(response.usage), latencyMs, status: "ok" });
+    return { ...getAiStatus(), working: true, latencyMs };
+  } catch (error) {
+    const status = errorStatus(error);
+    await recordLlmUsage({ model: deployment, callKind: "service_check", latencyMs: Date.now() - started, status: `error_${status || "network"}` });
+    if (error instanceof AiServiceError) throw error;
+    const message = status === 401 || status === 403
+      ? "OpenAI rejected authentication. Check the API key and resource access."
+      : status === 404
+        ? "OpenAI deployment was not found. Check the endpoint, deployment name, and API version."
+        : status === 429
+          ? "OpenAI is rate limited or out of quota. Check your quota and try again later."
+          : status === 400
+            ? "OpenAI rejected the check request. Check the deployment and API version."
+            : error?.name === "APIConnectionTimeoutError"
+              ? "OpenAI did not respond within 20 seconds. Try again."
+              : status >= 500
+                ? "OpenAI is temporarily unavailable. Try again later."
+                : "Could not connect to OpenAI. Check the endpoint and network connection.";
+    throw new AiServiceError(message, 502);
+  }
+}
+
 function isRetryable(error) {
   const status = errorStatus(error);
   return status === 429 || status >= 500 || ["ECONNRESET", "ETIMEDOUT", "EAI_AGAIN", "ENETUNREACH"].includes(error?.code);
