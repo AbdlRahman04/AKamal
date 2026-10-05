@@ -146,8 +146,8 @@ out/                       Generated static export
 The Pages workflow publishes the static export on pushes to `main` and can also
 be run manually from the Actions tab. In the repository's **Settings > Pages**,
 select **GitHub Actions** as the publishing source before the first deployment.
-The default project URL for the `askamal-Dev` repository is
-`https://abdlrahman04.github.io/askamal-Dev/`, with photography at `/askamal-Dev/photography/`.
+The default project URL for the `AKamal` repository is
+`https://abdlrahman04.github.io/AKamal/`, with photography at `/AKamal/photography/`.
 
 The workflow reads the Pages base path at build time, including support for a
 custom domain. Public images and icons use that prefix; canonical JSON retains
@@ -156,7 +156,7 @@ its root-relative asset paths. Admin tools still run locally.
 To check a project-path export locally in PowerShell:
 
 ```powershell
-$env:NEXT_PUBLIC_BASE_PATH = "/askamal-Dev"
+$env:NEXT_PUBLIC_BASE_PATH = "/AKamal"
 npm run build
 Remove-Item Env:NEXT_PUBLIC_BASE_PATH
 ```
