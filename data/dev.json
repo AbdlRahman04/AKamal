@@ -2,7 +2,7 @@
   "profile": {
     "name": "Abdulrahman Kamal",
     "role": "Software Developer | AI & Data",
-    "title": "I build useful software from complex ideas.",
+    "title": "From messy problems to thoughtful software",
     "intro": "Computer Science graduate building reliable software, AI applications, and data-driven systems. I focus on clean implementation, integration, and solving practical problems.",
     "location": "Abu Dhabi, United Arab Emirates",
     "email": "abdshawki@gmail.com",
@@ -777,7 +777,7 @@
       "number": "03"
     },
     {
-      "name": "Introduction to Software Engineering - IBM",
+      "name": "Introduction to Software Engineering",
       "issuer": "IBM",
       "year": "2025",
       "description": "",
@@ -794,7 +794,7 @@
       "description": "",
       "status": "completed",
       "credentialUrl": "https://coursera.org/share/2b3d773acb5bfb69f6b8f123aa73614e",
-      "imageUrl": "",
+      "imageUrl": "/dev/generative-ai-prompt-engineering-basics-6f58bf97-a5fa-4788-bbc3-27eb6dbdac6b.webp",
       "slug": "generative-ai-prompt-engineering-basics",
       "number": "05"
     },
@@ -805,7 +805,7 @@
       "description": "",
       "status": "completed",
       "credentialUrl": "https://coursera.org/share/fec6f63f2007a3599e07b6f367e7d4fb",
-      "imageUrl": "",
+      "imageUrl": "/dev/coursera-principles-of-photo-composition-and-digital-image-page-0001-313ae0b6-cad7-4313-acc4-688050cdd645.webp",
       "slug": "principles-of-photo-composition-and-digital-image-post-production",
       "number": "06"
     },
@@ -830,6 +830,61 @@
       "imageUrl": "",
       "slug": "aws-cloud-technical-essentials",
       "number": "08"
+    },
+    {
+      "name": "Intermediate Python",
+      "issuer": "DataCamp",
+      "year": "2023",
+      "description": "",
+      "status": "completed",
+      "credentialUrl": "",
+      "imageUrl": "/dev/datacamp-intermediate-python-6ee3b5cc-6fad-46fd-8674-0ff2734166ab.webp",
+      "slug": "datacamp-intermediate-python",
+      "number": "09"
+    },
+    {
+      "name": "Introduction to Network Analysis in Python",
+      "issuer": "DataCamp",
+      "year": "2023",
+      "description": "",
+      "status": "completed",
+      "credentialUrl": "",
+      "imageUrl": "/dev/datacamp-introduction-to-network-analysis-in-python-9252c8f5-cb43-4fb3-88a5-06e96ab288e7.webp",
+      "slug": "datacamp-introduction-to-network-analysis-in-python",
+      "number": "10"
+    },
+    {
+      "name": "Introduction to Python",
+      "issuer": "DataCamp",
+      "year": "2023",
+      "description": "",
+      "status": "completed",
+      "credentialUrl": "",
+      "imageUrl": "/dev/datacamp-introduction-to-python-35042d7b-6e96-4463-bed9-30f8271e1d52.webp",
+      "slug": "datacamp-introduction-to-python",
+      "number": "11"
+    },
+    {
+      "name": "One Million Prompters",
+      "issuer": "Dubai Future Foundation",
+      "year": "2026",
+      "description": "Completed on 4 October 2026.",
+      "status": "completed",
+      "credentialUrl": "",
+      "imageUrl": "/dev/one-million-prompters-dd618c93-c509-4b7b-a462-454eda195612.webp",
+      "slug": "one-million-prompters",
+      "number": "12"
+    },
+    {
+      "name": "Fundamentals of Accelerated Data Science",
+      "issuer": "NVIDIA",
+      "year": "2025",
+      "description": "Issued on 1 February 2025.",
+      "status": "completed",
+      "credentialUrl": "",
+      "imageUrl": "/dev/nvidia-fundamentals-of-accelerated-data-science-04247b92-b5bf-4f2e-b47d-10617d22098b.webp",
+      "slug": "fundamentals-of-accelerated-data-science",
+      "number": "13"
     }
   ],
   "toolkits": [
