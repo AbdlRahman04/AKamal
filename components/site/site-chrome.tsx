@@ -1,6 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
+import { publicPath } from "./public-path";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills } from "@/data/dev";
@@ -232,7 +233,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
         <div className="shared-header-inner">
           <Link className="shared-wordmark" href={isPhotography ? "/photography#top" : "/#top"} aria-label={isPhotography ? undefined : `${devProfile.name} — Back to top`}>
             {isPhotography ? <>
-              <img src="/assets/photo-logo.png" alt="" aria-hidden="true" />
+              <img src={publicPath("/assets/photo-logo.png")} alt="" aria-hidden="true" />
               <span>Abdul Rahman Kamal</span>
             </> : <span className="dev-monogram" aria-hidden="true"><span>A</span><span>K</span></span>}
           </Link>

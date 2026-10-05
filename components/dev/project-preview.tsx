@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "@/components/site/public-image";
 import { projectPreviews } from "@/data/project-previews";
 
 export type PreviewPhoto = { src: string; alt: string };

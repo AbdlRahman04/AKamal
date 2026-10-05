@@ -1,3 +1,4 @@
+import { publicPath } from "@/components/site/public-path";
 import type { Metadata } from "next";
 import "../../components/photography/photography.css";
 
@@ -5,7 +6,7 @@ export const metadata: Metadata = {
   title: "Abdul Rahman Kamal | Photo",
   description: "A visual journal of motion, atmosphere, and place.",
   icons: {
-    icon: "/assets/photo-logo.png",
+    icon: publicPath("/assets/photo-logo.png"),
   },
   openGraph: {
     title: "Abdul Rahman Kamal | Photo",

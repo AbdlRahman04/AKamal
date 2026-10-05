@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/site/public-image";
+import { publicPath } from "@/components/site/public-path";
 import { useEffect, useId, useRef, useState } from "react";
 import type { DevCertificate, DevEducation, DevExperience } from "@/data/dev";
 
@@ -138,7 +139,7 @@ export default function BackgroundOverview({ experience, education, certificates
             <div className="ds-background-dialog-dots">{slides.map((slide, index) => <button key={slide.item.slug} type="button" aria-label={`Show ${slide.kind.toLowerCase()} ${index + 1}`} aria-current={index === activeIndex ? "step" : undefined} aria-controls={`${id}-slide`} onClick={() => navigate(index)}><span /></button>)}</div>
           </nav>}
           <footer className="ds-background-dialog-footer">
-            {credential && <a href={credential} {...(credential.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>Verify credential <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>}
+            {credential && <a href={publicPath(credential)} {...(credential.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}>Verify credential <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10" /></svg></a>}
             <button type="button" onClick={() => dialog.current?.close()}>Close</button>
           </footer>
         </div>

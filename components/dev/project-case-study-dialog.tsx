@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/site/public-image";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent as ReactMouseEvent } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import type { DevProject } from "@/data/dev";

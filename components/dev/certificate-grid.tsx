@@ -1,4 +1,5 @@
-import Image from "next/image";
+import Image from "@/components/site/public-image";
+import { publicPath } from "@/components/site/public-path";
 import type { DevCertificate } from "@/data/dev";
 
 function escapeXml(value: string) {
@@ -69,7 +70,7 @@ function CertificateCard({ certificate }: { certificate: DevCertificate }) {
           <p className="ds-certificate-card-issuer">{certificate.issuer}</p>
           {certificate.description && <p className="ds-certificate-card-description">{certificate.description}</p>}
           {certificate.credentialUrl && (
-            <a className="ds-certificate-verify" href={certificate.credentialUrl} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
+            <a className="ds-certificate-verify" href={publicPath(certificate.credentialUrl)} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
               Verify credential <span aria-hidden="true">↗</span>
             </a>
           )}
@@ -93,7 +94,7 @@ function CertificateListItem({ certificate }: { certificate: DevCertificate }) {
       <span className={`ds-certificate-list-status is-${certificate.status}`}>{statusLabel}</span>
       <span className="ds-certificate-list-year">{certificate.year}</span>
       {certificate.credentialUrl ? (
-        <a className="ds-certificate-list-link" href={certificate.credentialUrl} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
+        <a className="ds-certificate-list-link" href={publicPath(certificate.credentialUrl)} {...(externalCredential ? { target: "_blank", rel: "noreferrer" } : {})}>
           Verify credential <span aria-hidden="true">↗</span>
         </a>
       ) : (

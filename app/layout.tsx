@@ -1,3 +1,4 @@
+import { basePath, publicPath } from "@/components/site/public-path";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "../components/dev/dev.css";
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   title: "Abdul Rahman Kamal — Software / Data / AI",
   description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
   icons: {
-    icon: "/assets/dev-logo.png",
+    icon: publicPath("/assets/dev-logo.png"),
   },
   openGraph: {
     title: "Abdul Rahman Kamal — Software / Data / AI",
@@ -33,7 +34,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body data-theme="dev" data-dev-mode="light" suppressHydrationWarning>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(window.location.pathname.indexOf("/photography")===0){var mode=window.localStorage.getItem("photography-theme");document.body.dataset.photographyMode=mode==="light"?"light":"dark";}else{document.body.dataset.devMode=window.localStorage.getItem("dev-theme")==="dark"?"dark":"light";}}catch(_){document.body.dataset.photographyMode="dark";document.body.dataset.devMode="light";}})();`,
+            __html: `(function(){try{if(window.location.pathname.indexOf(${JSON.stringify(`${basePath}/photography`)})===0){var mode=window.localStorage.getItem("photography-theme");document.body.dataset.photographyMode=mode==="light"?"light":"dark";}else{document.body.dataset.devMode=window.localStorage.getItem("dev-theme")==="dark"?"dark":"light";}}catch(_){document.body.dataset.photographyMode="dark";document.body.dataset.devMode="light";}})();`,
           }}
         />
         <SiteChrome>{children}</SiteChrome>

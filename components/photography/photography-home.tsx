@@ -1,6 +1,7 @@
 "use client";
 
-import Image from "next/image";
+import Image from "@/components/site/public-image";
+import { publicPath } from "@/components/site/public-path";
 import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent, type TouchEvent, useCallback, useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
@@ -274,7 +275,7 @@ export default function PhotographyHome() {
       const photo = photos[(selected.index + step + photos.length) % photos.length];
       if (photo?.isPlaceholder) return;
       const image = new window.Image();
-      image.src = photo.src;
+      image.src = publicPath(photo.src);
     });
   }, [selected]);
 
@@ -455,7 +456,7 @@ export default function PhotographyHome() {
       if (photo.isPlaceholder || warmedThumbnails.current.has(photo.thumbnailSrc)) continue;
       const image = new window.Image();
       image.decoding = "async";
-      image.src = photo.thumbnailSrc;
+      image.src = publicPath(photo.thumbnailSrc);
       warmedThumbnails.current.set(photo.thumbnailSrc, image);
     }
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
-import Image from "next/image";
+import Image from "@/components/site/public-image";
 import gsap from "gsap";
 import "./depth-carousel.css";
 

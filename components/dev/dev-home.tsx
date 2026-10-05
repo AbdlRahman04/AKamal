@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import Image from "next/image";
+import Image from "@/components/site/public-image";
+import { publicPath } from "@/components/site/public-path";
 import localFont from "next/font/local";
 import CopyEmailButton from "@/components/dev/copy-email-button";
 import BackgroundOverview from "@/components/dev/background-overview";
@@ -39,7 +40,7 @@ function revealStyle(delay = 0) {
 function ExternalLink({ href, children, className = "ds-text-link", showArrow = true }: { href: string; children: ReactNode; className?: string; showArrow?: boolean }) {
   if (!href) return null;
   const external = href.startsWith("http");
-  return <a className={className} href={href} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>{children}{showArrow && !href.startsWith("mailto:") && <> <span aria-hidden="true">{external ? "↗" : "→"}</span></>}</a>;
+  return <a className={className} href={publicPath(href)} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>{children}{showArrow && !href.startsWith("mailto:") && <> <span aria-hidden="true">{external ? "↗" : "→"}</span></>}</a>;
 }
 
 // Shows the profile photo when available; otherwise shows the person's initials.
@@ -78,7 +79,7 @@ export default function DevHome() {
               <p className="ds-lede">{devProfile.intro}</p>
               <div className="ds-hero-actions">
                 <a className="ds-button ds-button-primary" href="#projects">View projects <Arrow /></a>
-                <a className="ds-button ds-button-quiet" href="/Abdl%20Rahman%20Kamal%20-%20resume.pdf" download>Download CV <span aria-hidden="true">&darr;</span></a>
+                <a className="ds-button ds-button-quiet" href={publicPath("/Abdl%20Rahman%20Kamal%20-%20resume.pdf")} download>Download CV <span aria-hidden="true">&darr;</span></a>
               </div>
               <div className="ds-profile-links">
                 <a href={`mailto:${devProfile.email}`}>Email</a>

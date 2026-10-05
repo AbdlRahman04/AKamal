@@ -140,3 +140,26 @@ public/photography/        Generated web-ready image assets
 scripts/                   Validation and image tooling
 out/                       Generated static export
 ```
+
+## GitHub Pages
+
+The Pages workflow publishes the static export on pushes to `main` and can also
+be run manually from the Actions tab. In the repository's **Settings > Pages**,
+select **GitHub Actions** as the publishing source before the first deployment.
+The default project URL for the `askamal-Dev` repository is
+`https://abdlrahman04.github.io/askamal-Dev/`, with photography at `/askamal-Dev/photography/`.
+
+The workflow reads the Pages base path at build time, including support for a
+custom domain. Public images and icons use that prefix; canonical JSON retains
+its root-relative asset paths. Admin tools still run locally.
+
+To check a project-path export locally in PowerShell:
+
+```powershell
+$env:NEXT_PUBLIC_BASE_PATH = "/askamal-Dev"
+npm run build
+Remove-Item Env:NEXT_PUBLIC_BASE_PATH
+```
+
+Ordinary local and Vercel builds use no prefix. Pushing source changes to
+`origin/main` also triggers the existing Vercel deployment. Keep `out/` out of Git.
