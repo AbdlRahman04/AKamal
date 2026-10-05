@@ -31,6 +31,13 @@ pnpm-debug.log*
 /.claude/
 /GSAP/
 /Gambarino_Complete/
+/taste-skill/
+/skills-lock.json
+
+# Local review exports, scratch files, and archived unused web assets
+/output/
+/tmp/
+/assets/archive/
 
 # Editor and operating system files
 .DS_Store

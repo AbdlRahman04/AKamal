@@ -3,6 +3,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
+if (process.argv.includes("--archive-unused")) {
+  await import("./archive-unused-photography.mjs");
+  process.exit(0);
+}
+
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const originalsDir = path.join(projectRoot, "assets", "originals", "photography");
 const publicDir = path.join(projectRoot, "public", "photography");

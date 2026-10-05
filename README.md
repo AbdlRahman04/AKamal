@@ -18,6 +18,24 @@ npm run dev
 
 The Windows helper is available through `Start-Portfolio.bat`.
 
+## Organizing PDFs and certificate images
+
+Files dropped into the project root are automatically sorted while `npm run dev`
+or `Start-Portfolio.bat` is running:
+
+- PDFs move to `assets/pdfs/`.
+- Certificate images move to `assets/certificates/`. Include `certificate`,
+  `certification`, or `Coursera` in the filename so they can be recognized.
+  The existing NVIDIA `Screenshot_1.webp` is also recognized.
+
+The sorter checks only root files, waits for copies to settle, and preserves
+duplicate filenames using numbered suffixes. These folders store source files;
+moving a file does not add it to the public portfolio or convert its format.
+
+Run `npm run assets:organize` to sort existing root files once, or keep
+`npm run assets:watch` open to sort new files without starting the site.
+Automatic sorting stops when the command is closed.
+
 ## Local admin tools
 
 The admin tools are local-only and are not part of the deployed static site.
@@ -64,7 +82,7 @@ The only deployment artifact is `out/`. Next.js uses `app/`, `components/`,
 `data/`, and `public/` to produce it; the source `data/` and `assets/` folders
 remain local authoring infrastructure alongside `admin/` and `api/` and are
 not deployed separately. The Vercel project is connected to
-`AbdlRahman04/my-portfolio` and builds the site when changes are pushed to
+`AbdlRahman04/AKamal` and builds the site when changes are pushed to
 `main`.
 
 ```bash
@@ -104,6 +122,11 @@ npm run images:optimize
 npm run images:sync-presentation
 ```
 
+After removing photos from canonical content or regenerating all originals, run
+`npm run images:archive-unused` to move unreferenced WebPs out of the public site
+into the local, ignored `assets/archive/photography/` folder. It preserves source
+photographs and checks referenced image paths before archiving anything.
+
 Generated files live in `public/photography/thumbs/` and
 `public/photography/full/`. Validate references with:
 
@@ -116,9 +139,12 @@ npm run validate:photography
 | Command | Purpose |
 | --- | --- |
 | `npm run dev` | Start the public Next.js development server |
+| `npm run assets:organize` | Sort root PDFs and certificate images once |
+| `npm run assets:watch` | Watch and sort root PDFs and certificate images |
 | `npm run admin` | Start the local API/admin server on port 4000 |
 | `npm run admin:dev` | Watch backend edits and restart only the local admin server |
 | `npm run images:optimize` | Generate gallery and viewer WebP assets |
+| `npm run images:archive-unused` | Archive web images no longer referenced by public content |
 | `npm run images:sync-presentation` | Sync photo dimensions and orientation into data |
 | `npm run validate:photography` | Validate photography data and generated assets |
 | `npm run validate:dev` | Validate dev profile and project data |
@@ -163,3 +189,15 @@ Remove-Item Env:NEXT_PUBLIC_BASE_PATH
 
 Ordinary local and Vercel builds use no prefix. Pushing source changes to
 `origin/main` also triggers the existing Vercel deployment. Keep `out/` out of Git.
+
+## Repository organization
+
+- [Development and content workflow](docs/WORKFLOW.md)
+- [Architecture](docs/ARCHITECTURE.md), [design contract](DESIGN.md), and [case studies](docs/CASE_STUDIES.md)
+- [Asset inventory](assets/ASSET-INVENTORY.md)
+- [Future photography coach idea](docs/ideas/photography-coach.md)
+
+Keep source certificates in `assets/certificates/`. Source photographs and brand
+images stay locally under `assets/originals/`; only the required web assets belong
+in `public/`. Review exports (`output/`), scratch files (`tmp/`), unused-image
+archives (`assets/archive/`), and downloaded agent tools stay out of Git.

@@ -1356,7 +1356,7 @@ Anything that cannot be determined from the supplied information should be liste
 
 | ID | Question | Why It Matters | Decision |
 |----|----------|----------------|----------|
-| Q001 | Should the Photography Coach SaaS concept from analysis.md be implemented? | Would require major architectural changes (database, auth, cloud storage) | Pending |
+| Q001 | Should the Photography Coach SaaS concept from ideas/photography-coach.md be implemented? | Would require major architectural changes (database, auth, cloud storage) | Pending |
 | Q002 | What is the target deployment platform for the static site? | Affects build configuration and deployment workflow | Pending |
 | Q003 | Are there specific performance targets (Lighthouse scores, load times)? | Guides optimization priorities | Pending |
 | Q004 | Should analytics be added to track portfolio visitors? | Would require third-party integration | Pending |
