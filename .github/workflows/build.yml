@@ -19,6 +19,9 @@ jobs:
         run: npm ci
       - name: Build static portfolio
         run: npm run build
+        env:
+          NEXT_PUBLIC_CONTACT_ENDPOINT: ${{ vars.NEXT_PUBLIC_CONTACT_ENDPOINT }}
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
       - name: Upload static output
         uses: actions/upload-artifact@v4
         with:

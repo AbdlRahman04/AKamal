@@ -304,10 +304,10 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
         {children}
       </div>
 
-      <footer className={`shared-site-footer${isPhotography ? " photography-footer" : " dev-footer"}${isLightPhotography ? " is-light" : ""}`} id={isPhotography ? "contact" : undefined} data-reveal={isPhotography ? true : undefined}>
+      <footer className={`shared-site-footer${isPhotography ? " photography-footer" : " dev-footer"}${isLightPhotography ? " is-light" : ""}`} data-reveal={isPhotography ? true : undefined}>
         <div className="shared-footer-inner">
           <p className="shared-footer-kicker">{isPhotography ? "Now booking selected commissions" : devProfile.availability}</p>
-          <a className="shared-footer-email" href={`mailto:${currentProfile.email}`}>{currentProfile.email}</a>
+          <a className="shared-footer-email" href="#contact">Let’s start a conversation ↗</a>
           <div className="shared-footer-bottom">
             <span>© {new Date().getFullYear()} {currentProfile.name}</span>
             <div>

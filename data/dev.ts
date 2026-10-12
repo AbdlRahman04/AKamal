@@ -11,10 +11,8 @@ export type DevProfile = {
   title: string;
   intro: string;
   location: string;
-  email: string;
   availability: string;
   portraitUrl?: string;
-  phone?: string;
   contactHeading?: string;
   contactIntro?: string;
   links: DevLink[];

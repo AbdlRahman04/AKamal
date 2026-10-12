@@ -1,6 +1,7 @@
 import { basePath, publicPath } from "@/components/site/public-path";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "../components/site/contact.css";
 import "../components/dev/dev.css";
 import "../components/dev/bento.css";
 import SiteChrome from "@/components/site/site-chrome";

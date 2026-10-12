@@ -62,7 +62,6 @@ export type SiteProfile = {
   role: string;
   intro: string;
   about: string;
-  email: string;
   /** Optional portrait for the about section (root-relative URL under public/). */
   portraitSrc?: string;
   socialLinks: { label: string; href: string }[];

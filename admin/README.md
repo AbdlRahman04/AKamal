@@ -116,9 +116,12 @@ credentials in the Learning view. Project cover and certificate images
 can be uploaded; dev workspace uploads are converted to WebP and saved under
 `public/dev/`.
 
-The Profile & Contact view includes a CV PDF drop zone. Uploading replaces
-`public/resume.pdf`, which the public Download CV button serves. Since the site
-uses static export, rebuild and redeploy the site to publish a replacement.
+The Profile & Contact view edits public profile copy and social links. Email and
+phone fields are not public content, and canonical writers reject them and
+mailto/tel profile links, including imports. CV upload/publication is disabled;
+the original PDF is retained locally in ignored `assets/archive/private/`.
+Configure private delivery in the separate Vercel contact project using
+[contact setup](../docs/CONTACT_SETUP.md).
 
 The public page is:
 

@@ -6,7 +6,7 @@ This is a dual-portfolio static site built with Next.js 15 and TypeScript, featu
 - **Dev portfolio** (`/`) - Software, data, and systems projects
 - **Photography portfolio** (`/photography`) - Photography collections with AI-assisted metadata
 
-The site uses static export (`output: 'export'`) and deploys only the `out/` directory. All content management happens locally via an Express admin server.
+The frontend uses static export (`output: 'export'`) and deploys `out/`. All content management happens locally via an Express admin server. Contact submissions use an isolated Node.js Vercel project under `services/contact-api`, with server-side Turnstile verification and Gmail SMTP. The local `api/` and `admin/` directories remain private authoring tools. See [contact deployment setup](CONTACT_SETUP.md).
 
 ## Tech Stack
 

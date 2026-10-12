@@ -1,6 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPublicProfile } from "../../scripts/public-profile-privacy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -19,6 +20,7 @@ export async function readData() {
  * Write data back to photography.json with pretty formatting.
  */
 export async function writeData(data) {
+  assertPublicProfile(data.profile);
   const temporaryFile = `${DATA_FILE}.${process.pid}.${Date.now()}.tmp`;
   const serialized = JSON.stringify(data, null, 2) + "\n";
 

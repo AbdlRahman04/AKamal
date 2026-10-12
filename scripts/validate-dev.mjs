@@ -2,13 +2,15 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { validateArchitecture } from "./architecture-schema.mjs";
+import { assertPublicProfile } from "./public-profile-privacy.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const file = path.join(root, "data", "dev.json");
 const data = JSON.parse(await fs.readFile(file, "utf8"));
 const errors = [];
 
-for (const field of ["name", "title", "intro", "location", "email", "availability"]) {
+try { assertPublicProfile(data.profile); } catch (error) { errors.push(error.message); }
+for (const field of ["name", "title", "intro", "location", "availability"]) {
   if (!data.profile?.[field]) errors.push(`profile.${field} is required`);
 }
 if (!Array.isArray(data.profile?.links)) errors.push("profile.links must be an array");
@@ -63,7 +65,7 @@ for (const [index, project] of (data.projects || []).entries()) {
 
 for (const [index, link] of (data.profile?.links || []).entries()) {
   if (!link.label || !link.href) errors.push(`profile.links[${index}] needs label and href`);
-  if (link.href && !/^https?:\/\//.test(link.href) && !/^mailto:/.test(link.href)) errors.push(`profile.links[${index}].href must be http(s) or mailto`);
+  if (link.href && !/^https?:\/\//.test(link.href)) errors.push(`profile.links[${index}].href must be http(s)`);
 }
 
 for (const collection of ["projects", "certificates", "toolkits", "education"]) {

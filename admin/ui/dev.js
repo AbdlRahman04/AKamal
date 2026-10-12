@@ -269,66 +269,6 @@ function setupImageUpload(wrapper) {
   wrapper.addEventListener("drop", (event) => uploadImage(wrapper, event.dataTransfer.files[0]));
 }
 
-function setCvStatus(message, isError = false) {
-  const status = $("#cv-upload-status");
-  status.textContent = message;
-  status.classList.toggle("is-error", isError);
-}
-
-function showCvInfo(info) {
-  const link = $("#cv-current-link");
-  if (info.available) {
-    link.hidden = false;
-    link.textContent = `Current CV · updated ${new Date(info.updatedAt).toLocaleString()}`;
-    setCvStatus("A CV is available at /resume.pdf.");
-  } else {
-    link.hidden = true;
-    setCvStatus("No CV PDF is installed yet.");
-  }
-}
-
-async function uploadCv(file) {
-  if (!file) return;
-  if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-    setCvStatus("Choose a PDF file.", true);
-    return;
-  }
-  const wrapper = $("#cv-upload");
-  const input = $("#cv-file-input");
-  const buttons = $$("button", wrapper);
-  buttons.forEach((button) => { button.disabled = true; });
-  wrapper.classList.add("is-uploading");
-  setCvStatus("Uploading CV PDF…");
-  try {
-    const body = new FormData();
-    body.append("cv", file);
-    const info = await api("/api/dev/cv", { method: "POST", body });
-    showCvInfo(info);
-    toast("CV replaced. Rebuild and redeploy to publish the update.");
-  } catch (error) {
-    setCvStatus(error.message, true);
-  } finally {
-    wrapper.classList.remove("is-uploading");
-    buttons.forEach((button) => { button.disabled = false; });
-    input.value = "";
-  }
-}
-
-const cvWrapper = $("#cv-upload");
-const cvInput = $("#cv-file-input");
-const cvDropzone = $("#cv-dropzone");
-cvInput.addEventListener("change", () => uploadCv(cvInput.files[0]));
-cvDropzone.addEventListener("click", () => cvInput.click());
-["dragenter", "dragover"].forEach((eventName) => cvWrapper.addEventListener(eventName, (event) => {
-  event.preventDefault();
-  cvWrapper.classList.add("is-dragging");
-}));
-["dragleave", "drop"].forEach((eventName) => cvWrapper.addEventListener(eventName, (event) => {
-  event.preventDefault();
-  cvWrapper.classList.remove("is-dragging");
-}));
-cvWrapper.addEventListener("drop", (event) => uploadCv(event.dataTransfer.files[0]));
-
 function updateAccentValue(color) {
   const output = $("[data-accent-value]", color.closest(".aw-accent-field"));
   output.textContent = color.dataset.empty === "true" ? "Automatic" : color.value.toUpperCase();
@@ -430,8 +370,6 @@ $$('[data-view]').forEach((button) => button.addEventListener("click", () => set
 async function load() {
   try {
     state.data = await api("/api/dev");
-    const cvInfo = await api("/api/dev/cv");
-    showCvInfo(cvInfo);
     ["skills", "experience", "certificates", "education"].forEach((collection) => { state.data[collection] ??= []; });
     fillProfile();
     ["skills", "projects", "experience", "certificates", "education"].forEach(renderList);

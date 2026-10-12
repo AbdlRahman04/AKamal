@@ -8,6 +8,7 @@ import { analyzePhoto, analyzeCollection, analyzePortfolioProfile, getAiStatus, 
 import { getActivity, recordActivity } from "./activity-log.mjs";
 import { saveAiConfiguration } from "./routes/ai-config.mjs";
 import { normalizeFocalPoint } from "../scripts/image-presentation.mjs";
+import { assertPublicProfile } from "../scripts/public-profile-privacy.mjs";
 import {
   DEV_COLLECTIONS,
   findDevCollectionItem,
@@ -54,15 +55,6 @@ const upload = multer({
     } else {
       cb(Object.assign(new Error("Only image files (JPEG, PNG, TIFF, WebP) are accepted."), { statusCode: 400 }));
     }
-  },
-});
-
-const cvUpload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 20 * 1024 * 1024 },
-  fileFilter: (_req, file, cb) => {
-    if (/\.pdf$/i.test(file.originalname) && file.mimetype === "application/pdf") cb(null, true);
-    else cb(Object.assign(new Error("Choose a PDF file for the CV."), { statusCode: 400 }));
   },
 });
 
@@ -147,14 +139,6 @@ function normalizedProfileText(value, field, maxLength) {
     throw Object.assign(new Error(`${field} must be a non-empty string of ${maxLength} characters or fewer.`), { statusCode: 400 });
   }
   return value.trim();
-}
-
-function normalizedEmail(value) {
-  const email = normalizedProfileText(value, "email", 320);
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    throw Object.assign(new Error("email must be a valid email address."), { statusCode: 400 });
-  }
-  return email;
 }
 
 function normalizedHeroImages(value, data) {
@@ -337,7 +321,7 @@ app.put(
 
     if (incoming.intro !== undefined) profile.intro = normalizedProfileText(incoming.intro, "intro", 360);
     if (incoming.about !== undefined) profile.about = normalizedProfileText(incoming.about, "about", 1800);
-    if (incoming.email !== undefined) profile.email = normalizedEmail(incoming.email);
+    assertPublicProfile(incoming);
     if (incoming.socialLinks !== undefined) profile.socialLinks = normalizedSocialLinks(incoming.socialLinks);
 
     const updated = { ...data, profile };
@@ -379,43 +363,8 @@ app.get(
   }),
 );
 
-app.get(
-  "/api/dev/cv",
-  asyncHandler(async (_req, res) => {
-    const cvPath = path.join(PROJECT_ROOT, "public", "resume.pdf");
-    try {
-      const stats = await fs.promises.stat(cvPath);
-      res.json({ available: stats.isFile(), updatedAt: stats.mtime.toISOString() });
-    } catch (error) {
-      if (error.code !== "ENOENT") throw error;
-      res.json({ available: false, updatedAt: null });
-    }
-  }),
-);
-
-app.post(
-  "/api/dev/cv",
-  cvUpload.single("cv"),
-  asyncHandler(async (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "Choose a PDF file to upload." });
-    if (req.file.buffer.subarray(0, 5).toString("ascii") !== "%PDF-") {
-      return res.status(400).json({ error: "The selected file is not a valid PDF." });
-    }
-
-    const publicDirectory = path.join(PROJECT_ROOT, "public");
-    const cvPath = path.join(publicDirectory, "resume.pdf");
-    const temporaryPath = path.join(publicDirectory, `resume-${process.pid}-${Date.now()}.tmp`);
-    try {
-      await fs.promises.writeFile(temporaryPath, req.file.buffer, { flag: "wx" });
-      await fs.promises.rename(temporaryPath, cvPath);
-    } catch (error) {
-      await fs.promises.rm(temporaryPath, { force: true }).catch(() => {});
-      throw error;
-    }
-    const stats = await fs.promises.stat(cvPath);
-    res.status(201).json({ available: true, updatedAt: stats.mtime.toISOString() });
-  }),
-);
+/* CV publication is disabled until a sanitized document is introduced. */
+app.all("/api/dev/cv", (_req, res) => res.status(410).json({ error: "Public CV publication is disabled." }));
 
 async function removeUnreferencedDevImage(data, imageUrl) {
   if (!imageUrl || !/^\/dev\/[a-z0-9][a-z0-9-]*\.webp$/i.test(imageUrl)) return;

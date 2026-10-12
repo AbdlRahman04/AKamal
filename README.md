@@ -78,7 +78,12 @@ The regular `npm run admin` command remains available without a watcher.
 
 ## Build and deployment boundary
 
-The only deployment artifact is `out/`. Next.js uses `app/`, `components/`,
+Private contact inquiries use a separate Vercel backend under `services/contact-api`.
+See [contact setup](docs/CONTACT_SETUP.md) for Gmail, Turnstile, Vercel environment
+settings, and the Gmail Portfolio/important filter. Public profiles no longer contain
+email/phone fields; CV download and local admin CV publication are disabled.
+
+The frontend deployment artifact is `out/`. Next.js uses `app/`, `components/`,
 `data/`, and `public/` to produce it; the source `data/` and `assets/` folders
 remain local authoring infrastructure alongside `admin/` and `api/` and are
 not deployed separately. The Vercel project is connected to

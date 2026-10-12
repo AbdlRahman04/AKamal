@@ -1,11 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPublicProfile } from "./public-profile-privacy.mjs";
 
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const dataPath = path.join(projectRoot, "data", "photography.json");
 const data = JSON.parse(await fs.readFile(dataPath, "utf8"));
 const missing = [];
+try { assertPublicProfile(data.profile); } catch (error) { missing.push(error.message); }
 
 function checkAsset(collectionSlug, photoId, field, publicUrl) {
   if (typeof publicUrl !== "string" || !publicUrl.startsWith("/")) {

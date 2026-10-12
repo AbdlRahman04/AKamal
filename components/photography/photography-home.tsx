@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "@/components/site/public-image";
+import ContactForm, { type ContactFormHandle } from "@/components/site/contact-form";
 import { publicPath } from "@/components/site/public-path";
 import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent, type TouchEvent, useCallback, useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
@@ -186,6 +187,7 @@ export default function PhotographyHome() {
   const visibleArchiveCollections = archiveCollections.filter((collection) => collection.photos.length > 0);
   const heroContent = hero ?? fallbackHero;
   const heroImages = heroContent.images.map(resolveHeroImage);
+  const contactForm = useRef<ContactFormHandle>(null);
   const [selected, setSelected] = useState<SelectedPhoto | null>(null);
   const [viewerDirection, setViewerDirection] = useState<"next" | "previous" | null>(null);
   const [viewerMotion, setViewerMotion] = useState(false);
@@ -416,11 +418,8 @@ export default function PhotographyHome() {
   const activeWork = visiblePrimaryCollections.find((collection) => collection.slug === activeWorkSlug) ?? visiblePrimaryCollections[0];
 
   const startProject = useCallback((collection: Collection) => {
-    const subject = encodeURIComponent(`Commission inquiry \u2014 ${collection.title}`);
-    const body = encodeURIComponent(
-      `Hi,\n\nI'm interested in work similar to your "${collection.title}" collection (${collection.theme}).\n\n`,
-    );
-    window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+    contactForm.current?.startInquiry(`Commission inquiry — ${collection.title}`);
+    document.getElementById("contact")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth", block: "start" });
   }, []);
 
   const handleWorkTabKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -710,10 +709,17 @@ export default function PhotographyHome() {
               <p key={`${index}-${paragraph.slice(0, 16)}`}>{paragraph}</p>
             ))}
           </div>
-          <a className="text-link" href={`mailto:${profile.email}`}>Start a conversation <Arrow direction="right" /></a>
+          <a className="text-link" href="#contact">Start a conversation <Arrow direction="right" /></a>
         </div>
       </section>
 
+
+      <section className="portfolio-contact photography-contact" id="contact" aria-labelledby="photography-contact-title">
+        <div className="photography-contact-grid">
+          <div className="contact-intro"><p className="eyebrow">A project, a commission, a conversation</p><h2 id="photography-contact-title">Let’s make<br />something <em>matter.</em></h2><p>Have a place, a product, or a moment in mind? Tell me what you’d like to create.</p></div>
+          <ContactForm source="photography" ref={contactForm} />
+        </div>
+      </section>
 
       {selectedProject && (
         <div

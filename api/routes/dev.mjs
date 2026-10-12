@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { PROJECT_ROOT } from "./photography.mjs";
 import { validateArchitecture } from "../../scripts/architecture-schema.mjs";
+import { assertPublicProfile } from "../../scripts/public-profile-privacy.mjs";
 
 export const DEV_DATA_FILE = path.join(PROJECT_ROOT, "data", "dev.json");
 export const DEV_COLLECTIONS = new Set(["skills", "journey", "experience", "certificates", "toolkits", "education"]);
@@ -12,6 +13,7 @@ export async function readDevData() {
 }
 
 export async function writeDevData(data) {
+  assertPublicProfile(data.profile);
   const temporaryFile = `${DEV_DATA_FILE}.${process.pid}.${Date.now()}.tmp`;
   const serialized = JSON.stringify(data, null, 2) + "\n";
 

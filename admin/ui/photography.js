@@ -74,7 +74,6 @@ const dom = {
   profileEditorButton: $("#btn-profile-editor"),
   profileIntro:   $("#profile-intro"),
   profileAbout:   $("#profile-about"),
-  profileEmail:   $("#profile-email"),
   profileInstagram: $("#profile-instagram"),
   profileAiStatus: $("#profile-ai-status"),
   profileAiSummary: $("#profile-ai-summary"),
@@ -680,7 +679,6 @@ function renderProfileEditor() {
   const profile = data?.profile || {};
   dom.profileIntro.value = profile.intro || "";
   dom.profileAbout.value = profile.about || "";
-  dom.profileEmail.value = profile.email || "";
   dom.profileInstagram.value = profileLink("Instagram");
   dom.profileAiStatus.textContent = "";
   dom.profileAiStatus.classList.remove("error");
@@ -742,7 +740,6 @@ async function saveProfile() {
     const profile = await apiPut("/api/photography/profile", {
       intro: dom.profileIntro.value,
       about: dom.profileAbout.value,
-      email: dom.profileEmail.value,
       socialLinks: profileSocialLinksFromDraft(),
     });
     data.profile = profile;
@@ -824,7 +821,7 @@ async function analyzeProfileWithAI() {
 }
 
 function setupProfileEditing() {
-  [dom.profileIntro, dom.profileAbout, dom.profileEmail, dom.profileInstagram].forEach((field) => {
+  [dom.profileIntro, dom.profileAbout, dom.profileInstagram].forEach((field) => {
     field.addEventListener("input", markProfileDraftDirty);
   });
   dom.profileEditorButton.addEventListener("click", openProfileEditor);

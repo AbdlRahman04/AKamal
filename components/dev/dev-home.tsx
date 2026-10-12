@@ -2,7 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import Image from "@/components/site/public-image";
 import { publicPath } from "@/components/site/public-path";
 import localFont from "next/font/local";
-import CopyEmailButton from "@/components/dev/copy-email-button";
+import ContactForm from "@/components/site/contact-form";
 import BackgroundOverview from "@/components/dev/background-overview";
 import MotionObserver from "@/components/dev/motion-observer";
 import PortfolioSection from "@/components/dev/portfolio-section";
@@ -79,10 +79,10 @@ export default function DevHome() {
               <p className="ds-lede">{devProfile.intro}</p>
               <div className="ds-hero-actions">
                 <a className="ds-button ds-button-primary" href="#projects">View projects <Arrow /></a>
-                <a className="ds-button ds-button-quiet" href={publicPath("/Abdl%20Rahman%20Kamal%20-%20resume.pdf")} download>Download CV <span aria-hidden="true">&darr;</span></a>
+                <a className="ds-button ds-button-quiet" href="#contact">Get in touch <Arrow /></a>
               </div>
               <div className="ds-profile-links">
-                <a href={`mailto:${devProfile.email}`}>Email</a>
+                <a href="#contact">Contact</a>
                 {devProfile.links.map((link) => <ExternalLink key={link.label} href={link.href} showArrow>{link.label}</ExternalLink>)}
               </div>
           </div>
@@ -119,13 +119,13 @@ export default function DevHome() {
         <div className="ds-skill-groups">{devSkills.map((skill, index) => <article className="ds-skill-card" key={skill.slug} data-reveal style={revealStyle(index * 65)}><span>{skill.number} / Capability</span><h3>{skill.name}</h3><p>{skill.description}</p><div className="ds-chip-list" aria-label={`${skill.name} skills`}>{skill.items.map((item) => <span key={item}>{item}</span>)}</div></article>)}</div>
       </PortfolioSection>
 
-      {/* CONTACT: contact details, email-copy button, phone, and social links. */}
+      {/* CONTACT: private inquiries through the isolated contact service. */}
       {/* Styling: components/dev/dev.css (.ds-contact and .ds-contact-*). */}
-      <section className="ds-contact" id="contact" aria-labelledby="contact-title">
+      <section className="ds-contact portfolio-contact" id="contact" aria-labelledby="contact-title">
         <p className="ds-index" data-reveal>05 / Contact</p>
         <div className="ds-contact-grid">
           <div data-reveal><Portrait className="ds-contact-portrait" /><h2 id="contact-title">{devProfile.contactHeading || "Let's build something useful."}</h2><p>{devProfile.contactIntro || devProfile.availability}</p></div>
-          <div className="ds-contact-panel" data-reveal style={revealStyle(100)}><span>Available for</span><strong>{devProfile.availability}</strong><a className="ds-email" href={`mailto:${devProfile.email}`}>{devProfile.email}</a><CopyEmailButton email={devProfile.email} />{devProfile.phone && <a className="ds-phone" href={`tel:${devProfile.phone}`}>{devProfile.phone}</a>}<div className="ds-social-links">{devProfile.links.map((link) => <ExternalLink key={link.label} href={link.href}>{link.label}</ExternalLink>)}</div></div>
+          <ContactForm source="dev" />
         </div>
       </section>
     </main>
