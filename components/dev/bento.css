@@ -388,3 +388,47 @@ body[data-dev-mode="dark"] .ds-site .av-logo-flask { filter:invert(1); }
   .ds-project-card:hover,.ds-project-card:focus-within { translate:0 0; }
   .ds-project-card:hover .ds-project-art,.ds-project-card:hover .ds-project-visual > img { transform:none; }
 }
+
+/* Dev motion: a brief introduction, then feedback only as visitors explore. */
+.ds-site { animation:none; }
+.ds-intro-tile { position:relative; isolation:isolate; }
+.ds-hero-circuit { position:absolute; z-index:-1; top:0; right:0; width:min(48%,320px); height:auto; color:var(--ds-blue); opacity:.14; pointer-events:none; }
+.ds-hero-circuit > path { stroke:currentColor; stroke-width:1; }
+.ds-hero-circuit > circle { fill:var(--ds-panel); stroke:currentColor; stroke-width:1; }
+.ds-hero-circuit .ds-hero-circuit-trace { stroke-width:3; stroke-linecap:round; stroke-dasharray:.16 1; opacity:0; }
+.ds-contact-form-reveal { min-width:0; }
+.reveal-ready .ds-site [data-reveal] { transition:opacity 420ms cubic-bezier(.16,1,.3,1),transform 420ms cubic-bezier(.16,1,.3,1); transition-delay:var(--reveal-delay,0ms); }
+.reveal-ready .ds-site [data-reveal]:focus-within { opacity:1; transform:none; transition:none; }
+.ds-skill-groups .ds-skill-card,.ds-background-card { translate:0 0; transition:translate 220ms cubic-bezier(.16,1,.3,1),border-color 180ms cubic-bezier(.16,1,.3,1); }
+.ds-bento-portrait img { transition:transform 400ms cubic-bezier(.16,1,.3,1); }
+.ds-hero-actions .ds-button > span,.ds-profile-links a > span { display:inline-block; transition:transform 180ms cubic-bezier(.16,1,.3,1); }
+@media (prefers-reduced-motion:no-preference) {
+  .reveal-ready .ds-intro-tile > :not(.ds-hero-circuit) { opacity:0; transform:translateY(10px); transition:opacity 420ms cubic-bezier(.16,1,.3,1),transform 420ms cubic-bezier(.16,1,.3,1); transition-delay:var(--intro-delay,0ms); }
+  .ds-intro-tile > .ds-index { --intro-delay:40ms; }
+  .ds-intro-tile > h1 { --intro-delay:80ms; }
+  .ds-intro-tile > .ds-hero-role { --intro-delay:120ms; }
+  .ds-intro-tile > .ds-bento-statement { --intro-delay:160ms; }
+  .ds-intro-tile > .ds-lede { --intro-delay:200ms; }
+  .ds-intro-tile > .ds-hero-actions { --intro-delay:240ms; }
+  .ds-intro-tile > .ds-profile-links { --intro-delay:280ms; }
+  .reveal-ready .ds-intro-tile.is-visible > :not(.ds-hero-circuit) { opacity:1; transform:none; }
+  .reveal-ready .ds-intro-tile.is-visible .ds-hero-circuit-trace { animation:ds-hero-connection 1200ms linear 120ms both; }
+  .reveal-ready .ds-intro-tile:focus-within > :not(.ds-hero-circuit) { opacity:1; transform:none; transition:none; }
+  .reveal-ready .ds-intro-tile:focus-within .ds-hero-circuit-trace { animation:none; }
+}
+@keyframes ds-hero-connection {
+  0% { stroke-dashoffset:.16; opacity:0; }
+  15%,85% { opacity:1; }
+  100% { stroke-dashoffset:-1; opacity:0; }
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  .ds-skill-groups .ds-skill-card:hover,.ds-background-card:hover { translate:0 -3px; border-color:var(--ds-blue); }
+  .ds-identity-tile:hover .ds-bento-portrait img { transform:scale(1.035); }
+  .ds-hero-actions .ds-button:hover > span,.ds-profile-links a:hover > span { transform:translateX(3px); }
+}
+.ds-background-card:focus-visible,.ds-hero-actions .ds-button:focus-visible > span,.ds-profile-links a:focus-visible > span { translate:0 0; transform:none; transition:none; }
+@media (prefers-reduced-motion:reduce) {
+  .reveal-ready .ds-site [data-reveal] { opacity:1; transform:none; transition:none !important; }
+  .ds-hero-circuit-trace { animation:none !important; }
+  .ds-skill-groups .ds-skill-card,.ds-background-card,.ds-bento-portrait img,.ds-hero-actions .ds-button > span,.ds-profile-links a > span { translate:0 0; transform:none; transition:none !important; }
+}

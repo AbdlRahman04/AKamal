@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
+import { useReducedMotion } from "motion/react";
 import type { DevArchitecture } from "@/data/dev";
 import ArchitectureDetails from "./architecture-details";
 import ArchitectureIcon from "./architecture-icon";
@@ -17,6 +18,11 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
   const [mobileView, setMobileView] = useState("canvas");
   const [view, setView] = useState<View>({ x: 0, y: 0, scale: 1 });
   const [lines, setLines] = useState<Line[]>([]);
+  const initialReduceMotion = useReducedMotion();
+  const [reduceMotion, setReduceMotion] = useState(initialReduceMotion);
+  const [trace, setTrace] = useState<{ node: string; revision: number } | null>(null);
+  const selection = useRef(architecture.defaultNode);
+  const traceRevision = useRef(0);
   const viewport = useRef<HTMLDivElement>(null);
   const board = useRef<HTMLDivElement>(null);
   const nodeRefs = useRef<Record<string, HTMLButtonElement | null>>({});
@@ -24,7 +30,36 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
   const marker = useId().replace(/:/g, "");
   const current = architecture.nodes.find(node => node.id === selected) ?? architecture.nodes[0];
 
+  useEffect(() => {
+    // The installed motion hook reads the initial preference only.
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    function updatePreference() {
+      setReduceMotion(preference.matches);
+      setTrace(null);
+    }
+    function cancelHiddenTrace() {
+      if (document.hidden) setTrace(null);
+    }
+    updatePreference();
+    preference.addEventListener("change", updatePreference);
+    document.addEventListener("visibilitychange", cancelHiddenTrace);
+    return () => {
+      preference.removeEventListener("change", updatePreference);
+      document.removeEventListener("visibilitychange", cancelHiddenTrace);
+    };
+  }, []);
+
+  function selectNode(id: string) {
+    if (selection.current === id) return;
+    selection.current = id;
+    setSelected(id);
+    setTrace(reduceMotion === false && !document.hidden
+      ? { node: id, revision: ++traceRevision.current }
+      : null);
+  }
+
   function fit() {
+    setTrace(null);
     if (!viewport.current) return;
     const { clientWidth: width, clientHeight: height } = viewport.current;
     const scale = Math.min(width / WIDTH, height / HEIGHT, 1);
@@ -39,6 +74,7 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
       if (!current) return;
       const { clientWidth: width, clientHeight: height } = current;
       if (!width || !height) return;
+      setTrace(null);
       const narrow = width < 600;
       const scale = narrow ? .9 : Math.min(width / WIDTH, height / HEIGHT, 1);
       const initial = nodeRefs.current[architecture.defaultNode];
@@ -52,6 +88,7 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
 
   useEffect(() => {
     function measure() {
+      setTrace(null);
       setLines(architecture.edges.map(edge => {
         const from = nodeRefs.current[edge.from], to = nodeRefs.current[edge.to];
         if (!from || !to) return { path: "", x: 0, y: 0 };
@@ -84,6 +121,7 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
   }, [architecture]);
 
   function zoom(factor: number) {
+    setTrace(null);
     const element = viewport.current;
     if (!element) return;
     setView(previous => {
@@ -95,6 +133,7 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
 
   function startPan(event: PointerEvent<HTMLDivElement>) {
     if ((event.target as HTMLElement).closest("button") || event.button !== 0) return;
+    setTrace(null);
     drag.current = { x: event.clientX, y: event.clientY, view };
     event.currentTarget.setPointerCapture(event.pointerId);
   }
@@ -109,7 +148,7 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
   return <div className="av-viewer" data-mobile-view={mobileView} style={{ "--av-diagram-height": `${Math.min(340, HEIGHT)}px` } as CSSProperties}>
     <div className="av-mobile-switch" aria-label="Architecture view">
       <button type="button" aria-pressed={mobileView === "canvas"} onClick={() => setMobileView("canvas")}>Canvas</button>
-      <button type="button" aria-pressed={mobileView === "details"} onClick={() => setMobileView("details")}>Details</button>
+      <button type="button" aria-pressed={mobileView === "details"} onClick={() => { setTrace(null); setMobileView("details"); }}>Details</button>
     </div>
     <section className="av-canvas" aria-label="System architecture">
       <div className="av-canvas-heading"><div><h3>System architecture</h3><p>{architecture.description}</p></div><div className="av-controls" aria-label="Diagram controls"><button type="button" onClick={() => zoom(.8)} aria-label="Zoom out">−</button><button type="button" onClick={fit}>Fit</button><button type="button" onClick={() => zoom(1.25)} aria-label="Zoom in">+</button></div></div>
@@ -119,13 +158,13 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
             const line = lines[index];
             const active = edge.from === selected || edge.to === selected;
             if (!line || (edge.kind === "support" && !active)) return null;
-            return <g key={`${edge.from}-${edge.to}`} className={`av-edge av-edge-${edge.kind}${active ? " is-active" : ""}`}><path d={line.path} fill="none" markerEnd={`url(#${marker})`}/>{edge.label && <text x={line.x} y={line.y} textAnchor="middle">{edge.label}</text>}</g>;
+            return <g key={`${edge.from}-${edge.to}`} className={`av-edge av-edge-${edge.kind}${active ? " is-active" : ""}`}><path d={line.path} fill="none" markerEnd={`url(#${marker})`}/>{trace && reduceMotion === false && active && trace.node === selected && edge.kind !== "support" && line.path && <path key={trace.revision} className="av-edge-trace" d={line.path} fill="none" pathLength={1} onAnimationEnd={() => setTrace(previous => previous?.revision === trace.revision ? null : previous)}/>} {edge.label && <text x={line.x} y={line.y} textAnchor="middle">{edge.label}</text>}</g>;
           })}</svg>
-          {architecture.nodes.map(node => <button key={node.id} ref={element => { nodeRefs.current[node.id] = element; }} type="button" className={`av-node av-node-${node.category}${node.id === selected ? " is-selected" : ""}`} style={{ gridColumn: node.column, gridRow: node.row }} aria-pressed={node.id === selected} aria-label={`${node.title}: ${node.subtitle}. Show details`} onFocus={event => { setSelected(node.id); if (event.currentTarget.matches(":focus-visible")) revealNode(node.id); }} onClick={() => setSelected(node.id)}><ArchitectureIcon name={node.icon}/><strong>{node.title}</strong><span>{node.subtitle}</span></button>)}
+          {architecture.nodes.map(node => <button key={node.id} ref={element => { nodeRefs.current[node.id] = element; }} type="button" className={`av-node av-node-${node.category}${node.id === selected ? " is-selected" : ""}`} style={{ gridColumn: node.column, gridRow: node.row }} aria-pressed={node.id === selected} aria-label={`${node.title}: ${node.subtitle}. Show details`} onFocus={event => { selectNode(node.id); if (event.currentTarget.matches(":focus-visible")) revealNode(node.id); }} onClick={() => selectNode(node.id)}><ArchitectureIcon name={node.icon}/><strong>{node.title}</strong><span>{node.subtitle}</span></button>)}
         </div>
       </div>
       <div className="av-legend"><span><i/>Runtime path</span>{architecture.edges.some(edge => edge.kind === "response") && <span><i className="av-dashed"/>Response</span>}{architecture.edges.some(edge => edge.kind === "support") && <span>Support connections appear on selection</span>}</div>
-      <label className="av-node-picker">Select component<select value={selected} onChange={event => { setSelected(event.target.value); revealNode(event.target.value); }}>{architecture.nodes.map(node => <option key={node.id} value={node.id}>{node.title}</option>)}</select></label>
+      <label className="av-node-picker">Select component<select value={selected} onChange={event => { selectNode(event.target.value); revealNode(event.target.value); }}>{architecture.nodes.map(node => <option key={node.id} value={node.id}>{node.title}</option>)}</select></label>
     </section>
     <ArchitectureDetails node={current}/>
     <p className="av-sr" aria-live="polite">Selected component: {current.title}</p>

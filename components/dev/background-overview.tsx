@@ -80,7 +80,7 @@ export default function BackgroundOverview({ experience, education, certificates
 
   return <>
     <div className={`ds-background-grid${experience.length ? "" : " ds-background-grid-single"}`}>
-      {experience.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-experience`}>
+      {experience.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-experience`} data-reveal>
         <h3 id={`${id}-experience`}><CategoryIcon kind="Experience" />Experience</h3>
         <ul className="ds-background-cards">{experience.map(item => <li key={item.slug}>
           <button type="button" className="ds-background-card" aria-haspopup="dialog" aria-controls={id} onClick={event => open({ kind: "Experience", item }, event.currentTarget)}>
@@ -90,7 +90,7 @@ export default function BackgroundOverview({ experience, education, certificates
         </li>)}</ul>
       </div>}
       <div id="learning" className="ds-background-learning">
-        {education.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-education`}>
+        {education.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-education`} data-reveal>
           <h3 id={`${id}-education`}><CategoryIcon kind="Education" />Education</h3>
           <ul className="ds-background-cards">{education.map(item => <li key={item.slug}>
             <button type="button" className="ds-background-card ds-background-education-card" aria-haspopup="dialog" aria-controls={id} onClick={event => open({ kind: "Education", item }, event.currentTarget)}>
@@ -98,7 +98,7 @@ export default function BackgroundOverview({ experience, education, certificates
             </button>
           </li>)}</ul>
         </div>}
-        {certificates.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-certificates`}>
+        {certificates.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-certificates`} data-reveal>
           <h3 id={`${id}-certificates`}><CategoryIcon kind="Certification" />Certifications</h3>
           <CertificateCollection certificates={certificates} dialogId={id} headingId={`${id}-certificates`} onOpen={open} />
         </div>}

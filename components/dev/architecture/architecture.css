@@ -153,3 +153,33 @@
   .av-controls button { min-width:40px; min-height:40px; }
 }
 @media (max-width:360px) { .av-tech-stack ul { grid-template-columns:1fr; } }
+
+/* Selection feedback stays separate from the canvas transform and base edges. */
+.av-edge .av-edge-trace { stroke:var(--av-accent); stroke-width:4; stroke-linecap:round; stroke-dasharray:.16 1; stroke-dashoffset:.16; opacity:0; animation:av-connection-trace 450ms linear; }
+@keyframes av-connection-trace {
+  0% { stroke-dashoffset:.16; opacity:0; }
+  15%,85% { opacity:1; }
+  100% { stroke-dashoffset:-1; opacity:0; }
+}
+.av-flow-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-bottom:24px; }
+.av-flow-controls button { min-width:88px; min-height:44px; padding:8px 14px; border:1px solid var(--av-line); border-radius:10px; background:var(--av-card); }
+.av-flow-controls button:disabled { cursor:default; opacity:.45; }
+.av-flow-controls button:disabled:hover { border-color:var(--av-line); }
+.av-flow-controls > span { color:var(--av-muted); font-size:13px; font-variant-numeric:tabular-nums; }
+.av-request-interactive ol > li { position:relative; isolation:isolate; display:block; }
+.av-request-interactive ol > li::before { position:absolute; z-index:-1; inset:-1px; border:2px solid var(--av-accent); border-radius:inherit; content:""; opacity:0; pointer-events:none; }
+.av-request-interactive ol > li.is-current::before { opacity:1; }
+.av-request-interactive[data-step-motion="true"] ol > li::before { transition:opacity 180ms cubic-bezier(.16,1,.3,1); }
+.av-request-interactive .av-step-select { display:flex; align-items:center; gap:12px; min-height:44px; width:100%; padding:0; border:0; border-radius:6px; background:transparent; text-align:left; }
+.av-request-interactive .av-step-select:active { background:transparent; }
+.av-step-title { font-size:17px; font-weight:600; line-height:1.4; overflow-wrap:anywhere; }
+.av-request-interactive ol > li > div { padding-left:37px; }
+.av-request-interactive ol > li > div > p { margin-top:4px; overflow-wrap:anywhere; }
+@media (max-width:767px) {
+  .av-flow-controls { gap:8px; }
+  .av-step-title { font-size:14px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .av-edge .av-edge-trace { display:none; animation:none !important; }
+  .av-request-interactive[data-step-motion="true"] ol > li::before { transition:none !important; }
+}

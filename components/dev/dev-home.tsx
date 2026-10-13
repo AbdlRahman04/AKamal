@@ -71,6 +71,11 @@ export default function DevHome() {
       <section className="ds-hero" id="top" aria-labelledby="dev-hero-title">
         <div className="ds-bento-hero">
           <div className="ds-intro-tile" data-reveal>
+              <svg className="ds-hero-circuit" viewBox="0 0 320 180" fill="none" aria-hidden="true" focusable="false">
+                <path d="M40 0V38H122V86H228V136H320M122 38H198V14H320M228 86H282V54H320" />
+                <path className="ds-hero-circuit-trace" pathLength={1} d="M40 0V38H122V86H228V136H320" />
+                <circle cx="122" cy="38" r="4" /><circle cx="228" cy="86" r="4" /><circle cx="282" cy="54" r="4" />
+              </svg>
               <p className="ds-bento-presence"><i aria-hidden="true" />Available for opportunities <span>/ {devProfile.location}</span></p>
               <p className="ds-index">01 / Profile</p>
               <h1 id="dev-hero-title" className={nameFont.variable}><span className="ds-profile-name">{devProfile.name}</span></h1>
@@ -125,7 +130,7 @@ export default function DevHome() {
         <p className="ds-index" data-reveal>05 / Contact</p>
         <div className="ds-contact-grid">
           <div data-reveal><Portrait className="ds-contact-portrait" /><h2 id="contact-title">{devProfile.contactHeading || "Let's build something useful."}</h2><p>{devProfile.contactIntro || devProfile.availability}</p></div>
-          <ContactForm source="dev" />
+          <div className="ds-contact-form-reveal" data-reveal style={revealStyle(70)}><ContactForm source="dev" /></div>
         </div>
       </section>
     </main>
