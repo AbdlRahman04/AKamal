@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type PointerEvent } from "react";
 import { useReducedMotion } from "motion/react";
+import { useDeveloperMotion } from "../storytelling/developer-motion";
 import type { DevArchitecture } from "@/data/dev";
 import ArchitectureDetails from "./architecture-details";
 import ArchitectureIcon from "./architecture-icon";
@@ -19,7 +20,9 @@ export default function ArchitectureViewer({ architecture }: { architecture: Dev
   const [view, setView] = useState<View>({ x: 0, y: 0, scale: 1 });
   const [lines, setLines] = useState<Line[]>([]);
   const initialReduceMotion = useReducedMotion();
-  const [reduceMotion, setReduceMotion] = useState(initialReduceMotion);
+  const [systemReduceMotion, setReduceMotion] = useState(initialReduceMotion);
+  const { reduced: pageReduced } = useDeveloperMotion();
+  const reduceMotion = pageReduced || systemReduceMotion;
   const [trace, setTrace] = useState<{ node: string; revision: number } | null>(null);
   const selection = useRef(architecture.defaultNode);
   const traceRevision = useRef(0);

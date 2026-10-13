@@ -9,6 +9,37 @@ export type ProjectCaseStudy = {
   overview: { title: string; description: string }[];
 };
 
+export type StoryStep = {
+  id: string;
+  title: string;
+  description: string;
+  nodeIds: string[];
+};
+
+export type ProjectStoryModel = {
+  projectSlug: string;
+  kind: "leafai" | "dine";
+  steps: StoryStep[];
+};
+
+/** Visual mappings reference canonical content; they never supply new project claims. */
+export function getProjectStory(project: DevProject): ProjectStoryModel | null {
+  const kind = project.slug === "plant-health-monitoring-system" ? "leafai"
+    : project.slug === "smart-cafeteria-ordering-system" ? "dine" : null;
+  if (!kind) return null;
+  const study = getProjectCaseStudy(project);
+  if (!study || study.architecture.requestPath.length !== 5) return null;
+  const stages = kind === "leafai"
+    ? [["input", "user", "frontend"], ["request", "frontend", "api"], ["inference", "preprocessing", "classifier"], ["interpretation", "processing", "knowledge"], ["result", "results"]]
+    : [["menu", "customer", "frontend"], ["order", "frontend"], ["checkout", "backend", "payment"], ["payment", "payment"], ["saved", "backend", "database"]];
+  const nodes = new Set(study.architecture.nodes.map(node => node.id));
+  const steps = study.architecture.requestPath.map((step, index) => ({
+    ...step, id: stages[index][0], nodeIds: stages[index].slice(1).filter(id => nodes.has(id)),
+  }));
+  if (steps.some(step => !step.title || !step.description || !step.nodeIds.length)) return null;
+  return { projectSlug: project.slug, kind, steps };
+}
+
 /** Adapt existing authoring formats to one public case-study presentation. */
 export function getProjectCaseStudy(project: DevProject): ProjectCaseStudy | null {
   const overview = [

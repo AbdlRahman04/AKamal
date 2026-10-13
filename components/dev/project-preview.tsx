@@ -18,7 +18,7 @@ function PreviewIcon({ name }: { name: IconName }) {
   return <svg viewBox="0 0 24 24" aria-hidden="true"><path d={paths[name]} /></svg>;
 }
 
-export default function ProjectPreview({ kind, photos }: { kind: "plant" | "dine" | "portfolio"; photos?: PreviewPhoto[] }) {
+export default function ProjectPreview({ kind, photos, priority = false }: { kind: "plant" | "dine" | "portfolio"; photos?: PreviewPhoto[]; priority?: boolean }) {
   const description = kind === "plant"
     ? "Illustrative LeafAI interface with a tomato leaf photo and an image analysis panel"
     : kind === "dine"
@@ -29,7 +29,7 @@ export default function ProjectPreview({ kind, photos }: { kind: "plant" | "dine
     <div className={`ds-preview ds-preview--${kind}`} role="img" aria-label={`${description}. ${projectPreviews.label}.`}>
       <div className="ds-preview-scene" aria-hidden="true">
         {kind === "plant" && <>
-          <Image className="ds-preview-garden" src={projectPreviews.plant.image} alt="" fill sizes="(max-width: 700px) 100vw, 50vw" unoptimized />
+          <Image className="ds-preview-garden" src={projectPreviews.plant.image} alt="" fill sizes="(max-width: 700px) 100vw, 50vw" priority={priority} unoptimized />
           <div className="ds-preview-app ds-preview-plant-app">
             <aside className="ds-preview-sidebar">
               <strong className="ds-preview-brand"><PreviewIcon name="leaf" />{projectPreviews.plant.brand}</strong>

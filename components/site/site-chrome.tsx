@@ -18,6 +18,7 @@ const devNavigation: NavItem[] = [
   { label: "Projects", href: "#projects", visible: devProjects.length > 0 },
   { label: "Experience", href: "#experience", visible: devExperience.length > 0 || devCertificates.length > 0 || devEducation.length > 0 },
   { label: "Skills", href: "#skills", visible: devSkills.length > 0 },
+  { label: "Process", href: "#process", visible: devProjects.some(project => project.architecture || project.caseStudy) },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -49,6 +50,30 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   const mobileCloseRef = useRef<HTMLButtonElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const isLightPhotography = isPhotography && photographyTheme === "light";
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const distance = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = distance > 0 ? Math.max(0, Math.min(1, window.scrollY / distance)) : 0;
+      header.style.setProperty("--header-progress", String(progress));
+    };
+    const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
+    const observer = new ResizeObserver(schedule);
+    observer.observe(document.documentElement);
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    update();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     if (isPhotography) return;
@@ -230,8 +255,19 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   return (
     <>
       <header ref={headerRef} className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
+        <span className="shared-header-progress" aria-hidden="true" />
         <div className="shared-header-inner">
           <Link className="shared-wordmark" href={isPhotography ? "/photography#top" : "/#top"} aria-label={isPhotography ? undefined : `${devProfile.name} — Back to top`}>
+            <svg key={isPhotography ? "viewfinder" : "circuit"} className={`shared-header-graphic ${isPhotography ? "is-viewfinder" : "is-circuit"}`} viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">
+              {isPhotography ? <>
+                <path className="shared-graphic-outline" d="M6 17V6H17M31 6H42V17M42 31V42H31M17 42H6V31" />
+                <g className="shared-graphic-lens"><circle cx="24" cy="24" r="11" /><path d="M24 13V19M35 24H29M24 35V29M13 24H19" /></g>
+              </> : <>
+                <path className="shared-graphic-outline" d="M6 34H18V14H42M6 14H10M30 34H42" />
+                <circle cx="6" cy="34" r="2" /><circle cx="42" cy="14" r="2" />
+                <g className="shared-graphic-token"><rect x="-3" y="-3" width="6" height="6" rx="1" /></g>
+              </>}
+            </svg>
             {isPhotography ? <>
               <img src={publicPath("/assets/photo-logo.png")} alt="" aria-hidden="true" />
               <span>Abdul Rahman Kamal</span>
@@ -309,7 +345,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
           <p className="shared-footer-kicker">{isPhotography ? "Now booking selected commissions" : devProfile.availability}</p>
           <a className="shared-footer-email" href="#contact">Let’s start a conversation ↗</a>
           <div className="shared-footer-bottom">
-            <span>© {new Date().getFullYear()} {currentProfile.name}</span>
+            <span>© {new Date().getFullYear()} {currentProfile.name}<br />Last updated: <time dateTime="2026-10-01">1 October 2026</time></span>
             <div>
               {(isPhotography ? photographyProfile.socialLinks : devProfile.links).map((link) => (
                 <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>

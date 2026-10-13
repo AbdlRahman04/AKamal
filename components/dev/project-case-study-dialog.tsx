@@ -2,17 +2,18 @@
 
 import Image from "@/components/site/public-image";
 import { useEffect, useId, useMemo, useRef, useState, type KeyboardEvent, type MouseEvent as ReactMouseEvent } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
+import { useDeveloperMotion } from "./storytelling/developer-motion";
 import type { DevProject } from "@/data/dev";
 import { getProjectCaseStudy } from "@/data/project-case-study";
 import ArchitectureViewer from "./architecture/architecture-viewer";
 import RequestPath from "./architecture/request-path";
 import "./architecture/architecture.css";
 
-const tabs = ["Overview", "System Design", "Data Flow", "Decisions"];
+const tabs = ["Overview", "System Design", "Data Flow", "Decisions"] as const;
 const panelTransition = { duration: 0.18, ease: [0.16, 1, 0.3, 1] as const };
 
-export default function ProjectCaseStudyDialog({ project }: { project: DevProject }) {
+export default function ProjectCaseStudyDialog({ project, initialTab = "System Design", triggerLabel = "Explore case study" }: { project: DevProject; initialTab?: typeof tabs[number]; triggerLabel?: string }) {
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
   const closeTimer = useRef<number | null>(null);
@@ -20,7 +21,7 @@ export default function ProjectCaseStudyDialog({ project }: { project: DevProjec
   const [active, setActive] = useState(1);
   const [open, setOpen] = useState(false);
   const [animateActivePanel, setAnimateActivePanel] = useState(false);
-  const reduceMotion = useReducedMotion();
+  const { reduced: reduceMotion } = useDeveloperMotion();
   const id = useId();
   const content = useMemo(() => getProjectCaseStudy(project), [project]);
   useEffect(() => {
@@ -42,7 +43,7 @@ export default function ProjectCaseStudyDialog({ project }: { project: DevProjec
     if (!element) return;
     if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
     closeTimer.current = null;
-    const source = event.currentTarget.closest(".ds-project-card")?.getBoundingClientRect();
+    const source = event.currentTarget.closest(".ds-project-card")?.getBoundingClientRect() ?? event.currentTarget.getBoundingClientRect();
     const narrow = window.matchMedia("(max-width: 767px)").matches;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -54,10 +55,10 @@ export default function ProjectCaseStudyDialog({ project }: { project: DevProjec
       element.style.setProperty("--av-origin-y", `${source.top + source.height / 2 - viewportHeight / 2}px`);
       element.style.setProperty("--av-origin-scale", `${scale}`);
     }
-    const animate = event.detail > 0 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const animate = event.detail > 0 && !reduceMotion;
     if (animate) element.dataset.motion = "true";
     else element.removeAttribute("data-motion");
-    setActive(1);
+    setActive(tabs.indexOf(initialTab));
     setAnimateActivePanel(false);
     element.showModal();
     setOpen(true);
@@ -65,7 +66,7 @@ export default function ProjectCaseStudyDialog({ project }: { project: DevProjec
   function closeDialog(animate: boolean) {
     const element = dialog.current;
     if (!element?.open) return;
-    if (animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) element.dataset.motion = "true";
+    if (animate && !reduceMotion) element.dataset.motion = "true";
     else element.removeAttribute("data-motion");
     element.close();
   }
@@ -76,7 +77,7 @@ export default function ProjectCaseStudyDialog({ project }: { project: DevProjec
     event.preventDefault(); selectTab(next, false); tabRefs.current[next]?.focus();
   }
   return <>
-    <button ref={trigger} className="ds-project-action ds-project-action-case-study" type="button" aria-haspopup="dialog" aria-controls={id} onClick={openDialog}>Explore case study <span aria-hidden="true">↗</span></button>
+    <button ref={trigger} className="ds-project-action ds-project-action-case-study" type="button" aria-haspopup="dialog" aria-controls={id} onClick={openDialog}>{triggerLabel} <span aria-hidden="true">↗</span></button>
     <dialog className="av-dialog" ref={dialog} id={id} aria-labelledby={`${id}-title`} onClose={() => {
       if (dialog.current?.open) return;
       trigger.current?.focus();

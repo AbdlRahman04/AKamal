@@ -1,138 +1,50 @@
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
 import Image from "@/components/site/public-image";
-import { publicPath } from "@/components/site/public-path";
-import localFont from "next/font/local";
 import ContactForm from "@/components/site/contact-form";
-import BackgroundOverview from "@/components/dev/background-overview";
-import MotionObserver from "@/components/dev/motion-observer";
-import PortfolioSection from "@/components/dev/portfolio-section";
-import ProjectCard from "@/components/dev/project-card";
+import BackgroundOverview from "./background-overview";
+import MotionObserver from "./motion-observer";
+import PortfolioSection from "./portfolio-section";
+import ProjectCard from "./project-card";
+import DeveloperMotionProvider from "./storytelling/developer-motion";
+import DeveloperHero from "./storytelling/developer-hero";
+import ProjectStory from "./storytelling/project-story";
+import SkillsExplorer from "./storytelling/skills-explorer";
+import EngineeringProcess from "./storytelling/engineering-process";
+import { getProjectStory } from "@/data/project-case-study";
 import { primaryCollections } from "@/data/photography";
-import {
-  devCertificates,
-  devEducation,
-  devExperience,
-  devProfile,
-  devProjects,
-  devSkills,
-} from "@/data/dev";
-
-const nameFont = localFont({
-  src: "../../public/fonts/sora-latin-600.woff2",
-  weight: "600",
-  display: "swap",
-  variable: "--font-dev-name",
-});
-
-// Small reusable helpers used by the sections below.
-function Arrow() {
-  return <span aria-hidden="true">&rarr;</span>;
-}
-
-// Passes a delay to the CSS reveal animation. CSSProperties lets TypeScript
-// accept the custom CSS variable --reveal-delay.
-function revealStyle(delay = 0) {
-  return { "--reveal-delay": `${delay}ms` } as CSSProperties;
-}
-
-// Renders a normal link and opens web addresses in a new tab. Email and
-// on-page links stay in the current tab.
-function ExternalLink({ href, children, className = "ds-text-link", showArrow = true }: { href: string; children: ReactNode; className?: string; showArrow?: boolean }) {
-  if (!href) return null;
-  const external = href.startsWith("http");
-  return <a className={className} href={publicPath(href)} {...(external ? { target: "_blank", rel: "noreferrer" } : {})}>{children}{showArrow && !href.startsWith("mailto:") && <> <span aria-hidden="true">{external ? "↗" : "→"}</span></>}</a>;
-}
-
-// Shows the profile photo when available; otherwise shows the person's initials.
-function Portrait({ className = "", priority = false }: { className?: string; priority?: boolean }) {
-  const initials = devProfile.name.split(/\s+/).map((part) => part[0]).slice(0, 2).join("");
-  return <div className={`ds-portrait ${className}`}>{devProfile.portraitUrl ? <Image src={devProfile.portraitUrl} alt={`${devProfile.name} portrait`} width={256} height={256} priority={priority} unoptimized /> : <span>{initials}</span>}<i aria-hidden="true" /></div>;
-}
+import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills } from "@/data/dev";
+import "./storytelling/storytelling.css";
 
 export default function DevHome() {
-  // Prepare the data used by the page. The source content and its TypeScript
-  // types are in data/dev.json and data/dev.ts.
-  const professionalFocus = ["Computer Vision Integration", "Python API Development", "AI Application Engineering"];
-  const showcasedProjects = devProjects;
-  const portfolioPhotos = primaryCollections.flatMap((collection) => collection.photos.filter((photo) => !photo.isPlaceholder && photo.src).slice(0, 2))
-    .slice(0, 4).map((photo) => ({ src: photo.thumbnailSrc || photo.src, alt: photo.alt }));
-  // Put completed certificates first, followed by ones still in progress.
-  const completedCertificates = devCertificates.filter((certificate) => certificate.status === "completed");
-  const inProgressCertificates = devCertificates.filter((certificate) => certificate.status === "in-progress");
-  const allCertificates = [...completedCertificates, ...inProgressCertificates];
+  const portfolioPhotos = primaryCollections.flatMap(collection => collection.photos.filter(photo => !photo.isPlaceholder && photo.src).slice(0, 2))
+    .slice(0, 4).map(photo => ({ src: photo.thumbnailSrc || photo.src, alt: photo.alt }));
+  const allCertificates = [...devCertificates.filter(item => item.status === "completed"), ...devCertificates.filter(item => item.status === "in-progress")];
+  const stories = devProjects.map(project => ({ project, story: getProjectStory(project) }));
+  const hasStories = stories.some(item => item.story);
 
-  return (
-    <main className="ds-site">
-      {/* Watches for sections entering view and enables their reveal animation. */}
+  return <main className="ds-site ds-cinematic">
+    <DeveloperMotionProvider>
       <MotionObserver />
-
-      {/* INTRO / PROFILE: name, role, summary, key skills, CV, and profile links. */}
-      {/* Styling for this section is in components/dev/dev.css (.ds-hero, .ds-profile-*). */}
-      <section className="ds-hero" id="top" aria-labelledby="dev-hero-title">
-        <div className="ds-bento-hero">
-          <div className="ds-intro-tile" data-reveal>
-              <svg className="ds-hero-circuit" viewBox="0 0 320 180" fill="none" aria-hidden="true" focusable="false">
-                <path d="M40 0V38H122V86H228V136H320M122 38H198V14H320M228 86H282V54H320" />
-                <path className="ds-hero-circuit-trace" pathLength={1} d="M40 0V38H122V86H228V136H320" />
-                <circle cx="122" cy="38" r="4" /><circle cx="228" cy="86" r="4" /><circle cx="282" cy="54" r="4" />
-              </svg>
-              <p className="ds-bento-presence"><i aria-hidden="true" />Available for opportunities <span>/ {devProfile.location}</span></p>
-              <p className="ds-index">01 / Profile</p>
-              <h1 id="dev-hero-title" className={nameFont.variable}><span className="ds-profile-name">{devProfile.name}</span></h1>
-              <p className="ds-hero-role">{devProfile.role}</p>
-              <p className="ds-bento-statement">{devProfile.title}</p>
-              <p className="ds-lede">{devProfile.intro}</p>
-              <div className="ds-hero-actions">
-                <a className="ds-button ds-button-primary" href="#projects">View projects <Arrow /></a>
-                <a className="ds-button ds-button-quiet" href="#contact">Get in touch <Arrow /></a>
-              </div>
-              <div className="ds-profile-links">
-                <a href="#contact">Contact</a>
-                {devProfile.links.map((link) => <ExternalLink key={link.label} href={link.href} showArrow>{link.label}</ExternalLink>)}
-              </div>
-          </div>
-          <aside className="ds-identity-tile" aria-label="Profile summary" data-reveal style={revealStyle(70)}>
-              <Portrait className="ds-bento-portrait" priority />
-              <div className="ds-identity-copy">
-              <span className="ds-identity-label">Based in</span>
-              <strong>{devProfile.location}</strong>
-              <span className="ds-identity-label">Professional focus</span>
-              <div className="ds-profile-skills" aria-label="Professional scope">{professionalFocus.map((focus) => <span key={focus}>{focus}</span>)}</div>
-              <span className="ds-profile-availability"><i aria-hidden="true" />{devProfile.availability}</span>
-              </div>
-          </aside>
-        </div>
-      </section>
-
-      {/* PROJECTS: each entry is rendered by ProjectCard; that component also
-          handles its expandable details and project links. */}
-      {/* Styling: components/dev/dev.css (.ds-project-*). */}
-      <PortfolioSection headingClassName="ds-project-heading" id="projects" index="02 / Projects" title={<>Projects I&apos;ve <span>built.</span></>} intro="Selected application projects showing how I apply software engineering, AI, and data." className="ds-projects">
-        <div className="ds-project-grid">{showcasedProjects.map((project, index) => <ProjectCard key={project.slug} project={project} delay={index * 70} index={index} previewPhotos={project.slug === "portfolio-platform" ? portfolioPhotos : undefined} />)}</div>
+      <DeveloperHero />
+      <PortfolioSection id="projects" index="02 / Selected work" title={<>The interface.<br /><span>The thinking behind it.</span></>} intro="Explore the work, then follow the path from an input to an outcome." className="ds-cinematic-projects">
+        {stories.map(({ project, story }, index) => story
+          ? <ProjectStory key={project.slug} project={project} story={story} nextAnchor={index + 1 < stories.length ? stories[index + 1].story ? `#story-${stories[index + 1].project.slug}` : `#project-${stories[index + 1].project.slug}` : "#experience"} />
+          : <div id={`project-${project.slug}`} className="ds-retained-project" key={project.slug}><ProjectCard project={project} delay={0} index={index} previewPhotos={project.slug === "portfolio-platform" ? portfolioPhotos : undefined} /></div>)}
       </PortfolioSection>
-
-      {/* EXPERIENCE: work history, credentials, and education share one section. */}
-      {!!(devExperience.length || allCertificates.length || devEducation.length) && (
-        <PortfolioSection id="experience" index="03 / Background" title="Experience & Education" intro="Work experience, credentials, and education that support my technical practice." className="ds-background">
-          <BackgroundOverview experience={devExperience} education={devEducation} certificates={allCertificates} />
-        </PortfolioSection>
-      )}
-
-      {/* SKILLS: renders one card for each skill group from data/dev.json. */}
-      {/* Styling: components/dev/dev.css (.ds-skills, .ds-skill-* and .ds-chip-list). */}
-      <PortfolioSection id="skills" index="04 / Technical Skills and Tools" title="Technical Skills and Tools" intro="Grouped technical capabilities across software development, data, and applied AI." className="ds-skills">
-        <div className="ds-skill-groups">{devSkills.map((skill, index) => <article className="ds-skill-card" key={skill.slug} data-reveal style={revealStyle(index * 65)}><span>{skill.number} / Capability</span><h3>{skill.name}</h3><p>{skill.description}</p><div className="ds-chip-list" aria-label={`${skill.name} skills`}>{skill.items.map((item) => <span key={item}>{item}</span>)}</div></article>)}</div>
-      </PortfolioSection>
-
-      {/* CONTACT: private inquiries through the isolated contact service. */}
-      {/* Styling: components/dev/dev.css (.ds-contact and .ds-contact-*). */}
+      {!!(devExperience.length || allCertificates.length || devEducation.length) && <PortfolioSection id="experience" index="03 / Background" title="Experience & Education" intro="Work experience, credentials, and education that support my technical practice." className="ds-background">
+        <BackgroundOverview experience={devExperience} education={devEducation} certificates={allCertificates} />
+      </PortfolioSection>}
+      {!!devSkills.length && <PortfolioSection id="skills" index="04 / The capabilities" title={<>What I work with.<br /><span>And where it shows.</span></>} intro="Tools and techniques, connected to the work they make possible." className="ds-skills">
+        <SkillsExplorer />
+      </PortfolioSection>}
+      {hasStories && <PortfolioSection id="process" index="05 / Behind the decisions" title="How I approach a project" intro="A closer look at the problems, contributions, and tradeoffs in these projects." className="ds-process"><EngineeringProcess /></PortfolioSection>}
       <section className="ds-contact portfolio-contact" id="contact" aria-labelledby="contact-title">
-        <p className="ds-index" data-reveal>05 / Contact</p>
+        <p className="ds-index" data-reveal>06 / Contact</p>
         <div className="ds-contact-grid">
-          <div data-reveal><Portrait className="ds-contact-portrait" /><h2 id="contact-title">{devProfile.contactHeading || "Let's build something useful."}</h2><p>{devProfile.contactIntro || devProfile.availability}</p></div>
-          <div className="ds-contact-form-reveal" data-reveal style={revealStyle(70)}><ContactForm source="dev" /></div>
+          <div data-reveal>{devProfile.portraitUrl && <Image className="ds-cinematic-contact-portrait" src={devProfile.portraitUrl} alt={`${devProfile.name} portrait`} width={64} height={64} unoptimized />}<h2 id="contact-title">{devProfile.contactHeading || "Let's build something useful."}</h2><p>{devProfile.contactIntro || devProfile.availability}</p></div>
+          <div className="ds-contact-form-reveal" data-reveal style={{ "--reveal-delay": "70ms" } as CSSProperties}><ContactForm source="dev" /></div>
         </div>
       </section>
-    </main>
-  );
+    </DeveloperMotionProvider>
+  </main>;
 }

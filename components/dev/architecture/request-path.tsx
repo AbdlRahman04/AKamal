@@ -2,13 +2,16 @@
 
 import { useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
+import { useDeveloperMotion } from "../storytelling/developer-motion";
 import type { DevArchitecture } from "@/data/dev";
 
 export default function RequestPath({ steps, description, detailed = false }: { steps: DevArchitecture["requestPath"]; description?: string; detailed?: boolean }) {
   const [selected, setSelected] = useState(0);
   const [hasSelected, setHasSelected] = useState(false);
   const initialReduceMotion = useReducedMotion();
-  const [reduceMotion, setReduceMotion] = useState(initialReduceMotion);
+  const [systemReduceMotion, setReduceMotion] = useState(initialReduceMotion);
+  const { reduced: pageReduced } = useDeveloperMotion();
+  const reduceMotion = pageReduced || systemReduceMotion;
   const active = Math.min(selected, Math.max(0, steps.length - 1));
 
   useEffect(() => {

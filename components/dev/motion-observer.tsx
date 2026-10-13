@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect } from "react";
+import { useDeveloperMotion } from "./storytelling/developer-motion";
 
 export default function MotionObserver() {
+  const { reduced } = useDeveloperMotion();
   useEffect(() => {
     const root = document.querySelector<HTMLElement>(".ds-site");
     if (!root) return;
@@ -12,7 +14,7 @@ export default function MotionObserver() {
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const showAll = () => targets.forEach((target) => target.classList.add("is-visible"));
 
-    if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+    if (reduced || reduceMotion.matches || !("IntersectionObserver" in window)) {
       showAll();
       return;
     }
@@ -50,7 +52,7 @@ export default function MotionObserver() {
       root.removeEventListener("focusin", handleFocus);
       document.documentElement.classList.remove("reveal-ready");
     };
-  }, []);
+  }, [reduced]);
 
   return null;
 }

@@ -98,7 +98,7 @@
         "Compared CNN architectures to guide model selection and reduce experimentation time",
         "Delivered a REST endpoint for real-time prediction from leaf images"
       ],
-      "githubUrl": "https://github.com/AbdlRahman04/leafai",
+      "githubUrl": "",
       "liveUrl": "https://leafai-frontend.onrender.com/",
       "featured": true,
       "coverImageUrl": "",
@@ -483,15 +483,6 @@
       "slug": "smart-cafeteria-ordering-system",
       "number": "02",
       "title": "AURAK's Dine Ordering System",
-      "role": "Full-stack development",
-      "teamSize": 6,
-      "frontend": "React",
-      "backend": "Node.js · Express.js",
-      "database": "PostgreSQL · Neon",
-      "deployment": "Render",
-      "contribution": "Contributed to full-stack development as part of a six-person team, including menu management interfaces and connecting the application to its backend and database.",
-      "keyFeature": "Cafeteria pre-ordering with Stripe checkout and role-based tools for staff to manage menu listings and product images.",
-      "technicalChallenge": "Connecting the React frontend, Express backend, and PostgreSQL database, then configuring the application to run on Render with a Neon-hosted database.",
       "type": "Full-stack web application / Team project",
       "year": "2025",
       "status": "Completed",
@@ -507,6 +498,15 @@
         "Render",
         "Neon"
       ],
+      "role": "Full-stack development",
+      "frontend": "React",
+      "backend": "Node.js · Express.js",
+      "database": "PostgreSQL · Neon",
+      "deployment": "Render",
+      "contribution": "Contributed to full-stack development as part of a six-person team, including menu management interfaces and connecting the application to its backend and database.",
+      "keyFeature": "Cafeteria pre-ordering with Stripe checkout and role-based tools for staff to manage menu listings and product images.",
+      "technicalChallenge": "Connecting the React frontend, Express backend, and PostgreSQL database, then configuring the application to run on Render with a Neon-hosted database.",
+      "teamSize": 6,
       "stackBreakdown": [
         "Frontend: React",
         "Backend: Node.js, Express",
@@ -517,66 +517,74 @@
         "Built role-based CMS interfaces for menu listings and product images",
         "Automated deployment with render.yaml and a serverless Neon PostgreSQL database"
       ],
-      "githubUrl": "https://github.com/AbdlRahman04/AURAKs-Dine",
+      "githubUrl": "",
       "liveUrl": "https://auraks-dine.onrender.com/",
       "featured": true,
       "coverImageUrl": "",
       "accent": "",
       "caseStudy": {
         "description": "A web-based ordering system for AURAK's dine, allowing students to browse the menu, place orders and pay online, with a content management system for staff to manage menu items and product images.",
+        "architectureDescription": "High-level architecture showing core components, integrations and deployment boundary.",
+        "techStackDescription": "Core technologies and services used in this project.",
+        "deploymentLabel": "Deployed on Render",
         "nodes": {
           "customer": {
             "title": "Customer",
+            "icon": "users",
             "lines": [
               "Browse menu",
               "Place order",
               "Pay online"
-            ],
-            "icon": "users"
+            ]
           },
           "staff": {
             "title": "Staff",
+            "icon": "user",
             "lines": [
               "Manage menu",
               "Upload product images",
               "Maintain content"
-            ],
-            "icon": "user"
+            ]
           },
           "frontend": {
             "title": "React Frontend",
+            "icon": "browser",
             "lines": [
               "Student ordering UI",
               "Staff CMS (role-based)",
               "Product image management"
-            ],
-            "icon": "browser"
+            ]
           },
           "backend": {
             "title": "Node.js + Express API",
+            "icon": "server",
             "lines": [
               "REST API",
               "Order processing",
               "Role-based access",
               "Menu & image management"
-            ],
-            "icon": "server"
+            ]
           },
           "database": {
             "title": "PostgreSQL",
+            "icon": "database",
             "lines": [
               "Frosted by Neon"
-            ],
-            "icon": "database"
+            ]
           },
           "payment": {
             "title": "Stripe Checkout",
+            "icon": "card",
             "lines": [
               "Online payment",
               "(cards, wallets)"
-            ],
-            "icon": "card"
+            ]
           }
+        },
+        "connectionLabels": {
+          "frontendBackend": "HTTPS / REST",
+          "backendDatabase": "SQL",
+          "backendPayment": "HTTPS / API"
         },
         "technologies": [
           {
@@ -611,42 +619,34 @@
           "Menu and product image management",
           "Deployed on Render with Neon database"
         ],
+        "flowDescription": "From browsing the menu to saving the order, showing how the main components work together.",
         "flow": [
           {
+            "icon": "list",
             "title": "Browse menu",
-            "description": "Customer views menu items on the React frontend.",
-            "icon": "list"
+            "description": "Customer views menu items on the React frontend."
           },
           {
+            "icon": "cart",
             "title": "Submit order",
-            "description": "Customer adds items and submits an order.",
-            "icon": "cart"
+            "description": "Customer adds items and submits an order."
           },
           {
+            "icon": "settings",
             "title": "API creates checkout",
-            "description": "React calls the API to create a Stripe Checkout session.",
-            "icon": "settings"
+            "description": "React calls the API to create a Stripe Checkout session."
           },
           {
+            "icon": "card",
             "title": "Stripe confirms",
-            "description": "Customer completes payment with Stripe Checkout.",
-            "icon": "card"
+            "description": "Customer completes payment with Stripe Checkout."
           },
           {
+            "icon": "database",
             "title": "Order saved",
-            "description": "API verifies payment and saves the order in PostgreSQL (on Neon).",
-            "icon": "database"
+            "description": "API verifies payment and saves the order in PostgreSQL (on Neon)."
           }
-        ],
-        "architectureDescription": "High-level architecture showing core components, integrations and deployment boundary.",
-        "techStackDescription": "Core technologies and services used in this project.",
-        "flowDescription": "From browsing the menu to saving the order, showing how the main components work together.",
-        "connectionLabels": {
-          "frontendBackend": "HTTPS / REST",
-          "backendDatabase": "SQL",
-          "backendPayment": "HTTPS / API"
-        },
-        "deploymentLabel": "Deployed on Render"
+        ]
       }
     },
     {
