@@ -6,7 +6,7 @@ This is a dual-portfolio static site built with Next.js 15 and TypeScript, featu
 - **Dev portfolio** (`/`) - Software, data, and systems projects
 - **Photography portfolio** (`/photography`) - Photography collections with AI-assisted metadata
 
-The frontend uses static export (`output: 'export'`) and deploys `out/`. All content management happens locally via an Express admin server. Contact submissions use an isolated Node.js Vercel project under `services/contact-api`, with server-side Turnstile verification and Gmail SMTP. The local `api/` and `admin/` directories remain private authoring tools. See [contact deployment setup](CONTACT_SETUP.md).
+The frontend uses static export (`output: 'export'`) and deploys `out/`. All content management happens locally via an Express admin server. Contact submissions go directly to the managed Web3Forms API, which verifies hCaptcha and sends email to a recipient configured privately in its dashboard. Only the public form access key is included in the frontend; no custom contact backend is deployed. The local `api/` and `admin/` directories remain private authoring tools. See [contact setup](CONTACT_SETUP.md).
 
 ## Tech Stack
 

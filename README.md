@@ -78,9 +78,9 @@ The regular `npm run admin` command remains available without a watcher.
 
 ## Build and deployment boundary
 
-Private contact inquiries use a separate Vercel backend under `services/contact-api`.
-See [contact setup](docs/CONTACT_SETUP.md) for Gmail, Turnstile, Vercel environment
-settings, and the Gmail Portfolio/important filter. Public profiles no longer contain
+Contact inquiries use Web3Forms directly with one public form access key.
+See [contact setup](docs/CONTACT_SETUP.md) for the short local/Vercel setup
+and Gmail Portfolio/important filter. Public profiles no longer contain
 email/phone fields; CV download and local admin CV publication are disabled.
 
 The frontend deployment artifact is `out/`. Next.js uses `app/`, `components/`,

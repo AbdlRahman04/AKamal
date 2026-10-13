@@ -120,7 +120,7 @@ The Profile & Contact view edits public profile copy and social links. Email and
 phone fields are not public content, and canonical writers reject them and
 mailto/tel profile links, including imports. CV upload/publication is disabled;
 the original PDF is retained locally in ignored `assets/archive/private/`.
-Configure private delivery in the separate Vercel contact project using
+Configure the private receiving email in Web3Forms using
 [contact setup](../docs/CONTACT_SETUP.md).
 
 The public page is:
