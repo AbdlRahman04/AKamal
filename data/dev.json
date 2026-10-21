@@ -716,7 +716,7 @@
       "slug": "added-ai-data-analysis-intern",
       "number": "01",
       "company": "Abu Dhabi Department of Economic Development (ADDED)",
-      "role": "AI & Data Analysis Intern",
+      "role": "AI & Data Solutions Intern",
       "period": "Jun 2026 - Jul 2026",
       "summary": "Gathered requirements and defined functional specifications for four department-specific AI agents on an enterprise Agentic AI platform. Configured dashboards and KPI cards, engineered prompts and scoring rules with an AI Engineer, and executed CRUD, RBAC, workflow, deployment, and data validation checks across staging and production.",
       "technologies": [

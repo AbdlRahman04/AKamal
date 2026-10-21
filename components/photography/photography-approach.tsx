@@ -1,6 +1,6 @@
 "use client";
 
-import { type KeyboardEvent, useId, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, useId, useRef, useState } from "react";
 import Image from "@/components/site/public-image";
 import { collections, toolkit, type Collection } from "@/data/photography";
 
@@ -43,7 +43,7 @@ export default function PhotographyApproach({ openExamples }: Props) {
   return <section className="toolkit-section" id="approach" aria-labelledby="approach-title">
     <div className="toolkit-title reveal" data-reveal>
       <p className="eyebrow">03 / Approach</p>
-      <h2 id="approach-title">The craft<br />behind <em>the frame.</em></h2>
+      <h2 id="approach-title"><span className="approach-heading-line">The craft</span>{" "}<span className="approach-heading-line">behind <em>the frame.</em></span></h2>
       <ol className="approach-rail" aria-label="Approach principles">
         {toolkit.map((item, index) => <li key={item.number}>
           <button type="button" aria-current={active === index ? "step" : undefined}
@@ -54,18 +54,19 @@ export default function PhotographyApproach({ openExamples }: Props) {
       </ol>
       <p className="approach-hint">Open a principle to explore the method.<br />Use ↑ and ↓ to move between headings.</p>
     </div>
-    <div className="toolkit-list reveal" data-reveal>
+    <div className="toolkit-list">
       {toolkit.map((item, index) => {
         const isOpen = active === index;
         const collection = examples[index];
         const preview = collection.photos[0];
-        return <article className="approach-item" data-open={isOpen ? "true" : undefined} key={item.number}>
+        return <article className="approach-item" data-reveal style={{ "--reveal-delay": `${index * 60}ms` } as CSSProperties}
+          data-open={isOpen ? "true" : undefined} key={item.number}>
           <h3><button type="button" className="approach-trigger" id={`${id}-trigger-${index}`}
             ref={node => { buttons.current[index] = node; }}
             aria-expanded={isOpen} aria-controls={`${id}-panel-${index}`}
             onClick={() => setActive(isOpen ? null : index)} onKeyDown={event => handleKeyDown(event, index)}>
             <span className="approach-number">{item.number}</span><span>{item.title}</span>
-            <svg className="approach-toggle" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h14" />{!isOpen && <path d="M10 3v14" />}</svg>
+            <svg className="approach-toggle" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 10h14" /><path className="approach-toggle-stem" d="M10 3v14" /></svg>
           </button></h3>
           <p className="approach-summary">{item.description}</p>
           <div className="approach-panel" id={`${id}-panel-${index}`} role="region"
