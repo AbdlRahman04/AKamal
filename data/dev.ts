@@ -1,7 +1,7 @@
 import data from "./dev.json";
 
 // Update this date when portfolio content changes.
-export const portfolioLastUpdated = "2026-10-21";
+export const portfolioLastUpdated = "2026-10-01";
 
 export const portfolioSeo = {
   // TODO: Replace this placeholder with the portfolio's canonical domain.
