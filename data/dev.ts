@@ -1,5 +1,15 @@
 import data from "./dev.json";
 
+// Update this date when portfolio content changes.
+export const portfolioLastUpdated = "2026-10-21";
+
+export const portfolioSeo = {
+  // TODO: Replace this placeholder with the portfolio's canonical domain.
+  url: "https://TODO-domain.example",
+  // TODO: Replace this placeholder with the provided social preview image path.
+  image: "/TODO-og-image.jpg",
+};
+
 export type DevLink = {
   label: string;
   href: string;
@@ -119,6 +129,7 @@ export type DevCertificate = {
   number: string;
   name: string;
   issuer: string;
+  topic?: string;
   year: string;
   description: string;
   status: "completed" | "in-progress";
@@ -151,6 +162,8 @@ export const devSkills = data.skills as DevSkill[];
 export const devProjects = data.projects as DevProject[];
 export const devJourney = data.journey as JourneyItem[];
 export const devExperience = (data.experience ?? []) as DevExperience[];
+// TODO: Verify credentialUrl for "AI Infrastructure and Operations Fundamentals"; it duplicates the Photo Composition credential URL.
+// TODO: Verify credentialUrl for "Principles of Photo Composition and Digital Image Post-Production"; it duplicates the AI Infrastructure credential URL.
 export const devCertificates = (data.certificates ?? []) as DevCertificate[];
 export const devToolkits = (data.toolkits ?? []) as DevToolkit[];
 export const devEducation = (data.education ?? []) as DevEducation[];

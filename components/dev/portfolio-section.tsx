@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 type PortfolioSectionProps = {
   id: string;
-  index: string;
+  index?: string;
   title: ReactNode;
   intro: string;
   children: ReactNode;
@@ -32,7 +32,7 @@ export default function PortfolioSection({
   return (
     <section className={sectionClasses} id={id} aria-labelledby={headingId}>
       <div className={headingClasses} data-reveal>
-        <p className="ds-index">{index}</p>
+        {index && <p className="ds-index">{index}</p>}
         <div>
           <h2 id={headingId}>{title}</h2>
           <p>{intro}</p>

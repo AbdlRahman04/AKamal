@@ -7,6 +7,7 @@ export const projectPreviews = {
     heading: "Plant diagnosis",
     status: "Sample analysis",
     subject: "Tomato leaf",
+    sampleScore: 94,
     observation: "Visible leaf symptoms",
     features: ["Image classification", "Prediction history", "Plant care resources"],
   },

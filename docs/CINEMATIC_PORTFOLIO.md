@@ -1,5 +1,7 @@
 # Cinematic developer portfolio
 
+> Historical implementation notes. The October 2026 compact homepage supersedes the scroll-driven presentation described below. See `DESIGN.md`, `components/dev/portfolio.css`, and `components/dev/portfolio-features.css` for the current design and sample interactions. Project summaries, contributions, experience, skills, and credentials remain directly readable. A compact request explorer adds optional playback; full architecture and decisions remain in case-study dialogs. Existing `#story-<slug>`, `#project-<slug>`, `#learning`, and `#process` anchors remain available. The separate Process navigation entry is removed.
+
 Implemented from the approved 13 October 2026 JSON plan. The developer homepage combines an editorial hero, layered existing project artwork, two five-step project stories, project-backed skills, and four engineering-process stages.
 
 ## Content and behavior

@@ -13,6 +13,10 @@
       {
         "label": "LinkedIn",
         "href": "https://www.linkedin.com/in/abdulrahman-kamal04/"
+      },
+      {
+        "label": "GitHub",
+        "href": "https://github.com/AbdlRahman04"
       }
     ]
   },
@@ -20,7 +24,7 @@
     {
       "slug": "software-development",
       "number": "01",
-      "name": "Software Development",
+      "name": "Software development",
       "description": "Programming languages, application frameworks, requirements analysis, and delivery practices.",
       "items": [
         "Python",
@@ -38,7 +42,7 @@
     {
       "slug": "data-integration",
       "number": "02",
-      "name": "Data & Integration",
+      "name": "Data & integration",
       "description": "Relational data, service interfaces, and validation for reliable application workflows.",
       "items": [
         "PostgreSQL",
@@ -51,7 +55,7 @@
     {
       "slug": "ai-machine-learning",
       "number": "03",
-      "name": "AI & Machine Learning",
+      "name": "AI & machine learning",
       "description": "Applied AI and computer vision explored through practical model and workflow projects.",
       "items": [
         "Agentic AI",
@@ -70,7 +74,7 @@
       "type": "AI application / Senior design project",
       "year": "2026",
       "status": "Completed",
-      "summary": "LeafAI is a plant health application that classifies plant diseases from leaf images. It combines a fine-tuned MobileNetV2 model with a Flask REST API to make image-based predictions accessible through a web application.",
+      "summary": "Classifies plant diseases from leaf photos using a fine-tuned MobileNetV2 model and a Flask REST API.",
       "problem": "Identifying plant diseases from leaf images requires interpreting visual symptoms. The project explores how computer vision can make this process faster and more accessible through an image-based prediction workflow.",
       "solution": "A MobileNetV2 transfer-learning model was fine-tuned with TensorFlow and Keras, then integrated into a Flask REST API that accepts leaf images and returns disease predictions. CNN architectures were compared to guide model selection before integrating the selected model into the application.",
       "technologies": [
@@ -85,7 +89,7 @@
       "backend": "Python / Flask REST API",
       "database": "JSON file storage",
       "deployment": "React frontend and Flask API configured on Render",
-      "contribution": "On our six-person senior design project, I was the sole Computer Science student, working with five AI teammates to bring the team’s MobileNetV2 plant disease model into a Flask application. I focused on connecting leaf-image input, model inference, and the prediction shown to the user.",
+      "contribution": "As the sole Computer Science student on our six-person team, I connected leaf-image input, MobileNetV2 inference, and the prediction shown to the user through Flask.",
       "keyFeature": "Image-based plant disease classification through a REST endpoint, connecting the trained computer vision model to an application workflow.",
       "technicalChallenge": "Selecting a CNN architecture for plant disease classification and taking the model from training experiments to inference within a Flask application.",
       "teamSize": 6,
@@ -486,7 +490,7 @@
       "type": "Full-stack web application / Team project",
       "year": "2025",
       "status": "Completed",
-      "summary": "A cafeteria pre-ordering website built by a six-person team, with online payments through Stripe and menu management tools for staff.",
+      "summary": "A cafeteria pre-ordering site with Stripe payments and role-based menu management for staff.",
       "problem": "Students need a convenient way to place cafeteria orders in advance, while staff need a simple way to keep menu listings and product images up to date.",
       "solution": "Built a React frontend connected to a Node.js and Express backend with PostgreSQL. The application brings together pre-ordering, Stripe checkout, and role-based menu management, with deployment on Render and database hosting on Neon.",
       "technologies": [
@@ -503,7 +507,7 @@
       "backend": "Node.js · Express.js",
       "database": "PostgreSQL · Neon",
       "deployment": "Render",
-      "contribution": "Contributed to full-stack development as part of a six-person team, including menu management interfaces and connecting the application to its backend and database.",
+      "contribution": "Built menu management interfaces and connected the application to its backend and database as part of a six-person team.",
       "keyFeature": "Cafeteria pre-ordering with Stripe checkout and role-based tools for staff to manage menu listings and product images.",
       "technicalChallenge": "Connecting the React frontend, Express backend, and PostgreSQL database, then configuring the application to run on Render with a Neon-hosted database.",
       "teamSize": 6,
@@ -569,7 +573,7 @@
             "title": "PostgreSQL",
             "icon": "database",
             "lines": [
-              "Frosted by Neon"
+              "Hosted by Neon"
             ]
           },
           "payment": {
@@ -744,8 +748,9 @@
     {
       "name": "Foundations: Data, Data, Everywhere",
       "issuer": "Google",
+      "topic": "Data",
       "year": "2026",
-      "description": "Google Data Analytics Professional Certificate coursework foundation.",
+      "description": "First course of the Google Data Analytics Professional Certificate.",
       "status": "completed",
       "credentialUrl": "https://coursera.org/share/e5054c8d18275b0a42069b52f1d0c299",
       "imageUrl": "/dev/coursera-foundations-data-data-everywhere-page-001-0b414bcd-096f-470e-9896-d9837e8a24f7.webp",
@@ -755,6 +760,7 @@
     {
       "name": "Agentic AI and AI Agents: A Primer for Leaders",
       "issuer": "Vanderbilt University",
+      "topic": "AI",
       "year": "2026",
       "description": "A primer on agentic AI systems and AI agent workflows.",
       "status": "completed",
@@ -766,6 +772,7 @@
     {
       "name": "AI Infrastructure and Operations Fundamentals",
       "issuer": "NVIDIA",
+      "topic": "AI",
       "year": "2025",
       "description": "Foundations of infrastructure and operations for AI workloads.",
       "status": "completed",
@@ -777,6 +784,7 @@
     {
       "name": "Introduction to Software Engineering",
       "issuer": "IBM",
+      "topic": "Software",
       "year": "2025",
       "description": "",
       "status": "completed",
@@ -788,6 +796,7 @@
     {
       "name": "Generative AI: Prompt Engineering Basics",
       "issuer": "IBM",
+      "topic": "AI",
       "year": "2025",
       "description": "",
       "status": "completed",
@@ -799,6 +808,7 @@
     {
       "name": "Principles of Photo Composition and Digital Image Post-Production",
       "issuer": "Michigan State University",
+      "topic": "Photography",
       "year": "2023",
       "description": "",
       "status": "completed",
@@ -810,6 +820,7 @@
     {
       "name": "Software Testing and Automation Specialization",
       "issuer": "University of Minnesota",
+      "topic": "Software",
       "year": "2026",
       "description": "",
       "status": "in-progress",
@@ -821,6 +832,7 @@
     {
       "name": "AWS Cloud Technical Essentials",
       "issuer": "AWS",
+      "topic": "Cloud",
       "year": "2026",
       "description": "",
       "status": "in-progress",
@@ -832,6 +844,7 @@
     {
       "name": "Intermediate Python",
       "issuer": "DataCamp",
+      "topic": "Software",
       "year": "2023",
       "description": "",
       "status": "completed",
@@ -843,6 +856,7 @@
     {
       "name": "Introduction to Network Analysis in Python",
       "issuer": "DataCamp",
+      "topic": "Data",
       "year": "2023",
       "description": "",
       "status": "completed",
@@ -854,6 +868,7 @@
     {
       "name": "Introduction to Python",
       "issuer": "DataCamp",
+      "topic": "Software",
       "year": "2023",
       "description": "",
       "status": "completed",
@@ -865,6 +880,7 @@
     {
       "name": "One Million Prompters",
       "issuer": "Dubai Future Foundation",
+      "topic": "AI",
       "year": "2026",
       "description": "Completed on 4 October 2026.",
       "status": "completed",
@@ -876,6 +892,7 @@
     {
       "name": "Fundamentals of Accelerated Data Science",
       "issuer": "NVIDIA",
+      "topic": "Data",
       "year": "2025",
       "description": "Issued on 1 February 2025.",
       "status": "completed",

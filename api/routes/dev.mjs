@@ -131,6 +131,7 @@ export function normalizeDevCollectionItem(collection, input, fallback = {}) {
       ...numberedRecord(record, fallback, record.name, { name: "Certificate", issuer: "", year: "", description: "", status: "in-progress", credentialUrl: "", imageUrl: "" }),
       name: String(record.name || "Certificate").trim(),
       issuer: String(record.issuer || "").trim(),
+      topic: String(record.topic ?? "").trim(),
       year: String(record.year || "").trim(),
       description: String(record.description || "").trim(),
       status: record.status === "completed" ? "completed" : "in-progress",

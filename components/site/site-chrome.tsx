@@ -1,24 +1,25 @@
 ﻿"use client";
 
 import Link from "next/link";
+import localFont from "next/font/local";
 import { publicPath } from "./public-path";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills } from "@/data/dev";
-import { profile as photographyProfile } from "@/data/photography";
+import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills, portfolioLastUpdated } from "@/data/dev";
+import { hero as photographyHero, profile as photographyProfile } from "@/data/photography";
 import DevThemeSwitch from "@/components/dev/theme-switch";
 
 type NavItem = { label: string; href: string; visible?: boolean };
 type PhotographyTheme = "dark" | "light";
 
 const photographyThemeStorageKey = "photography-theme";
+const footerDisplayFont = localFont({ src: "../../public/fonts/bricolage-grotesque-700.ttf", weight: "700", display: "swap", variable: "--font-footer-display" });
 
 const devNavigation: NavItem[] = [
   { label: "Profile", href: "#top" },
   { label: "Projects", href: "#projects", visible: devProjects.length > 0 },
   { label: "Experience", href: "#experience", visible: devExperience.length > 0 || devCertificates.length > 0 || devEducation.length > 0 },
   { label: "Skills", href: "#skills", visible: devSkills.length > 0 },
-  { label: "Process", href: "#process", visible: devProjects.some(project => project.architecture || project.caseStudy) },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -29,6 +30,68 @@ const photographyNavigation: NavItem[] = [
   { label: "Approach", href: "#approach" },
   { label: "About", href: "#about" },
 ];
+
+function PortfolioFooterContent({ isPhotography }: { isPhotography: boolean }) {
+  const [localTime, setLocalTime] = useState<{ label: string; dateTime: string } | null>(null);
+  const profile = isPhotography ? { ...photographyProfile, links: photographyProfile.socialLinks } : devProfile;
+  const location = isPhotography ? photographyHero?.locationLabel ?? "UAE" : devProfile.location.split(",")[0];
+  const socialLinks = [
+    { label: "Instagram", path: "M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5Zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7Zm5 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5.5-3.5a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z" },
+    { label: "LinkedIn", path: "M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.049c.476-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286ZM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124ZM7.119 20.452H3.555V9h3.564v11.452ZM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003Z" },
+    { label: "GitHub", path: "M12 .297C5.37.297 0 5.67 0 12.297c0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.043-1.61-4.043-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.762-1.605-2.665-.304-5.467-1.334-5.467-5.93 0-1.31.469-2.381 1.236-3.221-.124-.303-.536-1.524.117-3.176 0 0 1.008-.322 3.301 1.23a11.52 11.52 0 0 1 3.003-.404c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.655 1.652.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 22.092 24 17.595 24 12.297c0-6.627-5.373-12-12-12Z" },
+  ];
+  const footerNavigation: NavItem[] = isPhotography ? [
+    ...photographyNavigation.filter(item => item.href !== "#top"),
+    { label: "Contact", href: "#contact" },
+  ] : [
+    { label: "Projects", href: "#projects", visible: devProjects.length > 0 },
+    { label: "Experience", href: "#experience", visible: devExperience.length > 0 || devEducation.length > 0 },
+    { label: "Certifications", href: "#certifications", visible: devCertificates.length > 0 },
+    { label: "Skills", href: "#skills", visible: devSkills.length > 0 },
+    { label: "Contact", href: "#contact" },
+  ];
+
+  useEffect(() => {
+    const formatter = new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Dubai", hour: "2-digit", minute: "2-digit" });
+    const update = () => {
+      const now = new Date();
+      setLocalTime({ label: formatter.format(now), dateTime: now.toISOString() });
+    };
+    update();
+    const interval = window.setInterval(update, 30_000);
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return <div className={`dev-footer-content ${footerDisplayFont.variable}`}>
+    <div className="dev-footer-top">
+      <div>
+        <a className="dev-footer-name" href="#top">{profile.name}</a>
+        <p className="dev-footer-role">{profile.role}</p>
+      </div>
+      <nav className="dev-footer-socials" aria-label="Social profiles">
+        {socialLinks.filter(social => isPhotography ? social.label === "Instagram" : social.label !== "Instagram").map(social => {
+          const link = profile.links.find(item => item.label.toLowerCase() === social.label.toLowerCase());
+          const icon = <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d={social.path} /></svg>;
+          return link?.href
+            ? <a key={social.label} href={link.href} target="_blank" rel="noreferrer" aria-label={social.label} title={social.label}>{icon}</a>
+            : <span key={social.label} role="link" aria-disabled="true" aria-label={`${social.label} (link coming soon)`} title={`${social.label} link coming soon`}>{icon}</span>;
+        })}
+      </nav>
+    </div>
+    <nav className="dev-footer-navigation" aria-label="Footer navigation">
+      {footerNavigation.filter(item => item.visible !== false).map(item => <a key={item.href} href={item.href}>{item.label}</a>)}
+      <Link className="dev-footer-photography" href={isPhotography ? "/" : "/photography"}>{isPhotography ? "See my development work" : "See my photography"} <span aria-hidden="true">↗</span></Link>
+    </nav>
+    <div className="dev-footer-bottom">
+      <div className="dev-footer-meta">
+        <span>© {new Date().getFullYear()} {profile.name}</span>
+        <span>{location}, <time dateTime={localTime?.dateTime}>{localTime?.label ?? "UAE time"}</time></span>
+        <span>Updated <time dateTime={portfolioLastUpdated}>{new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(portfolioLastUpdated))}</time></span>
+      </div>
+      <button className="dev-footer-up" type="button" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" })}>Back to top <span aria-hidden="true">↑</span></button>
+    </div>
+  </div>;
+}
 
 export default function SiteChrome({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
@@ -54,12 +117,19 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
+    const site = !isPhotography ? document.querySelector<HTMLElement>(".ds-site") : null;
+    if (site) {
+      const tokens = getComputedStyle(site);
+      header.style.setProperty("--ds-blue", tokens.getPropertyValue("--ds-blue"));
+      header.style.setProperty("--ds-cyan", tokens.getPropertyValue("--ds-cyan"));
+    }
     let frame = 0;
     const update = () => {
       frame = 0;
       const distance = document.documentElement.scrollHeight - window.innerHeight;
       const progress = distance > 0 ? Math.max(0, Math.min(1, window.scrollY / distance)) : 0;
       header.style.setProperty("--header-progress", String(progress));
+      header.dataset.scrolled = String(window.scrollY > 24);
     };
     const schedule = () => { if (!frame) frame = window.requestAnimationFrame(update); };
     const observer = new ResizeObserver(schedule);
@@ -73,7 +143,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
       window.removeEventListener("resize", schedule);
       window.cancelAnimationFrame(frame);
     };
-  }, [pathname]);
+  }, [pathname, isPhotography, devDark]);
 
   useEffect(() => {
     if (isPhotography) return;
@@ -201,33 +271,6 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   }, [menuMounted]);
 
   useEffect(() => {
-    if (!isPhotography) return;
-
-    const footer = document.querySelector<HTMLElement>(".photography-footer[data-reveal]");
-    if (!footer) return;
-
-    const revealFooter = () => footer.classList.add("is-visible");
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
-      revealFooter();
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          revealFooter();
-          observer.disconnect();
-        });
-      },
-      { threshold: 0.08, rootMargin: "0px 0px -5% 0px" },
-    );
-
-    observer.observe(footer);
-    return () => observer.disconnect();
-  }, [isPhotography]);
-
-  useEffect(() => {
     const defaultHref = navigation[0]?.href || "#top";
     const sections = navigation
       .map((item) => ({ href: item.href, element: document.querySelector(item.href) }))
@@ -236,12 +279,15 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
 
     if (!sections.length) return;
 
+    if (!("IntersectionObserver" in window)) return;
+    const visible = new Set<Element>();
     const observer = new IntersectionObserver((entries) => {
-      const visible = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0];
-      if (!visible) return;
-      const match = sections.find((section) => section.element === visible.target);
+      entries.forEach(entry => {
+        if (entry.isIntersecting) visible.add(entry.target);
+        else visible.delete(entry.target);
+      });
+      const match = sections.filter(section => visible.has(section.element))
+        .sort((a, b) => Math.abs(a.element.getBoundingClientRect().top) - Math.abs(b.element.getBoundingClientRect().top))[0];
       if (match) setActiveHref(match.href);
     }, { rootMargin: "-18% 0px -68%", threshold: [0, 0.15, 0.45] });
 
@@ -254,6 +300,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
 
   return (
     <>
+      {!isPhotography && <a className="ds-feature-skip" href="#main-content">Skip to content</a>}
       <header ref={headerRef} className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
         <span className="shared-header-progress" aria-hidden="true" />
         <div className="shared-header-inner">
@@ -295,7 +342,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             type="button"
             aria-label="Open navigation menu"
             aria-expanded={menuOpen}
-            aria-controls="shared-mobile-navigation"
+            aria-controls={menuMounted ? "shared-mobile-navigation" : undefined}
             onClick={() => {
               if (headerRef.current) setMenuTop(headerRef.current.getBoundingClientRect().bottom + 8);
               setMenuMounted(true);
@@ -340,19 +387,9 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
         {children}
       </div>
 
-      <footer className={`shared-site-footer${isPhotography ? " photography-footer" : " dev-footer"}${isLightPhotography ? " is-light" : ""}`} data-reveal={isPhotography ? true : undefined}>
+      <footer className={`shared-site-footer${isPhotography ? " photography-footer" : " dev-footer"}${isLightPhotography ? " is-light" : ""}`}>
         <div className="shared-footer-inner">
-          <p className="shared-footer-kicker">{isPhotography ? "Now booking selected commissions" : devProfile.availability}</p>
-          <a className="shared-footer-email" href="#contact">Let’s start a conversation ↗</a>
-          <div className="shared-footer-bottom">
-            <span>© {new Date().getFullYear()} {currentProfile.name}<br />Last updated: <time dateTime="2026-10-01">1 October 2026</time></span>
-            <div>
-              {(isPhotography ? photographyProfile.socialLinks : devProfile.links).map((link) => (
-                <a key={link.label} href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
-              ))}
-            </div>
-            <a href="#top">Back to top ↑</a>
-          </div>
+          <PortfolioFooterContent isPhotography={isPhotography} />
         </div>
       </footer>
     </>

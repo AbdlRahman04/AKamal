@@ -78,6 +78,9 @@ for (const collection of ["projects", "certificates", "toolkits", "education"]) 
 }
 
 for (const [index, certificate] of (data.certificates || []).entries()) {
+  if (certificate.topic !== undefined && typeof certificate.topic !== "string") {
+    errors.push(`certificates[${index}].topic must be a string`);
+  }
   if (!["completed", "in-progress"].includes(certificate.status)) {
     errors.push(`certificates[${index}].status must be completed or in-progress`);
   }

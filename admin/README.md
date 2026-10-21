@@ -92,6 +92,8 @@ admin/ui/
 
 ## Notes
 
+The Dev workspace's Learning editor manages certificate titles, issuers, years, completion status, descriptions, verification links, and preview images. The optional Topic field controls the public Certifications & learning filters. Choose a suggested topic or enter a new one; a blank topic appears under Other. The public list, search, counts, and Learning from provider strip all use `data/dev.json`. Rebuild the static site after saving content changes.
+
 - The admin server binds to `localhost:4000`, so it is intended for local use.
 - Uploaded images are accepted as JPEG, PNG, TIFF, or WebP files up to 50 MB.
 - After changing portfolio content, run the main site locally with `npm run dev` or build it with `npm run build` to check the public experience.

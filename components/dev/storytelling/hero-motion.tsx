@@ -1,22 +1,39 @@
 "use client";
 
-import { useEffect, useRef, useSyncExternalStore, type ReactNode, type PointerEvent } from "react";
+import { useEffect, useRef, type ReactNode, type PointerEvent, type RefObject } from "react";
 import { useDeveloperMotion } from "./developer-motion";
 
-const desktopQuery = "(min-width: 1024px) and (min-height: 700px)";
-function subscribeDesktop(listener: () => void) {
-  const query = window.matchMedia(desktopQuery);
-  query.addEventListener("change", listener);
-  return () => query.removeEventListener("change", listener);
+export function useHeroScroll(root: RefObject<HTMLElement | null>) {
+  const { reduced } = useDeveloperMotion();
+  useEffect(() => {
+    if (reduced || !root.current) return;
+    let cancelled = false;
+    let cleanup: (() => void) | undefined;
+    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ default: gsap }, { ScrollTrigger }]) => {
+      if (cancelled || !root.current) return;
+      gsap.registerPlugin(ScrollTrigger);
+      const element = root.current;
+      const media = gsap.matchMedia();
+      media.add({ motion: "(prefers-reduced-motion: no-preference)", mobile: "(max-width: 699px)" }, context => {
+        if (!context.conditions?.motion) return;
+        const distance = context.conditions.mobile ? 20 : 40;
+        const scrollTrigger = { trigger: element, start: "top top", end: "bottom top", scrub: true, invalidateOnRefresh: true };
+        gsap.to(element.querySelectorAll("[data-hero-layer], .ds-simple-hero-preview"), {
+          y: (index: number) => distance * (index === 0 ? 1 : .65), ease: "none", scrollTrigger,
+        });
+        gsap.to(element, { opacity: .88, scale: .98, ease: "none", scrollTrigger });
+      }, element);
+      cleanup = () => media.revert();
+    }).catch(() => { /* The hero remains fully readable if its optional motion chunk fails. */ });
+    return () => { cancelled = true; cleanup?.(); };
+  }, [root, reduced]);
 }
-const getDesktop = () => window.matchMedia(desktopQuery).matches;
-const getServerDesktop = () => false;
 
 export default function HeroMotion({ children }: { children: ReactNode }) {
   const root = useRef<HTMLElement>(null);
   const entered = useRef(false);
   const { reduced } = useDeveloperMotion();
-  const desktop = useSyncExternalStore(subscribeDesktop, getDesktop, getServerDesktop);
+  useHeroScroll(root);
 
   useEffect(() => {
     const element = root.current;
@@ -46,24 +63,6 @@ export default function HeroMotion({ children }: { children: ReactNode }) {
     const timer = window.setTimeout(() => element.classList.remove("ds-hero-entering"), 800);
     return () => { window.clearTimeout(timer); element.classList.remove("ds-hero-entering"); };
   }, [reduced]);
-
-  useEffect(() => {
-    if (reduced || !desktop || !root.current) return;
-    let cancelled = false;
-    let cleanup: (() => void) | undefined;
-    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ default: gsap }, { ScrollTrigger }]) => {
-      if (cancelled || !root.current) return;
-      gsap.registerPlugin(ScrollTrigger);
-      const media = gsap.matchMedia();
-      const context = gsap.context(() => {
-        media.add(desktopQuery, () => {
-          gsap.to("[data-hero-layer]", { y: (index: number) => index === 0 ? -48 : 32, ease: "none", scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: true } });
-        });
-      }, root);
-      cleanup = () => { media.revert(); context.revert(); };
-    });
-    return () => { cancelled = true; cleanup?.(); };
-  }, [reduced, desktop]);
 
   function tilt(event: PointerEvent<HTMLElement>) {
     if (reduced || event.pointerType !== "mouse" || !window.matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)").matches) return;

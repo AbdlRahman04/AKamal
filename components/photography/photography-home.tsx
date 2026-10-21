@@ -2,6 +2,8 @@
 
 import Image from "@/components/site/public-image";
 import ContactForm, { type ContactFormHandle } from "@/components/site/contact-form";
+import PhotographyApproach from "./photography-approach";
+import PhotographyOverview from "./photography-overview";
 import { publicPath } from "@/components/site/public-path";
 import { type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type SyntheticEvent, type TouchEvent, useCallback, useEffect, useId, useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
@@ -11,7 +13,6 @@ import {
   collections,
   hero,
   profile,
-  toolkit,
   type Collection,
   type HeroImage,
   type Photo,
@@ -200,12 +201,45 @@ export default function PhotographyHome() {
   const [workDirection, setWorkDirection] = useState(0);
   const [workHasChanged, setWorkHasChanged] = useState(false);
   const reduceMotion = useReducedMotion();
+  const [activeBannerIndex, setActiveBannerIndex] = useState(0);
+  const [bannerVisible, setBannerVisible] = useState(false);
+  const [bannerReducedMotion, setBannerReducedMotion] = useState(true);
+  const [pageVisible, setPageVisible] = useState(true);
+  const bannerRef = useRef<HTMLElement | null>(null);
+  const bannerRotating = !bannerReducedMotion && bannerVisible && pageVisible
+    && !selected && !selectedProject && heroImages.length > 1;
+
+  useEffect(() => {
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => setBannerReducedMotion(motionPreference.matches);
+    updateMotion();
+    motionPreference.addEventListener("change", updateMotion);
+    const updateVisibility = () => setPageVisible(!document.hidden);
+    updateVisibility();
+    document.addEventListener("visibilitychange", updateVisibility);
+    const observer = new IntersectionObserver(([entry]) => setBannerVisible(entry.isIntersecting));
+    if (bannerRef.current) observer.observe(bannerRef.current);
+    return () => {
+      observer.disconnect();
+      motionPreference.removeEventListener("change", updateMotion);
+      document.removeEventListener("visibilitychange", updateVisibility);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!bannerRotating) return;
+    const timer = window.setInterval(() => setActiveBannerIndex(index => (index + 1) % heroImages.length), 5200);
+    return () => window.clearInterval(timer);
+  }, [bannerRotating, heroImages.length]);
+
   const workTabsId = useId();
   const animateWork = workDirection !== 0 && reduceMotion === false;
   const openerRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const projectCloseButtonRef = useRef<HTMLButtonElement | null>(null);
   const touchStartX = useRef<number | null>(null);
+  const thumbnailStripRef = useRef<HTMLElement | null>(null);
+  const viewerOpen = selected !== null;
   const viewerHistoryEntry = useRef(false);
   const viewerCloseRequested = useRef(false);
   const viewerClosingRef = useRef(false);
@@ -250,7 +284,7 @@ export default function PhotographyHome() {
   }, []);
 
   const movePhoto = useCallback((step: number, animate = false) => {
-    if (!selected) return;
+    if (!selected || step === 0) return;
     const photos = selected.collection.photos;
     const nextIndex = (selected.index + step + photos.length) % photos.length;
     setViewerDirection(animate && !window.matchMedia("(prefers-reduced-motion: reduce)").matches ? (step > 0 ? "next" : "previous") : null);
@@ -311,17 +345,28 @@ export default function PhotographyHome() {
 
   useEffect(() => {
     if (!selected) return;
-    closeButtonRef.current?.focus();
+    thumbnailStripRef.current?.querySelector('[aria-current="true"]')?.scrollIntoView({ block: "nearest", inline: "nearest" });
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeViewer();
-      if (event.key === "ArrowLeft") movePhoto(-1);
-      if (event.key === "ArrowRight") movePhoto(1);
+      if (event.key === "Escape") { event.preventDefault(); closeViewer(); }
+      if (event.key === "ArrowLeft") { event.preventDefault(); movePhoto(-1); }
+      if (event.key === "ArrowRight") { event.preventDefault(); movePhoto(1); }
+      if (event.key === "Tab") {
+        const controls = closeButtonRef.current?.closest(".viewer")?.querySelectorAll<HTMLButtonElement>("button");
+        const first = controls?.[0];
+        const last = controls?.[controls.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
     };
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [selected, closeViewer, movePhoto]);
+
+  useEffect(() => {
+    if (viewerOpen) closeButtonRef.current?.focus();
+  }, [viewerOpen]);
 
   useEffect(() => {
     if (!selectedProject || selected) return;
@@ -463,71 +508,77 @@ export default function PhotographyHome() {
   return (
     <main className={revealReady ? "reveal-ready" : ""}>
 
-      <section className="hero redesigned-hero" id="top" aria-labelledby="hero-title">
-        <div className="hero-manifest" aria-label="Archive classification">
-          <span>Catalogue // {heroContent.yearLabel}</span>
-          <span>{profile.role}</span>
-          <span>{heroContent.locationLabel}</span>
-        </div>
-        <div className="hero-shell">
-          <div className="hero-copy">
-            <div className="hero-kicker"><span /> {profile.name} / {heroContent.eyebrow}</div>
-            <div className="hero-heading-wrap">
-              <p className="hero-index">01 / Introduction</p>
-              <h1 id="hero-title">{heroContent.title}<br /><em>{heroContent.titleAccent}</em></h1>
-            </div>
-            <div className="hero-copy-bottom">
-              <p>{profile.intro || heroContent.description}</p>
-              <div className="hero-actions">
-                <a className="hero-button hero-button-primary" href="#work">{heroContent.primaryCta} <Arrow direction="right" /></a>
-                <a className="hero-button hero-button-secondary" href="#about">{heroContent.secondaryCta}</a>
-              </div>
+      <section
+        className="photo-banner"
+        id="top"
+        aria-labelledby="hero-title"
+        ref={bannerRef}
+        data-rotating={bannerRotating}
+      >
+        <div className="photo-banner-inner">
+          <div className="photo-banner-meta" aria-label="Archive classification">
+            <span>Catalogue // {heroContent.yearLabel}</span>
+            <span>{profile.role}</span>
+            <span>{heroContent.locationLabel}</span>
+          </div>
+          <h1 className="photo-banner-title" id="hero-title"><span>{heroContent.title}</span><em>{heroContent.titleAccent}</em></h1>
+          <div className="photo-banner-summary">
+            <p>{profile.intro || heroContent.description}</p>
+            <div className="photo-banner-actions">
+              <a className="photo-banner-primary" href="#work">{heroContent.primaryCta} <Arrow direction="right" /></a>
+              <a className="photo-banner-secondary" href="#about">{heroContent.secondaryCta}</a>
             </div>
           </div>
-
-          <div className="hero-visual" aria-label="Selected photographs">
+          <div className="photo-banner-panels" id="photo-banner-frames" role="group" aria-label="Featured photographs">
             {heroImages.map((image, index) => {
               const target = resolveHeroPhotoTarget(image);
-              const frameClass = `hero-frame hero-frame-${index + 1}`;
-              const frameImage = (
+              const title = target?.photo.title || image.label || image.alt;
+              const active = index === activeBannerIndex;
+              const frameClass = `photo-banner-panel${active ? " is-expanded" : ""}`;
+              const frameContent = <>
                 <Image
                   src={image.src}
                   alt={image.alt}
                   fill
                   draggable={false}
                   priority={index === 0}
-                  sizes={index === 0 ? "(max-width: 850px) 86vw, 43vw" : "(max-width: 850px) 43vw, 17vw"}
+                  sizes="(max-width: 900px) 100vw, 65vw"
+                  style={target?.photo.focalPoint ? { objectPosition: `${target.photo.focalPoint.x}% ${target.photo.focalPoint.y}%` } : undefined}
                 />
-              );
-              if (!target) {
-                return (
-                  <figure className={frameClass} key={image.src} onContextMenu={blockPhotoAction} onDragStart={blockPhotoAction}>
-                    {frameImage}
-                  </figure>
-                );
-              }
+                <span className="photo-banner-viewfinder" aria-hidden="true" />
+                <span className="photo-banner-count" aria-hidden="true">{String(index + 1).padStart(2, "0")} / {String(heroImages.length).padStart(2, "0")}</span>
+                <span className="photo-banner-photo-title" aria-hidden="true">{title}</span>
+                {target && <span className="photo-banner-view" aria-hidden="true">View ↗</span>}
+              </>;
+              if (!target) return <figure className={frameClass} key={image.src} onPointerEnter={event => { if (event.pointerType === "mouse") setActiveBannerIndex(index); }} onContextMenu={blockPhotoAction} onDragStart={blockPhotoAction}>{frameContent}</figure>;
               return (
                 <button
                   type="button"
-                  className={`${frameClass} hero-frame-button`}
+                  className={frameClass}
                   key={image.src}
-                  onClick={(event) => openViewer(target.collection, target.photo, target.index, event.currentTarget, event.detail > 0)}
+                  onPointerEnter={event => {
+                    if (event.pointerType === "mouse") setActiveBannerIndex(index);
+                  }}
+                  onClick={event => openViewer(target.collection, target.photo, target.index, event.currentTarget, event.detail > 0)}
                   onContextMenu={blockPhotoAction}
                   onDragStart={blockPhotoAction}
-                  aria-label={`View photograph: ${image.alt}`}
+                  aria-expanded={active}
+                  aria-label={`View photograph: ${title}`}
                 >
-                  {frameImage}
+                  {frameContent}
                 </button>
               );
             })}
           </div>
-        </div>
-        <div className="hero-footer">
-          <span>Selected work</span>
-          <span>{heroContent.locationLabel}</span>
-          <span className="hero-rights-notice">© {profile.name} / All rights reserved</span>
+          <div className="photo-banner-footer">
+            <span>Selected photographs</span>
+            <span>{heroContent.locationLabel}</span>
+            <span>© {profile.name} / All rights reserved</span>
+          </div>
         </div>
       </section>
+
+      <PhotographyOverview />
 
       {/* Legacy hero markup is intentionally kept unreachable for compatibility with older authored content. */}
       {false && <section className="hero legacy-reference" id="legacy-hero" aria-labelledby="legacy-hero-title">
@@ -665,26 +716,7 @@ export default function PhotographyHome() {
           </div>
         </div>
 
-      <section className="toolkit-section" id="approach" aria-labelledby="approach-title">
-        <div className="toolkit-title reveal" data-reveal>
-          <p className="eyebrow">03 / Approach</p>
-          <h2 id="approach-title">The craft<br />behind <em>the frame.</em></h2>
-        </div>
-        <div className="toolkit-list reveal" data-reveal>
-          {toolkit.map((item) => (
-            <article
-              className="toolkit-item reveal"
-              key={item.number}
-              data-reveal
-              style={{ "--reveal-delay": `${(Number(item.number) - 1) * 70}ms` } as CSSProperties}
-            >
-              <span>{item.number}</span>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
-          ))}
-        </div>
-      </section>
+      <PhotographyApproach openExamples={(collection, opener, animate) => openViewer(collection, collection.photos[0], 0, opener, animate)} />
 
       <section className="about-section reveal" id="about" aria-labelledby="about-title" data-reveal>
         <div className="about-aside">
@@ -780,15 +812,25 @@ export default function PhotographyHome() {
         <div className="viewer-backdrop" role="presentation" data-motion={viewerMotion ? "true" : undefined} data-closing={viewerClosing ? "true" : undefined} onMouseDown={(event) => { if (event.target === event.currentTarget) closeViewer(event.detail > 0); }}>
           <section className="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" aria-describedby="viewer-story">
             <button className="viewer-close" ref={closeButtonRef} onClick={event => closeViewer(event.detail > 0)} aria-label="Close photo viewer">Close</button>
-            <div
-              className={`viewer-image${viewerDirection ? ` viewer-image-${viewerDirection}` : ""}${selected.photo.isPlaceholder ? ` placeholder placeholder-${(collections.indexOf(selected.collection) % 3) + 1}` : ""}`}
-              key={`image-${selected.photo.id}`}
-              onTouchStart={handleViewerTouchStart}
-              onTouchEnd={handleViewerTouchEnd}
-              onContextMenu={blockPhotoAction}
-              onDragStart={blockPhotoAction}
-            >
-              {selected.photo.isPlaceholder ? <><span>{String(selected.index + 1).padStart(2, "0")}</span><p>Replace with<br />your photograph</p></> : <Image src={selected.photo.src} alt={selected.photo.alt} fill sizes="90vw" priority draggable={false} />}
+            <div className="viewer-media">
+              <div
+                className={`viewer-image${viewerDirection ? ` viewer-image-${viewerDirection}` : ""}${selected.photo.isPlaceholder ? ` placeholder placeholder-${(collections.indexOf(selected.collection) % 3) + 1}` : ""}`}
+                key={`image-${selected.photo.id}`}
+                onTouchStart={handleViewerTouchStart}
+                onTouchEnd={handleViewerTouchEnd}
+                onContextMenu={blockPhotoAction}
+                onDragStart={blockPhotoAction}
+              >
+                {selected.photo.isPlaceholder ? <><span>{String(selected.index + 1).padStart(2, "0")}</span><p>Replace with<br />your photograph</p></> : <Image src={selected.photo.src} alt={selected.photo.alt} fill sizes="90vw" priority draggable={false} />}
+              </div>
+              <nav className="viewer-thumbnails" aria-label="Photos in this collection" ref={thumbnailStripRef}>
+                {selected.collection.photos.map((photo, index) => <button type="button" key={photo.id}
+                  aria-label={`View photo ${index + 1}: ${photo.title}`} aria-current={index === selected.index ? "true" : undefined}
+                  onClick={event => movePhoto(index - selected.index, event.detail > 0)}>
+                  {photo.isPlaceholder ? <span>{String(index + 1).padStart(2, "0")}</span>
+                    : <Image src={photo.thumbnailSrc} alt="" fill sizes="72px" draggable={false} />}
+                </button>)}
+              </nav>
             </div>
             <div className="viewer-details" key={`details-${selected.photo.id}`}>
               {selected.photo.location && <p className="viewer-location">{selected.photo.location}</p>}

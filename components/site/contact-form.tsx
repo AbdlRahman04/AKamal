@@ -2,6 +2,7 @@
 
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState, type FormEvent } from "react";
 import { submitContact, validateContactFields } from "./contact-service.mjs";
+import { devProfile } from "@/data/dev";
 
 type Fields = { name: string; email: string; subject: string; message: string; inquiryType: string; website: string };
 type HCaptcha = {
@@ -16,6 +17,7 @@ const accessKey = (process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "").trim();
 // Web3Forms' shared free-plan hCaptcha site key; no separate captcha account.
 const siteKey = "50b2fe65-b00b-4b9e-ad62-3ba471098be2";
 const configured = Boolean(accessKey && process.env.NEXT_PUBLIC_VERCEL_ENV !== "preview");
+const fallbackContact = devProfile.links.find(link => link.label === "LinkedIn");
 let challengeScript: Promise<void> | undefined;
 
 function loadChallenge() {
@@ -117,10 +119,10 @@ const ContactForm = forwardRef<ContactFormHandle, { source: "dev" | "photography
       <div className="contact-honeypot" aria-hidden="true"><label>Website<input name="website" value={fields.website} onChange={event => change("website", event.target.value)} tabIndex={-1} autoComplete="off" /></label></div>
     </fieldset>
     <div ref={container} className="contact-challenge" />
-    {!configured && <p className="contact-status" role="status">Contact is temporarily unavailable. Please try again later.</p>}
-    {configured && !token && !challengeError && !sent && <p className="contact-status" role="status">Please complete the security check before sending.</p>}
-    {challengeError && <p className="contact-status" role="status">The security check could not load. <button className="contact-retry" type="button" disabled={sending} onClick={() => setAttempt(previous => previous + 1)}>Try again</button></p>}
     <div role="status" aria-live="polite" aria-atomic="true">
+      {!configured && <p className="contact-status">Contact is temporarily unavailable. Please try again later.{fallbackContact?.href && <> You can also <a href={fallbackContact.href} target="_blank" rel="noreferrer">contact me on LinkedIn</a>.</>}</p>}
+      {configured && !token && !challengeError && !sent && !status && <p className="contact-status">Please complete the security check before sending.</p>}
+      {challengeError && <p className="contact-status">The security check could not load. <button className="contact-retry" type="button" disabled={sending} onClick={() => setAttempt(previous => previous + 1)}>Try again</button>{fallbackContact?.href && <> Or <a href={fallbackContact.href} target="_blank" rel="noreferrer">contact me on LinkedIn</a>.</>}</p>}
       {sent ? <div className="contact-success" ref={successPanel} tabIndex={-1} aria-labelledby={`${id}-success-title`} aria-describedby={`${id}-success-detail`}>
         <span className="contact-success-check" aria-hidden="true">✓</span>
         <div><strong id={`${id}-success-title`}>Message sent successfully</strong><p id={`${id}-success-detail`}>Thank you for getting in touch.</p></div>

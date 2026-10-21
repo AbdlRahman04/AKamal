@@ -43,7 +43,7 @@ export default function ProjectCaseStudyDialog({ project, initialTab = "System D
     if (!element) return;
     if (closeTimer.current !== null) window.clearTimeout(closeTimer.current);
     closeTimer.current = null;
-    const source = event.currentTarget.closest(".ds-project-card")?.getBoundingClientRect() ?? event.currentTarget.getBoundingClientRect();
+    const source = event.currentTarget.closest(".ds-project-card, .ds-explorer-card")?.getBoundingClientRect() ?? event.currentTarget.getBoundingClientRect();
     const narrow = window.matchMedia("(max-width: 767px)").matches;
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
@@ -98,7 +98,7 @@ export default function ProjectCaseStudyDialog({ project, initialTab = "System D
       if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) closeDialog(event.detail > 0);
     }}>
       <header className="av-header"><div><h2 id={`${id}-title`}>{architecture.title}</h2><p>{architecture.subtitle}</p></div><button type="button" aria-label="Close project case study" onClick={event => closeDialog(event.detail > 0)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg></button></header>
-      <div className="av-tabs av-motion-tabs" role="tablist" aria-label="Case study sections">{tabs.map((label, index) => <button key={label} ref={element => { tabRefs.current[index] = element; }} type="button" role="tab" id={`${id}-tab-${index}`} aria-selected={active === index} aria-controls={`${id}-panel-${index}`} tabIndex={active === index ? 0 : -1} onKeyDown={event => navigate(event, index)} onClick={event => selectTab(index, event.detail > 0)}>
+      <div className="av-tabs av-motion-tabs" role="tablist" aria-label="Case study sections">{tabs.map((label, index) => <button key={label} ref={element => { tabRefs.current[index] = element; }} type="button" role="tab" id={`${id}-tab-${index}`} aria-selected={active === index} aria-controls={open ? `${id}-panel-${index}` : undefined} tabIndex={active === index ? 0 : -1} onKeyDown={event => navigate(event, index)} onClick={event => selectTab(index, event.detail > 0)}>
         {open && active === index && <motion.span className="av-tab-highlight" aria-hidden="true" layoutId={`${id}-active-tab`} transition={shouldAnimatePanel ? { duration: 0.24, ease: [0.16, 1, 0.3, 1] } : { duration: 0 }} />}
         <span className="av-tab-label">{label}</span>
       </button>)}</div>

@@ -1,4 +1,6 @@
 import data from "./photography.json";
+import approach from "./photography-approach.json";
+import overview from "./photography-overview.json";
 
 /* ─────────────────────────────────────────────
    Types
@@ -118,29 +120,16 @@ export const collections: Collection[] = [...primaryCollectionData, ...archiveCo
 export const primaryCollections: Collection[] = primaryCollectionData;
 export const archiveCollections: Collection[] = archiveCollectionData;
 
-export const toolkit = [
-  {
-    number: "01",
-    title: "Composition",
-    description:
-      "Rule of thirds, visual balance, leading lines, and intentional framing to give each image depth and direction.",
-  },
-  {
-    number: "02",
-    title: "Light & Exposure",
-    description:
-      "High-contrast natural light, deep shadow, and atmospheric tones handled with a calm, deliberate exposure.",
-  },
-  {
-    number: "03",
-    title: "Post-Processing",
-    description:
-      "Contrast, highlight recovery, and color grading used to reinforce the mood already present in the scene.",
-  },
-  {
-    number: "04",
-    title: "Camera Control",
-    description:
-      "Action tracking, panning, and intentional motion blur balanced with a sharp, purposeful subject.",
-  },
-];
+export type ApproachPrinciple = {
+  number: string;
+  title: string;
+  description: string;
+  detail: string;
+  demo: "composition" | "light" | "grading" | "motion" | "storytelling";
+  previewLabel: string;
+  techniques: TechniqueTag[];
+};
+
+export const toolkit = approach as ApproachPrinciple[];
+
+export const photographyOverview: { subjects: string[]; cities: number; years: number } = overview;

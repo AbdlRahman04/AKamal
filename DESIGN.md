@@ -12,7 +12,7 @@ canonical data -> validator -> layout module -> route or admin editor -> targete
 
 ## Visual direction
 
-- Public developer portfolio: Modern Bento, light by default with a remembered dark option. Cool white / graphite surfaces, teal / mint accents, bold sans-serif type, and generous project visuals.
+- Public developer portfolio: a compact showcase of demonstrated ability, light by default with a remembered dark option. Preserve the original navy surfaces and mint accents in dark mode, with cool white surfaces and teal accents in light mode. Use locally hosted Sora headings, Manrope body text, and an explicitly illustrative LeafAI analysis.
 - Public photography portfolio: preserve its own route-specific visual language.
 - Admin tools: dark navy surfaces with the same control hierarchy across inputs, selects, toggles, panels, and focus states.
 - Display type is reserved for public section headings. Sans-serif supports reading. Monospace is limited to compact metadata and status.
@@ -31,7 +31,16 @@ Use the existing CSS custom properties before adding a new literal value.
 | Divider or border | `--ds-line` | `--line` |
 | Main accent | `--ds-blue` | `--blue` |
 
-- Public developer tiles use `24px` corners, inner previews use `16px`, and controls use `12px`. Route-specific presentation lives in `components/dev/bento.css`; shared interaction and artwork styles remain in `dev.css`.
+- The developer homepage uses a maximum width of 1180px, 20px project corners, 12px previews and credential tiles, and pill-shaped hero actions. Its presentation lives in `components/dev/portfolio.css`; existing artwork and dialog styles remain in `bento.css` and `dev.css`.
+- Light developer tokens: background `#F2F6F7`, secondary surface `#E9F3F2`, panel `#FFFFFF`, text `#192C32`, supporting text `#526970`, accent `#087C80`. Dark tokens: `#111D22`, `#243C42`, `#1B2B32`, `#ECF4F4`, `#AAC1C5`, `#86E1CF`, respectively.
+- Preserve the developer header's existing circuit graphic and two-tone AK monogram: the A uses the text colour and the K uses the accent. Header surfaces, active navigation, theme controls, and contact actions follow the same palette.
+- The hero name alone uses locally hosted Bricolage Grotesque Bold, matching the supplied sample: given name on the first line, surname with a blue-to-gold gradient on the second. Keep the remaining headings in Sora and the main controls mint/teal. Forced-colour mode shows the surname as solid text.
+- Selected software projects use one keyboard-accessible tabbed card combining their photo/preview, concise summary, personal contribution, technologies, and visible case-study/demo buttons. The request path and step controls sit below the photo and summary; a native disclosure contains all workflow steps and project accomplishments. Do not repeat these software projects as separate cards. Projects without a supported walkthrough retain their existing card.
+- Derive workflow and component highlights from canonical case-study adapters. Preserve direct project/story anchors by selecting the corresponding tab. Without JavaScript, show both project panels and their native disclosures. Keep full architecture and decisions in the dialogs. Experience and education use a readable timeline; skills link to evidence; credentials remain stationary.
+- Sample features live in `portfolio-features.css`: a pausable hero typewriter and illustrative leaf scan, a network entrance that settles after four seconds, pointer glow/skill tilt, and counters derived from canonical content. The 520px mouse-following glow uses the mint/teal accent at 17%, follows the pointer once per frame, and fades when the pointer leaves the window. Pointer effects are disabled for touch and reduced motion. The illustrative score lives in `data/project-previews.ts` and must never become a real performance claim.
+- Walkthrough autoplay starts only when a visitor chooses Play. Manual navigation stops playback; hover, offscreen content, hidden tabs, and reduced motion suspend it. The hero has its own pause control. Reduced motion keeps all information in its static state, and a native workflow transcript remains readable without JavaScript.
+- A pausable strip summarizes completed course providers above the stationary credential collection. Its duplicate visual copy is hidden from assistive technology. Reduced motion and no JavaScript show a single wrapped list.
+- Developer navigation includes a skip-to-content link. The developer route exports profile metadata, mobile theme colors, and Person structured data from the public profile.
 - Admin panels use `10px` corners and controls use `7px` corners.
 - Every interactive control has visible hover, focus-visible, and active feedback.
 - Reduced-motion users receive the final static state.
@@ -58,7 +67,6 @@ Use `components/dev/portfolio-section.tsx` for every new top-level developer por
 ```tsx
 <PortfolioSection
   id="awards"
-  index="06 / Awards"
   title="Recognition for practical work."
   intro="A concise record of externally recognised projects and learning."
   className="ds-awards"
@@ -67,7 +75,7 @@ Use `components/dev/portfolio-section.tsx` for every new top-level developer por
 </PortfolioSection>
 ```
 
-The module owns the anchor ID, heading ID, semantic relationship, heading layout, and reveal hook. Feature code owns only the content inside the section.
+The module owns the anchor ID, heading ID, semantic relationship, heading layout, and reveal hook. Its decorative `index` is optional; omit it on the compact homepage. Feature code owns only the content inside the section.
 
 ## Data and state rules
 

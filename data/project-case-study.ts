@@ -1,4 +1,26 @@
-import type { ArchitectureNode, DevArchitecture, DevProject } from "./dev";
+import type { ArchitectureNode, DevArchitecture, DevExperience, DevProject } from "./dev";
+
+export type PortfolioFact = { value: number; label: string; detail: string; href: string };
+
+/** Portfolio totals include every canonical project, including smaller experiments. */
+export function getPortfolioFacts(projects: DevProject[], experience: DevExperience[]): PortfolioFact[] {
+  const facts: PortfolioFact[] = [];
+  if (projects.length) facts.push({ value: projects.length, label: "Projects", detail: "Explore the work", href: "#projects" });
+  const internships = experience.filter(item => /\bintern\b/i.test(item.role)).length;
+  if (internships) facts.push({ value: internships, label: "Internships", detail: "See my experience", href: "#experience" });
+  return facts;
+}
+
+/** Model coverage belongs to LeafAI, never to the portfolio as a whole. */
+export function getProjectModelCoverage(project: DevProject): { classes: number; species: number } | null {
+  if (project.slug !== "plant-health-monitoring-system") return null;
+  const classifier = project.architecture?.nodes.find(node => node.id === "classifier");
+  const coverage = classifier?.responsibilities.join(" ").match(/\b(\d+)\s+plant health classes across\s+(\d+)\s+species\b/i);
+  if (coverage && Number(coverage[1]) > 0 && Number(coverage[2]) > 0) {
+    return { classes: Number(coverage[1]), species: Number(coverage[2]) };
+  }
+  return null;
+}
 
 export type ProjectCaseStudy = {
   architecture: DevArchitecture;

@@ -1,0 +1,47 @@
+[
+  {
+    "number": "01",
+    "title": "Composition",
+    "description": "Rule of thirds, visual balance, leading lines, and intentional framing to give each image depth and direction.",
+    "detail": "I place the subject on a third intersection and let lines carry the eye into the scene. Foreground framing and space around the subject give the eye a clear path through the photograph.",
+    "demo": "composition",
+    "previewLabel": "Thirds grid",
+    "techniques": ["Rule of Thirds", "Leading Lines", "Environmental Framing", "Depth"]
+  },
+  {
+    "number": "02",
+    "title": "Light & Exposure",
+    "description": "High-contrast natural light, deep shadow, and atmospheric tones handled with a calm, deliberate exposure.",
+    "detail": "I expose for the highlights I want to keep and let the shadows fall away. Watching how light changes across a scene helps me choose the moment, balance the exposure, and preserve its atmosphere.",
+    "demo": "light",
+    "previewLabel": "Light and shadow study",
+    "techniques": ["Golden Hour", "Atmospheric Light", "Exposure Balance", "Window Light"]
+  },
+  {
+    "number": "03",
+    "title": "Post-Processing",
+    "description": "Contrast, highlight recovery, and color grading used to reinforce the mood already present in the scene.",
+    "detail": "Edits stay small and consistent: contrast, highlight recovery, and a color grade that reinforces the mood already in the scene. I look at the whole set together so the photographs share a coherent tone.",
+    "demo": "grading",
+    "previewLabel": "Illustrative grade comparison",
+    "techniques": ["Color Grading", "Environmental Texture"]
+  },
+  {
+    "number": "04",
+    "title": "Camera Control",
+    "description": "Action tracking, panning, and intentional motion blur balanced with a sharp, purposeful subject.",
+    "detail": "I track the subject, slow the shutter, and pan with its movement, aiming to keep the subject sharp as the background turns into streaks. Shutter speed and a steady follow-through determine how much movement stays in the frame.",
+    "demo": "motion",
+    "previewLabel": "Tracking the subject",
+    "techniques": ["Panning", "Motion Blur", "Shutter Speed"]
+  },
+  {
+    "number": "05",
+    "title": "Storytelling",
+    "description": "Frames chosen and ordered so a set reads as a sequence: the wide establishing shot, the detail, the closing beat.",
+    "detail": "I shoot for the edit: one wide frame to establish the place, a few details to give it texture, and a closing frame that lets the set breathe. Changes in scale and pace help a collection carry the feeling of being there.",
+    "demo": "storytelling",
+    "previewLabel": "A sequence of frames",
+    "techniques": ["Environmental Framing", "Environmental Texture", "Depth"]
+  }
+]

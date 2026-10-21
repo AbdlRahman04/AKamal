@@ -43,3 +43,31 @@ test("missing optional facts and missing nodes cannot invent story content", () 
   assert.equal(story.steps.length, 5);
   assert.ok(story.steps.every(step => !step.nodeIds.includes("preprocessing")));
 });
+
+test("portfolio totals count every project and only internship roles", () => {
+  const facts = exports.getPortfolioFacts(data.projects, data.experience);
+  assert.deepEqual(facts.map(({ value, label, href }) => ({ value, label, href })), [
+    { value: data.projects.length, label: "Projects", href: "#projects" },
+    { value: 2, label: "Internships", href: "#experience" },
+  ]);
+  const solo = { ...data.projects[2], slug: "new-experiment", teamSize: 1 };
+  const added = exports.getPortfolioFacts([...data.projects, solo], [...data.experience, { role: "Software engineer" }]);
+  assert.deepEqual(added.map(fact => fact.value), [data.projects.length + 1, 2]);
+  assert.equal(exports.getPortfolioFacts([], data.experience)[0].label, "Internships");
+  assert.deepEqual(exports.getPortfolioFacts([], []), []);
+});
+
+test("model coverage stays with LeafAI and follows canonical facts", () => {
+  const changed = structuredClone(data.projects);
+  assert.deepEqual(exports.getProjectModelCoverage(changed[0]), { classes: 38, species: 14 });
+  changed[0].architecture.nodes.find(node => node.id === "classifier").responsibilities = ["Scores 20 plant health classes across 8 species."];
+  assert.deepEqual(exports.getProjectModelCoverage(changed[0]), { classes: 20, species: 8 });
+  assert.deepEqual(exports.getPortfolioFacts(changed, []).map(fact => fact.value), [changed.length]);
+  assert.equal(exports.getProjectModelCoverage(changed[1]), null);
+  changed[0].architecture.nodes.find(node => node.id === "classifier").responsibilities = ["Scores 0 plant health classes across 8 species."];
+  assert.equal(exports.getProjectModelCoverage(changed[0]), null);
+  changed[0].architecture.nodes = [];
+  assert.equal(exports.getProjectModelCoverage(changed[0]), null);
+  delete changed[0].architecture;
+  assert.equal(exports.getProjectModelCoverage(changed[0]), null);
+});

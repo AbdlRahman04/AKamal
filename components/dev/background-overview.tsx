@@ -4,6 +4,7 @@ import Image from "@/components/site/public-image";
 import { publicPath } from "@/components/site/public-path";
 import { useEffect, useId, useRef, useState } from "react";
 import type { DevCertificate, DevEducation, DevExperience } from "@/data/dev";
+import CertificateCollection from "./certificate-collection";
 
 type Selection =
   | { kind: "Experience"; item: DevExperience }
@@ -14,24 +15,6 @@ function CategoryIcon({ kind }: { kind: Selection["kind"] }) {
   return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
     {kind === "Experience" ? <><rect x="4" y="7" width="16" height="14" rx="1" /><path d="M9 7V3h6v4M9 7v14M15 7v14" /></> : kind === "Education" ? <><path d="m2 9 10-5 10 5-10 5L2 9ZM6 11v6c4 3 8 3 12 0v-6M22 9v8" /></> : <><circle cx="12" cy="8" r="5" /><path d="m9 12-1 9 4-3 4 3-1-9" /></>}
   </svg>;
-}
-
-function CertificateCollection({ certificates, dialogId, headingId, onOpen }: {
-  certificates: DevCertificate[];
-  dialogId: string;
-  headingId: string;
-  onOpen: (selection: Selection, button: HTMLButtonElement) => void;
-}) {
-  return <div className="ds-background-certificates" aria-labelledby={headingId}>
-    <ul className="ds-background-certificate-grid">
-      {certificates.map(item => <li key={item.slug}>
-        <button type="button" className="ds-background-card ds-background-certificate-card" aria-haspopup="dialog" aria-controls={dialogId} onClick={event => onOpen({ kind: "Certification", item }, event.currentTarget)}>
-          <CategoryIcon kind="Certification" />
-          <span className="ds-background-card-copy"><strong>{item.name}</strong><span>{item.issuer} &middot; {item.status === "completed" ? item.year : "In progress"}</span></span>
-        </button>
-      </li>)}
-    </ul>
-  </div>;
 }
 
 export default function BackgroundOverview({ experience, education, certificates }: {
@@ -79,28 +62,34 @@ export default function BackgroundOverview({ experience, education, certificates
   const credential = selection?.kind === "Certification" ? selection.item.credentialUrl : "";
 
   return <>
-    <div className={`ds-background-grid${experience.length ? "" : " ds-background-grid-single"}`}>
+    <div className="ds-simple-background">
       {experience.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-experience`} data-reveal>
         <h3 id={`${id}-experience`}><CategoryIcon kind="Experience" />Experience</h3>
-        <ul className="ds-background-cards">{experience.map(item => <li key={item.slug}>
-          <button type="button" className="ds-background-card" aria-haspopup="dialog" aria-controls={id} onClick={event => open({ kind: "Experience", item }, event.currentTarget)}>
-            <span className="ds-background-card-copy"><strong>{item.role}</strong><span>{item.company}</span></span>
-            <span className="ds-background-period">{item.period}</span>
-          </button>
+        <ul className="ds-simple-timeline">{experience.map(item => <li key={item.slug}>
+          <article>
+            <p className="ds-timeline-period">{item.period}{item.current ? " · Current role" : ""}</p>
+            <h4>{item.role}</h4><p className="ds-timeline-organization">{item.company}</p>
+            <p>{item.summary}</p>
+            <ul className="ds-simple-tags" aria-label={`${item.role} skills`}>{item.technologies.map(tag => <li key={tag}>{tag}</li>)}</ul>
+          </article>
         </li>)}</ul>
       </div>}
-      <div id="learning" className="ds-background-learning">
+      <div id={education.length ? "learning" : undefined} className="ds-background-learning">
         {education.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-education`} data-reveal>
           <h3 id={`${id}-education`}><CategoryIcon kind="Education" />Education</h3>
-          <ul className="ds-background-cards">{education.map(item => <li key={item.slug}>
-            <button type="button" className="ds-background-card ds-background-education-card" aria-haspopup="dialog" aria-controls={id} onClick={event => open({ kind: "Education", item }, event.currentTarget)}>
-              <span className="ds-background-card-copy"><strong>{item.degree}</strong><span>{item.institution}</span><span className="ds-background-period">{item.period}</span></span>
-            </button>
+          <ul className="ds-simple-timeline">{education.map(item => <li key={item.slug}>
+            <article>
+              <p className="ds-timeline-period">{item.period}</p>
+              <h4>{item.degree}</h4><p className="ds-timeline-organization">{item.institution}</p>
+              <p>{item.description}</p>
+              <ul className="ds-simple-tags" aria-label="Areas of study">{item.focus.map(tag => <li key={tag}>{tag}</li>)}</ul>
+              {item.imageUrl && <button type="button" className="ds-education-details" aria-haspopup="dialog" aria-controls={id} onClick={event => open({ kind: "Education", item }, event.currentTarget)}>View education details</button>}
+            </article>
           </li>)}</ul>
         </div>}
         {certificates.length > 0 && <div className="ds-background-group" aria-labelledby={`${id}-certificates`} data-reveal>
-          <h3 id={`${id}-certificates`}><CategoryIcon kind="Certification" />Certifications</h3>
-          <CertificateCollection certificates={certificates} dialogId={id} headingId={`${id}-certificates`} onOpen={open} />
+          <h3 className="ds-project-sr-only" id={`${id}-certificates`}>Credentials</h3>
+          <CertificateCollection certificates={certificates} dialogId={id} headingId={`${id}-certificates`} onOpen={(item, button) => open({ kind: "Certification", item }, button)} />
         </div>}
       </div>
     </div>

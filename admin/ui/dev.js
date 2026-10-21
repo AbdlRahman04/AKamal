@@ -7,7 +7,7 @@ const caseNodeLabels = { customer: "Customer", staff: "Staff", frontend: "Fronte
 const config = {
   experience: { title: (item) => item.role, subtitle: (item) => `${item.company} · ${item.period}`, fields: ["company", "role", "period", "summary", "technologies"], lists: ["technologies"], checks: ["current"] },
   projects: { title: (item) => item.title, subtitle: (item) => `${item.type} · ${item.year}`, fields: ["title", "type", "year", "status", "summary", "role", "teamSize", "frontend", "backend", "database", "deployment", "contribution", "keyFeature", "technicalChallenge", "problem", "solution", "technologies", "stackBreakdown", "highlights", "githubUrl", "liveUrl", "coverImageUrl", "accent"], lists: ["technologies"], lines: ["stackBreakdown", "highlights"], checks: ["featured"] },
-  certificates: { title: (item) => item.name, subtitle: (item) => `${item.issuer} · ${item.year}`, fields: ["name", "issuer", "year", "status", "credentialUrl", "description", "imageUrl"] },
+  certificates: { title: (item) => item.name, subtitle: (item) => `${item.issuer} · ${item.year}`, fields: ["name", "issuer", "year", "topic", "status", "credentialUrl", "description", "imageUrl"] },
   education: { title: (item) => item.degree, subtitle: (item) => `${item.institution} · ${item.period}`, fields: ["degree", "institution", "period", "description", "focus", "imageUrl"], lists: ["focus"] },
   skills: { title: (item) => item.name, subtitle: () => "Capability group", fields: ["name", "description", "items"], lists: ["items"] },
 };

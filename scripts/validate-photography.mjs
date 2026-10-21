@@ -22,6 +22,32 @@ function checkAsset(collectionSlug, photoId, field, publicUrl) {
 }
 
 const checks = [];
+const overview = JSON.parse(await fs.readFile(path.join(projectRoot, "data", "photography-overview.json"), "utf8"));
+if (!Array.isArray(overview.subjects) || !overview.subjects.length || overview.subjects.some(subject => typeof subject !== "string" || !subject.trim()) || new Set(overview.subjects).size !== overview.subjects.length) {
+  missing.push("photography-overview.subjects must contain unique, non-empty labels");
+}
+for (const field of ["cities", "years"]) {
+  if (!Number.isSafeInteger(overview[field]) || overview[field] < 1) missing.push(`photography-overview.${field} must be a positive integer`);
+}
+const approach = JSON.parse(await fs.readFile(path.join(projectRoot, "data", "photography-approach.json"), "utf8"));
+const allPhotos = [...(data.primaryCollections ?? []), ...(data.archiveCollections ?? [])].flatMap(collection => collection.photos ?? []);
+const demos = ["composition", "light", "grading", "motion", "storytelling"];
+const approachNumbers = new Set();
+if (!Array.isArray(approach) || approach.length !== demos.length || demos.some(demo => !approach.some(item => item.demo === demo))) {
+  missing.push("photography-approach must contain all five principles");
+} else for (const item of approach) {
+  for (const field of ["number", "title", "description", "detail", "previewLabel"]) {
+    if (typeof item[field] !== "string" || !item[field].trim()) missing.push(`approach: ${field} must be a non-empty string`);
+  }
+  if (approachNumbers.has(item.number)) missing.push(`approach: duplicate number ${item.number}`);
+  approachNumbers.add(item.number);
+  if (!demos.includes(item.demo)) missing.push(`approach/${item.number}: unsupported demo ${item.demo}`);
+  if (!Array.isArray(item.techniques) || !item.techniques.length || item.techniques.some(tag => typeof tag !== "string" || !allPhotos.some(photo => photo.tags?.includes(tag)))) {
+    missing.push(`approach/${item.number}: techniques must reference existing photography tags`);
+  } else if (!allPhotos.some(photo => !photo.isPlaceholder && photo.src && photo.tags?.some(tag => item.techniques.includes(tag)))) {
+    missing.push(`approach/${item.number}: no real photographs match these techniques`);
+  }
+}
 const heroImages = data.hero?.images;
 if (!Array.isArray(heroImages) || heroImages.length !== 3) {
   missing.push("hero.images must contain exactly three images");

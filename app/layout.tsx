@@ -5,21 +5,26 @@ import "../components/site/contact.css";
 import "../components/dev/dev.css";
 import "../components/dev/bento.css";
 import SiteChrome from "@/components/site/site-chrome";
+import { portfolioSeo } from "@/data/dev";
 
 export const metadata: Metadata = {
-  title: "Abdul Rahman Kamal — Software / Data / AI",
+  metadataBase: new URL(portfolioSeo.url),
+  alternates: { canonical: publicPath("/") },
+  title: "Abdulrahman Kamal — Software / Data / AI",
   description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
   icons: {
     icon: publicPath("/assets/dev-logo.png"),
   },
   openGraph: {
-    title: "Abdul Rahman Kamal — Software / Data / AI",
+    title: "Abdulrahman Kamal — Software / Data / AI",
+    images: [publicPath(portfolioSeo.image)],
     description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
     type: "website",
   },
   twitter: {
     card: "summary",
-    title: "Abdul Rahman Kamal — Software / Data / AI",
+    title: "Abdulrahman Kamal — Software / Data / AI",
+    images: [publicPath(portfolioSeo.image)],
     description: "Computer Science graduate focused on software engineering, AI applications, and data integration.",
   },
 };

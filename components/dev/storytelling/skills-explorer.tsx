@@ -1,22 +1,33 @@
-import { devProjects, devSkills } from "@/data/dev";
-import { getProjectStory } from "@/data/project-case-study";
-import KnowledgeTabs from "./knowledge-tabs";
-import StoryVisual from "./story-visual";
+"use client";
 
-const evidence: Record<string, { slug: string; stage: number; heading: string; text: string }> = {
-  "software-development": { slug: "smart-cafeteria-ordering-system", stage: 2, heading: "Interfaces connected to a real system.", text: "React, a Node.js API, and a shared ordering workflow." },
-  "data-integration": { slug: "smart-cafeteria-ordering-system", stage: 4, heading: "The connections behind the interface.", text: "The API, payment provider, and PostgreSQL database in AURAK Dine." },
-  "ai-machine-learning": { slug: "plant-health-monitoring-system", stage: 2, heading: "From a trained model to a usable application.", text: "Image preprocessing and MobileNetV2 inference inside the LeafAI API." },
+import type { PointerEvent } from "react";
+import { devProjects, devSkills } from "@/data/dev";
+
+function tilt(event: PointerEvent<HTMLElement>) {
+  if (event.pointerType !== "mouse" || matchMedia("(prefers-reduced-motion: reduce)").matches || !matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  const box = event.currentTarget.getBoundingClientRect();
+  event.currentTarget.style.setProperty("--skill-x", ((event.clientX - box.left) / box.width - .5) * 4 + "deg");
+  event.currentTarget.style.setProperty("--skill-y", -((event.clientY - box.top) / box.height - .5) * 4 + "deg");
+}
+function reset(element: HTMLElement) {
+  element.style.removeProperty("--skill-x"); element.style.removeProperty("--skill-y");
+}
+
+const evidence: Record<string, { slug: string; text: string }> = {
+  "software-development": { slug: "smart-cafeteria-ordering-system", text: "Built menu management interfaces and connected the application to its backend." },
+  "data-integration": { slug: "smart-cafeteria-ordering-system", text: "Connected application workflows with backend services and PostgreSQL." },
+  "ai-machine-learning": { slug: "plant-health-monitoring-system", text: "Connected leaf-image input, model inference, and the prediction shown to the user." },
 };
 
 export default function SkillsExplorer() {
-  return <KnowledgeTabs label="Technical capabilities" labels={devSkills.map(skill => skill.name)} panels={devSkills.map(skill => {
+  return <div className="ds-practical-skills">{devSkills.map(skill => {
     const proof = evidence[skill.slug];
     const project = devProjects.find(item => item.slug === proof?.slug);
-    const story = project ? getProjectStory(project) : null;
-    return <div className="ds-skills-explorer-panel" key={skill.slug}>
-      <div><span className="ds-story-label">The capability</span><h3>{skill.name}</h3><p>{skill.description}</p><ul className="ds-capability-list" aria-label={`${skill.name} skills`}>{skill.items.map(item => <li key={item}>{item}</li>)}</ul></div>
-      {project && story && proof && <div className="ds-skill-proof"><span className="ds-story-label">In practice / {project.title}</span><h4>{proof.heading}</h4><p>{proof.text}</p><StoryVisual project={project} story={story} active={proof.stage} compact animate={false} /><p className="ds-skill-contribution">{project.contribution}</p><a className="ds-evidence-link" href={`#story-${project.slug}`}>Explore the project story <span aria-hidden="true">↗</span></a></div>}
-    </div>;
-  })} />;
+    return <article key={skill.slug} onPointerMove={tilt} onPointerLeave={event => reset(event.currentTarget)} onFocusCapture={event => reset(event.currentTarget)}>
+      <h3>{skill.name}</h3>
+      <p>{skill.description}</p>
+      <ul className="ds-simple-tags" aria-label={`${skill.name} skills`}>{skill.items.map(item => <li key={item}>{item}</li>)}</ul>
+      {project && proof && <div className="ds-practical-proof"><p>{proof.text}</p><a href={`#project-${project.slug}`}>See {project.title}</a></div>}
+    </article>;
+  })}</div>;
 }
