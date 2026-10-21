@@ -32,9 +32,15 @@
 .ds-simple .ds-simple-hero { animation:none; transform-origin:center top; }
 
 /* Dev-only chrome: the existing progress element sits along the top edge. */
-body:has(.ds-site.ds-simple) .shared-site-header.is-dev { background:transparent; border-bottom-color:transparent; backdrop-filter:none; }
+body:has(.ds-site.ds-simple) .shared-site-header.is-dev { background:transparent; border-bottom-color:transparent; -webkit-backdrop-filter:none; backdrop-filter:none; }
 body:has(.ds-site.ds-simple) .shared-site-header.is-dev[data-scrolled="true"] {
+  background:var(--bento-panel);
   background:color-mix(in srgb,var(--bento-panel) 94%,transparent); border-bottom-color:var(--bento-line);
+  background-image:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--bento-accent) 12%,transparent),transparent 70%);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+}
+@media (prefers-reduced-motion:no-preference) {
+  body:has(.ds-site.ds-simple) .shared-site-header.is-dev { transition:background-color 220ms cubic-bezier(.22,1,.36,1),border-color 220ms cubic-bezier(.22,1,.36,1); }
 }
 body:has(.ds-site.ds-simple) .shared-site-header.is-dev .shared-header-progress {
   inset:0 0 auto; height:2px; opacity:1;

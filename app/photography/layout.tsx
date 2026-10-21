@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Abdulrahman Kamal | Photo",
   description: "A visual journal of motion, atmosphere, and place.",
   icons: {
-    icon: publicPath("/assets/photo-logo.png"),
+    icon: { url: publicPath("/assets/photo-monogram.svg"), type: "image/svg+xml" },
   },
   openGraph: {
     title: "Abdulrahman Kamal | Photo",

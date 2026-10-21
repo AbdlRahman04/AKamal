@@ -716,7 +716,7 @@ export default function PhotographyHome() {
           </div>
         </div>
 
-      <PhotographyApproach openExamples={(collection, opener, animate) => openViewer(collection, collection.photos[0], 0, opener, animate)} />
+      <PhotographyApproach blockPhotoAction={blockPhotoAction} openExamples={(collection, opener, animate) => openViewer(collection, collection.photos[0], 0, opener, animate)} />
 
       <section className="about-section reveal" id="about" aria-labelledby="about-title" data-reveal>
         <div className="about-aside">

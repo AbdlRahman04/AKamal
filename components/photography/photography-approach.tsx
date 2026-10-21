@@ -1,14 +1,15 @@
 "use client";
 
-import { type CSSProperties, type KeyboardEvent, useId, useRef, useState } from "react";
+import { type CSSProperties, type KeyboardEvent, type SyntheticEvent, useId, useRef, useState } from "react";
 import Image from "@/components/site/public-image";
 import { collections, toolkit, type Collection } from "@/data/photography";
 
 type Props = {
   openExamples: (collection: Collection, opener: HTMLButtonElement, animate: boolean) => void;
+  blockPhotoAction: (event: SyntheticEvent<HTMLElement>) => void;
 };
 
-export default function PhotographyApproach({ openExamples }: Props) {
+export default function PhotographyApproach({ openExamples, blockPhotoAction }: Props) {
   const [active, setActive] = useState<number | null>(0);
   const id = useId();
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
@@ -71,20 +72,21 @@ export default function PhotographyApproach({ openExamples }: Props) {
           <p className="approach-summary">{item.description}</p>
           <div className="approach-panel" id={`${id}-panel-${index}`} role="region"
             aria-labelledby={`${id}-trigger-${index}`} hidden={!isOpen}>
-            {preview && <figure className={`approach-demo approach-demo-${item.demo}`}>
+            {preview && <figure className={`approach-demo approach-demo-${item.demo}`}
+              onContextMenu={blockPhotoAction} onDragStart={blockPhotoAction}>
               {item.demo === "storytelling" ? <div className="approach-sequence">
                 {collection.photos.slice(0, 3).map(photo => <div key={photo.id}>
-                  <Image src={photo.thumbnailSrc} alt={photo.alt} fill sizes="(max-width: 700px) 28vw, 10vw" />
+                  <Image src={photo.thumbnailSrc} alt={photo.alt} fill sizes="(max-width: 700px) 28vw, 10vw" draggable={false} />
                 </div>)}
               </div> : <>
-                <Image src={preview.thumbnailSrc} alt={preview.alt} fill sizes="(max-width: 700px) 90vw, 36vw" />
+                <Image src={preview.thumbnailSrc} alt={preview.alt} fill sizes="(max-width: 700px) 90vw, 36vw" draggable={false} />
                 {item.demo === "composition" && <svg className="approach-overlay" viewBox="0 0 100 75" preserveAspectRatio="none" aria-hidden="true">
                   <path d="M33.33 0v75M66.67 0v75M0 25h100M0 50h100" /><circle cx="66.67" cy="25" r="2" />
                 </svg>}
                 {item.demo === "motion" && <svg className="approach-overlay" viewBox="0 0 100 75" aria-hidden="true">
                   <path d="M30 30v-8h8M62 22h8v8M70 48v8h-8M38 56h-8v-8" />
                 </svg>}
-                {item.demo === "grading" && <><Image className="approach-muted-preview" src={preview.thumbnailSrc} alt="" fill sizes="(max-width: 700px) 90vw, 36vw" /><span className="approach-grade-label">Muted</span><span className="approach-grade-label approach-grade-label-right">Finished</span></>}
+                {item.demo === "grading" && <><Image className="approach-muted-preview" src={preview.thumbnailSrc} alt="" fill sizes="(max-width: 700px) 90vw, 36vw" draggable={false} /><span className="approach-grade-label">Muted</span><span className="approach-grade-label approach-grade-label-right">Finished</span></>}
               </>}
               <figcaption>{item.previewLabel}</figcaption>
             </figure>}

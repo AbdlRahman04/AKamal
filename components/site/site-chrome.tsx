@@ -2,15 +2,13 @@
 
 import Link from "next/link";
 import localFont from "next/font/local";
-import { publicPath } from "./public-path";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills, portfolioLastUpdated } from "@/data/dev";
 import { hero as photographyHero, profile as photographyProfile } from "@/data/photography";
-import DevThemeSwitch from "@/components/dev/theme-switch";
 
 type NavItem = { label: string; href: string; visible?: boolean };
-type PhotographyTheme = "dark" | "light";
+type ThemeMode = "dark" | "light";
 
 const photographyThemeStorageKey = "photography-theme";
 const footerDisplayFont = localFont({ src: "../../public/fonts/bricolage-grotesque-700.ttf", weight: "700", display: "swap", variable: "--font-footer-display" });
@@ -24,12 +22,20 @@ const devNavigation: NavItem[] = [
 ];
 
 const photographyNavigation: NavItem[] = [
-  { label: "Introduction", href: "#top" },
+  { label: "Home", href: "#top" },
   { label: "Selected works", href: "#work" },
   { label: "Archive", href: "#archive" },
   { label: "Approach", href: "#approach" },
   { label: "About", href: "#about" },
 ];
+
+function ThemeToggle({ theme, onToggle, mobile = false }: { theme: ThemeMode; onToggle: () => void; mobile?: boolean }) {
+  return <button className={`site-theme-toggle${mobile ? " is-mobile" : ""}`} type="button" aria-label="Toggle theme" aria-pressed={theme === "dark"} title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`} onClick={onToggle}>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {theme === "dark" ? <><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></> : <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />}
+    </svg>
+  </button>;
+}
 
 function PortfolioFooterContent({ isPhotography }: { isPhotography: boolean }) {
   const [localTime, setLocalTime] = useState<{ label: string; dateTime: string } | null>(null);
@@ -105,7 +111,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   const [menuMounted, setMenuMounted] = useState(false);
   const [menuTop, setMenuTop] = useState(96);
   const [activeHref, setActiveHref] = useState("#top");
-  const [photographyTheme, setPhotographyTheme] = useState<PhotographyTheme>("dark");
+  const [photographyTheme, setPhotographyTheme] = useState<ThemeMode>("dark");
   const [photographyThemeReady, setPhotographyThemeReady] = useState(false);
   const [devDark, setDevDark] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -163,7 +169,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
-    const updateMenuTop = () => setMenuTop(header.getBoundingClientRect().bottom + 8);
+    const updateMenuTop = () => setMenuTop(header.getBoundingClientRect().bottom + (isPhotography ? 0 : 8));
     const observer = new ResizeObserver(updateMenuTop);
     observer.observe(header);
     window.addEventListener("resize", updateMenuTop);
@@ -177,11 +183,17 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
   useEffect(() => {
-    const desktop = window.matchMedia("(min-width: 1121px)");
+    const closeOnHashChange = () => setMenuOpen(false);
+    window.addEventListener("hashchange", closeOnHashChange);
+    return () => window.removeEventListener("hashchange", closeOnHashChange);
+  }, []);
+
+  useEffect(() => {
+    const desktop = window.matchMedia(isPhotography ? "(min-width: 1024px)" : "(min-width: 1121px)");
     const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
     desktop.addEventListener("change", closeOnDesktop);
     return () => desktop.removeEventListener("change", closeOnDesktop);
-  }, []);
+  }, [isPhotography]);
 
   useEffect(() => {
     if (menuOpen || !menuMounted) return;
@@ -197,7 +209,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     }
     try {
       const savedTheme = window.localStorage.getItem(photographyThemeStorageKey);
-      const initialTheme: PhotographyTheme = savedTheme === "light" ? "light" : "dark";
+      const initialTheme: ThemeMode = savedTheme === "light" ? "light" : "dark";
       document.body.dataset.photographyMode = initialTheme;
       setPhotographyTheme(initialTheme);
       window.requestAnimationFrame(() => setPhotographyThemeReady(true));
@@ -236,7 +248,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     if (!menuMounted) return;
     const opener = menuButtonRef.current;
     const previousOverflow = document.body.style.overflow;
-    const background = Array.from(document.querySelectorAll<HTMLElement>(".shared-site-header, .site-section, .shared-site-footer"));
+    const background = Array.from(document.querySelectorAll<HTMLElement>(isPhotography ? ".site-section, .shared-site-footer" : ".shared-site-header, .site-section, .shared-site-footer"));
     const previousInert = background.map((element) => element.inert);
     background.forEach((element) => { element.inert = true; });
     document.body.style.overflow = "hidden";
@@ -244,18 +256,24 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        event.preventDefault();
         setMenuOpen(false);
         return;
       }
       if (event.key !== "Tab") return;
-      const focusable = mobileMenuRef.current?.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled])');
+      const selector = 'a[href], button:not([disabled]), input:not([disabled])';
+      const focusable = [
+        ...(isPhotography ? Array.from(headerRef.current?.querySelectorAll<HTMLElement>(selector) ?? []) : []),
+        ...Array.from(mobileMenuRef.current?.querySelectorAll<HTMLElement>(selector) ?? []),
+      ].filter(element => element.getClientRects().length > 0);
       if (!focusable?.length) return;
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
+      const isOutside = !focusable.includes(document.activeElement as HTMLElement);
+      if (event.shiftKey && (document.activeElement === first || isOutside)) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
+      } else if (!event.shiftKey && (document.activeElement === last || isOutside)) {
         event.preventDefault();
         first.focus();
       }
@@ -268,7 +286,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
       background.forEach((element, index) => { element.inert = previousInert[index]; });
       if (opener?.isConnected && opener.getClientRects().length) opener.focus({ preventScroll: true });
     };
-  }, [menuMounted]);
+  }, [menuMounted, isPhotography]);
 
   useEffect(() => {
     const defaultHref = navigation[0]?.href || "#top";
@@ -301,52 +319,56 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   return (
     <>
       {!isPhotography && <a className="ds-feature-skip" href="#main-content">Skip to content</a>}
-      <header ref={headerRef} className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
-        <span className="shared-header-progress" aria-hidden="true" />
-        <div className="shared-header-inner">
-          <Link className="shared-wordmark" href={isPhotography ? "/photography#top" : "/#top"} aria-label={isPhotography ? undefined : `${devProfile.name} — Back to top`}>
-            <svg key={isPhotography ? "viewfinder" : "circuit"} className={`shared-header-graphic ${isPhotography ? "is-viewfinder" : "is-circuit"}`} viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">
-              {isPhotography ? <>
-                <path className="shared-graphic-outline" d="M6 17V6H17M31 6H42V17M42 31V42H31M17 42H6V31" />
-                <g className="shared-graphic-lens"><circle cx="24" cy="24" r="11" /><path d="M24 13V19M35 24H29M24 35V29M13 24H19" /></g>
-              </> : <>
+      {/* A new header prevents color and border transitions from carrying across portfolios. */}
+      <header key={isPhotography ? "photography" : "dev"} ref={headerRef} className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
+        {!isPhotography && <span className="shared-header-progress" aria-hidden="true" />}
+        <div className={`shared-header-inner${isPhotography ? " photo-banner-inner" : ""}`}>
+          <Link className="shared-wordmark" href={isPhotography ? "/photography#top" : "/#top"} aria-label={`${currentProfile.name}${isPhotography ? " Photography" : ""} — Back to top`}>
+            {!isPhotography && <svg className="shared-header-graphic is-circuit" viewBox="0 0 48 48" fill="none" aria-hidden="true" focusable="false">
                 <path className="shared-graphic-outline" d="M6 34H18V14H42M6 14H10M30 34H42" />
                 <circle cx="6" cy="34" r="2" /><circle cx="42" cy="14" r="2" />
                 <g className="shared-graphic-token"><rect x="-3" y="-3" width="6" height="6" rx="1" /></g>
-              </>}
-            </svg>
-            {isPhotography ? <>
-              <img src={publicPath("/assets/photo-logo.png")} alt="" aria-hidden="true" />
-              <span>Abdul Rahman Kamal</span>
-            </> : <span className="dev-monogram" aria-hidden="true"><span>A</span><span>K</span></span>}
+            </svg>}
+            {isPhotography ? <span className="photo-brand" aria-hidden="true">
+              <svg className="photo-monogram" viewBox="0 0 80 48" fill="none" focusable="false">
+                <path fill="currentColor" fillRule="evenodd" d="M4 42 18 6h8l14 36h-9l-3-8H16l-3 8H4ZM29.5 24a7.5 7.5 0 1 0-15 0 7.5 7.5 0 0 0 15 0Z" />
+                <g className="photo-monogram-aperture">
+                  <path className="photo-monogram-blades" d="m25 24-1.5 2.6h-3L19 24l1.5-2.6h3L25 24v-6.9m-1.5 9.5 6-3.5m-9 3.5 6 3.5M19 24v6.9m1.5-9.5-6 3.5m9-3.5-6-3.5" stroke="currentColor" strokeWidth=".9" />
+                </g>
+                <path className="photo-monogram-k" fill="currentColor" d="M40 6h8v15L62 6h11L56 23l18 19H63L48 26v16h-8V6Z" />
+                <g className="photo-monogram-frame" stroke="currentColor" strokeWidth="1.5">
+                  <path className="photo-monogram-corner-start" d="M1 13V1h12" />
+                  <path className="photo-monogram-corner-end" d="M67 47h12V35" />
+                </g>
+              </svg>
+              <span className="photo-brand-label">Photography</span>
+            </span> : <span className="dev-monogram" aria-hidden="true"><span>A</span><span>K</span></span>}
           </Link>
           <nav className="shared-desktop-nav" aria-label="Primary navigation">
             {navigation.map((item) => {
               const isActive = activeHref === item.href;
-              return <a key={item.href} href={item.href} className={isActive ? "is-active" : undefined} aria-current={isActive ? "location" : undefined} onClick={() => setActiveHref(item.href)}>{item.label}</a>;
+              return <a key={item.href} href={item.href} className={isActive ? "is-active" : undefined} aria-current={isActive ? (isPhotography ? "page" : "location") : undefined} onClick={() => setActiveHref(item.href)}>{item.label}</a>;
             })}
           </nav>
           <div className="shared-header-actions">
-            {!isPhotography && <DevThemeSwitch dark={devDark} onToggle={toggleDevTheme} />}
-            {isPhotography && (
-              <DevThemeSwitch dark={photographyTheme === "dark"} onToggle={togglePhotographyTheme} section="photography" />
-            )}
+            <ThemeToggle theme={isPhotography ? photographyTheme : devDark ? "dark" : "light"} onToggle={isPhotography ? togglePhotographyTheme : toggleDevTheme} />
             <Link href={isPhotography ? "/" : "/photography"}>
-              {isPhotography ? "Dev" : "Photography"}
+              {isPhotography ? "Developer ↗" : "Photography"}
             </Link>
             <a href="#contact">{isPhotography ? "Commission" : "Contact me"} <span aria-hidden="true">→</span></a>
           </div>
+          {isPhotography && <ThemeToggle theme={photographyTheme} onToggle={togglePhotographyTheme} mobile />}
           <button
             className="shared-menu-toggle"
             ref={menuButtonRef}
             type="button"
-            aria-label="Open navigation menu"
+            aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={menuOpen}
             aria-controls={menuMounted ? "shared-mobile-navigation" : undefined}
             onClick={() => {
-              if (headerRef.current) setMenuTop(headerRef.current.getBoundingClientRect().bottom + 8);
-              setMenuMounted(true);
-              setMenuOpen(true);
+              if (headerRef.current) setMenuTop(headerRef.current.getBoundingClientRect().bottom + (isPhotography ? 0 : 8));
+              if (!menuOpen) setMenuMounted(true);
+              setMenuOpen(!menuOpen);
             }}
           >
             <span />
@@ -357,27 +379,26 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
 
       {menuMounted && (
         <div className="shared-mobile-backdrop" data-state={menuOpen ? "open" : "closing"} style={{ "--menu-top": `${menuTop}px` } as CSSProperties} role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setMenuOpen(false); }}>
-          <div className="shared-mobile-menu" id="shared-mobile-navigation" ref={mobileMenuRef} role="dialog" aria-label="Mobile navigation" aria-modal="true">
+          <div className="shared-mobile-menu" id="shared-mobile-navigation" ref={mobileMenuRef} role={isPhotography ? "region" : "dialog"} aria-label="Mobile navigation" aria-modal={isPhotography ? undefined : true}>
             <div className="shared-mobile-topline">
               <span>Navigate</span>
               <div className="shared-mobile-controls">
-                {!isPhotography && <DevThemeSwitch dark={devDark} onToggle={toggleDevTheme} />}
-                {isPhotography && <DevThemeSwitch dark={photographyTheme === "dark"} onToggle={togglePhotographyTheme} section="photography" />}
+                {!isPhotography && <ThemeToggle theme={devDark ? "dark" : "light"} onToggle={toggleDevTheme} />}
                 <button ref={mobileCloseRef} type="button" onClick={() => setMenuOpen(false)} aria-label="Close navigation menu">Close <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
               </div>
             </div>
             <nav aria-label="Mobile primary navigation">
               {navigation.map((item) => (
-                <a key={item.href} href={item.href} className={activeHref === item.href ? "is-active" : undefined} aria-current={activeHref === item.href ? "location" : undefined} onClick={() => { setActiveHref(item.href); setMenuOpen(false); }}>
+                <a key={item.href} href={item.href} className={activeHref === item.href ? "is-active" : undefined} aria-current={activeHref === item.href ? (isPhotography ? "page" : "location") : undefined} onClick={() => { setActiveHref(item.href); setMenuOpen(false); }}>
                   {item.label}
                 </a>
               ))}
             </nav>
             <div className="shared-mobile-actions">
               <Link href={isPhotography ? "/" : "/photography"} onClick={() => setMenuOpen(false)}>
-                {isPhotography ? "Developer portfolio" : "Photography"}
+                {isPhotography ? "Developer ↗" : "Photography"}
               </Link>
-              <a className="shared-mobile-contact" href="#contact" onClick={() => setMenuOpen(false)}>{isPhotography ? "Commission" : "Contact"}</a>
+              <a className="shared-mobile-contact" href="#contact" onClick={() => setMenuOpen(false)}>{isPhotography ? "Commission →" : "Contact"}</a>
             </div>
           </div>
         </div>

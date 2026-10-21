@@ -32,7 +32,7 @@ body:has(.ds-simple) .shared-site-header.is-dev { padding-top:env(safe-area-inse
 .ds-leaf-sample-actions { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px; }
 .ds-leaf-sample-actions a { display:inline-flex; align-items:center; min-height:44px; padding:8px 0; color:var(--ds-blue); font:600 13px/1.5 var(--sans); }
 .ds-leaf-sample-actions a { text-decoration:underline; text-underline-offset:4px; }
-.ds-simple .ds-portfolio-facts { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); width:min(1180px,calc(100% - 80px)); margin:0 auto; padding:0; border-block:1px solid var(--ds-line); list-style:none; }
+.ds-simple .ds-portfolio-facts { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); width:min(1280px,calc(100% - 80px)); margin:0 auto; padding:0; border-block:1px solid var(--ds-line); list-style:none; }
 .ds-simple .ds-portfolio-facts + .ds-section { border-top:0; }
 .ds-portfolio-facts li { min-width:0; }
 .ds-portfolio-facts a { display:flex; flex-direction:column; height:100%; padding:26px 24px; color:var(--ds-text); text-decoration:none; }
