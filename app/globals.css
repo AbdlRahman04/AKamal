@@ -116,9 +116,9 @@ button { font:inherit; }
   --menu-line:var(--line);
   --menu-accent:var(--orange);
   --menu-on-accent:var(--ink);
-  position:fixed; inset:0; z-index:40;
+  position:fixed; inset:var(--menu-top,80px) 0 0; z-index:40;
   display:flex; align-items:flex-start; justify-content:flex-end;
-  padding:var(--menu-top,80px) 18px 16px;
+  padding:0 18px 16px;
   background:rgba(8,8,7,.38);
   animation:shared-menu-backdrop-in 280ms ease-out both;
 }

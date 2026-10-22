@@ -305,7 +305,10 @@ body[data-dev-mode="dark"] .ds-site .av-logo-flask { filter:invert(1); }
 .ds-site .av-mobile-switch button[aria-pressed="true"] { background:var(--av-accent); color:var(--bento-on-accent); }
 .ds-site .av-node-picker select { min-height:44px; border-radius:10px; }
 @media (max-width:1328px) { .ds-hero,.ds-section { margin-inline:24px; } .ds-contact { margin-inline:24px; } }
-@media (max-width:1120px) { .shared-site-header.is-dev .shared-header-inner { grid-template-columns:minmax(0,1fr) auto; } }
+@media (max-width:1120px) {
+  .shared-site-header.is-dev .shared-header-inner { grid-template-columns:minmax(0,1fr) auto auto; }
+  .shared-site-header.is-dev .site-theme-toggle.is-mobile { display:grid; }
+}
 @media (max-width:900px) {
   .ds-bento-hero { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); gap:16px; }
   .ds-identity-copy { padding:22px; }

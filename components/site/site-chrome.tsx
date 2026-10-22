@@ -18,7 +18,7 @@ const devNavigation: NavItem[] = [
   { label: "Projects", href: "#projects", visible: devProjects.length > 0 },
   { label: "Experience", href: "#experience", visible: devExperience.length > 0 || devCertificates.length > 0 || devEducation.length > 0 },
   { label: "Skills", href: "#skills", visible: devSkills.length > 0 },
-  { label: "Contact", href: "#contact" },
+  { label: "Achievements", href: "#certifications", visible: devCertificates.length > 0 },
 ];
 
 const photographyNavigation: NavItem[] = [
@@ -169,7 +169,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   useEffect(() => {
     const header = headerRef.current;
     if (!header) return;
-    const updateMenuTop = () => setMenuTop(header.getBoundingClientRect().bottom + (isPhotography ? 0 : 8));
+    const updateMenuTop = () => setMenuTop(header.getBoundingClientRect().bottom + 8);
     const observer = new ResizeObserver(updateMenuTop);
     observer.observe(header);
     window.addEventListener("resize", updateMenuTop);
@@ -189,7 +189,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   }, []);
 
   useEffect(() => {
-    const desktop = window.matchMedia(isPhotography ? "(min-width: 1024px)" : "(min-width: 1121px)");
+    const desktop = window.matchMedia("(min-width: 1121px)");
     const closeOnDesktop = () => { if (desktop.matches) setMenuOpen(false); };
     desktop.addEventListener("change", closeOnDesktop);
     return () => desktop.removeEventListener("change", closeOnDesktop);
@@ -248,7 +248,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     if (!menuMounted) return;
     const opener = menuButtonRef.current;
     const previousOverflow = document.body.style.overflow;
-    const background = Array.from(document.querySelectorAll<HTMLElement>(isPhotography ? ".site-section, .shared-site-footer" : ".shared-site-header, .site-section, .shared-site-footer"));
+    const background = Array.from(document.querySelectorAll<HTMLElement>(".site-section, .shared-site-footer"));
     const previousInert = background.map((element) => element.inert);
     background.forEach((element) => { element.inert = true; });
     document.body.style.overflow = "hidden";
@@ -263,7 +263,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
       if (event.key !== "Tab") return;
       const selector = 'a[href], button:not([disabled]), input:not([disabled])';
       const focusable = [
-        ...(isPhotography ? Array.from(headerRef.current?.querySelectorAll<HTMLElement>(selector) ?? []) : []),
+        ...Array.from(headerRef.current?.querySelectorAll<HTMLElement>(selector) ?? []),
         ...Array.from(mobileMenuRef.current?.querySelectorAll<HTMLElement>(selector) ?? []),
       ].filter(element => element.getClientRects().length > 0);
       if (!focusable?.length) return;
@@ -357,7 +357,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             </Link>
             <a href="#contact">{isPhotography ? "Commission" : "Contact me"} <span aria-hidden="true">→</span></a>
           </div>
-          {isPhotography && <ThemeToggle theme={photographyTheme} onToggle={togglePhotographyTheme} mobile />}
+          <ThemeToggle theme={isPhotography ? photographyTheme : devDark ? "dark" : "light"} onToggle={isPhotography ? togglePhotographyTheme : toggleDevTheme} mobile />
           <button
             className="shared-menu-toggle"
             ref={menuButtonRef}
@@ -366,7 +366,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             aria-expanded={menuOpen}
             aria-controls={menuMounted ? "shared-mobile-navigation" : undefined}
             onClick={() => {
-              if (headerRef.current) setMenuTop(headerRef.current.getBoundingClientRect().bottom + (isPhotography ? 0 : 8));
+              if (headerRef.current) setMenuTop(headerRef.current.getBoundingClientRect().bottom + 8);
               if (!menuOpen) setMenuMounted(true);
               setMenuOpen(!menuOpen);
             }}
@@ -379,11 +379,10 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
 
       {menuMounted && (
         <div className="shared-mobile-backdrop" data-state={menuOpen ? "open" : "closing"} style={{ "--menu-top": `${menuTop}px` } as CSSProperties} role="presentation" onClick={(event) => { if (event.target === event.currentTarget) setMenuOpen(false); }}>
-          <div className="shared-mobile-menu" id="shared-mobile-navigation" ref={mobileMenuRef} role={isPhotography ? "region" : "dialog"} aria-label="Mobile navigation" aria-modal={isPhotography ? undefined : true}>
+          <div className="shared-mobile-menu" id="shared-mobile-navigation" ref={mobileMenuRef} role="region" aria-label="Mobile navigation">
             <div className="shared-mobile-topline">
               <span>Navigate</span>
               <div className="shared-mobile-controls">
-                {!isPhotography && <ThemeToggle theme={devDark ? "dark" : "light"} onToggle={toggleDevTheme} />}
                 <button ref={mobileCloseRef} type="button" onClick={() => setMenuOpen(false)} aria-label="Close navigation menu">Close <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
               </div>
             </div>
@@ -396,9 +395,9 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
             </nav>
             <div className="shared-mobile-actions">
               <Link href={isPhotography ? "/" : "/photography"} onClick={() => setMenuOpen(false)}>
-                {isPhotography ? "Developer ↗" : "Photography"}
+                {isPhotography ? "Developer" : "Photography"}
               </Link>
-              <a className="shared-mobile-contact" href="#contact" onClick={() => setMenuOpen(false)}>{isPhotography ? "Commission →" : "Contact"}</a>
+              <a className="shared-mobile-contact" href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
             </div>
           </div>
         </div>
