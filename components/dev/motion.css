@@ -1,26 +1,5 @@
-/* Once-only reveals. Server HTML stays visible until the observer is ready. */
-.ds-site, .dev-footer { --ds-motion-ease:cubic-bezier(.2,.8,.2,1); }
-:is(.ds-site,.dev-footer).reveal-ready [data-reveal] {
-  opacity:0; transform:translateY(16px);
-  transition:transform 650ms var(--ds-motion-ease),opacity 650ms var(--ds-motion-ease);
-  transition-delay:calc(var(--i,0) * 75ms);
-}
-:is(.ds-site,.dev-footer).reveal-ready [data-reveal].is-visible { opacity:1; transform:none; }
-.ds-site.reveal-ready [data-reveal="group"] { opacity:1; transform:none; transition:none; }
-.ds-site.reveal-ready [data-reveal="label"] { transform:none; transition-duration:500ms; transition-delay:0ms; }
-.ds-site.reveal-ready [data-reveal="intro"] { transition-delay:160ms; }
-
-/* Real line masks follow font loading and responsive wrapping via SplitText. */
-.ds-site.reveal-ready [data-reveal="heading"] { opacity:1; transform:none; transition:none; }
-.ds-heading-line-mask { overflow:clip; }
-.ds-site.reveal-ready [data-reveal="heading"] .ds-heading-line {
-  opacity:0; transform:translateY(110%);
-  transition:transform 750ms var(--ds-motion-ease),opacity 650ms var(--ds-motion-ease);
-  transition-delay:calc(90ms + var(--i,0) * 80ms);
-}
-.ds-site.reveal-ready [data-reveal="heading"].is-visible .ds-heading-line { opacity:1; transform:none; }
-:is(.ds-site,.dev-footer).reveal-ready [data-reveal-instant],
-.ds-site.reveal-ready [data-reveal-instant] .ds-heading-line { opacity:1; transform:none; transition:none; }
+/* Use photography's shared fade-and-rise reveals from app/globals.css. */
+:is(.ds-site,.dev-footer).reveal-ready [data-reveal-instant] { opacity:1; transform:none; transition:none; }
 
 /* Exact final-value space and stable accessible text during number updates. */
 .ds-counter { display:inline-grid; vertical-align:baseline; }
@@ -28,33 +7,15 @@
 .ds-counter-reserve { opacity:0; }
 .ds-counter-value { text-align:right; }
 
-/* Current hero exit and preview depth; GSAP owns transform and opacity. */
-.ds-simple .ds-simple-hero { animation:none; transform-origin:center top; }
-
-/* Dev-only chrome: the existing progress element sits along the top edge. */
-body:has(.ds-site.ds-simple) .shared-site-header.is-dev { background:transparent; border-bottom-color:transparent; -webkit-backdrop-filter:none; backdrop-filter:none; }
-body:has(.ds-site.ds-simple) .shared-site-header.is-dev[data-scrolled="true"] {
-  background:var(--bento-panel);
-  background:color-mix(in srgb,var(--bento-panel) 94%,transparent); border-bottom-color:var(--bento-line);
-  background-image:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--bento-accent) 12%,transparent),transparent 70%);
-  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
-}
-@media (prefers-reduced-motion:no-preference) {
-  body:has(.ds-site.ds-simple) .shared-site-header.is-dev { transition:background-color 220ms cubic-bezier(.22,1,.36,1),border-color 220ms cubic-bezier(.22,1,.36,1); }
-}
-body:has(.ds-site.ds-simple) .shared-site-header.is-dev .shared-header-progress {
-  inset:0 0 auto; height:2px; opacity:1;
-  background:linear-gradient(90deg,var(--ds-blue,var(--bento-accent)),var(--ds-cyan,var(--bento-accent)));
-  transform:scaleX(var(--header-progress,0)); transform-origin:left;
-}
+/* Photography's hero stays steady while scrolling. */
+.ds-simple .ds-simple-hero { animation:none; }
 
 /* Manual workflow selection and scroll selection share the existing diagram. */
 .ds-explorer-transcript [data-scroll-step].is-current > strong { color:var(--ds-blue); }
 
 /* Motion preference changes take effect immediately, including mid-reveal. */
 @media (prefers-reduced-motion:reduce) {
-  :is(.ds-site,.dev-footer).reveal-ready [data-reveal],
-  .ds-site.reveal-ready [data-reveal="heading"] .ds-heading-line {
+  :is(.ds-site,.dev-footer).reveal-ready [data-reveal] {
     opacity:1; transform:none; filter:none; transition:none;
   }
   .ds-site :is(.ds-simple-hero,.ds-simple-hero-preview,[data-hero-layer]) { transform:none !important; opacity:1 !important; }

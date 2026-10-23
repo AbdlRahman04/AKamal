@@ -43,6 +43,22 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             __html: `(function(){try{if(window.location.pathname.indexOf(${JSON.stringify(`${basePath}/photography`)})===0){var mode=window.localStorage.getItem("photography-theme");document.body.dataset.photographyMode=mode==="light"?"light":"dark";}else{document.body.dataset.devMode=window.localStorage.getItem("dev-theme")==="dark"?"dark":"light";}}catch(_){document.body.dataset.photographyMode="dark";document.body.dataset.devMode="light";}})();`,
           }}
         />
+        <script dangerouslySetInnerHTML={{ __html: `(function(){
+          function update(){
+            var header=document.querySelector('.shared-site-header');
+            if(header)header.dataset.scrolled=String(window.scrollY>24);
+          }
+          function cleanup(){
+            window.removeEventListener('scroll',update);
+            window.removeEventListener('pageshow',update);
+            document.removeEventListener('DOMContentLoaded',update);
+          }
+          window.addEventListener('scroll',update,{passive:true});
+          window.addEventListener('pageshow',update);
+          document.addEventListener('DOMContentLoaded',update);
+          window.addEventListener('portfolio-header-ready',cleanup,{once:true});
+          update();
+        })();` }} />
         <SiteChrome>{children}</SiteChrome>
       </body>
     </html>

@@ -41,9 +41,26 @@ body:has(.dev-section)::after { display:none; }
 .shared-site-header.is-dev {
   --section-accent:var(--bento-accent);
   inset:0 0 auto;
-  padding:0 max(24px,calc((100vw - 1280px) / 2)); border:0; border-bottom:1px solid var(--bento-line); border-radius:0;
-  background:color-mix(in srgb,var(--bento-panel) 94%,transparent);
-  color:var(--bento-text); box-shadow:var(--bento-shadow);
+  padding:0 max(24px,calc((100vw - 1280px) / 2)); border:0; border-bottom:1px solid transparent; border-radius:0;
+  background:transparent;
+  color:var(--bento-text); box-shadow:none;
+  -webkit-backdrop-filter:none; backdrop-filter:none;
+}
+/* Shared chrome must have its final surface before route styles arrive. */
+.shared-site-header.is-dev[data-scrolled="true"] {
+  background:var(--bento-panel);
+  background:color-mix(in srgb,var(--bento-panel) 94%,transparent); border-bottom-color:var(--bento-line);
+  background-image:radial-gradient(ellipse at 50% 0,color-mix(in srgb,var(--bento-accent) 12%,transparent),transparent 70%);
+  box-shadow:0 8px 24px color-mix(in srgb,var(--bento-text) 7%,transparent);
+  -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+}
+@media (prefers-reduced-motion:no-preference) {
+  .shared-site-header.is-dev { transition:background-color 220ms cubic-bezier(.22,1,.36,1),border-color 220ms cubic-bezier(.22,1,.36,1),box-shadow 220ms cubic-bezier(.22,1,.36,1); }
+}
+.shared-site-header.is-dev .shared-header-progress {
+  inset:0 0 auto; height:2px; opacity:1;
+  background:linear-gradient(90deg,var(--ds-blue,var(--bento-accent)),var(--ds-cyan,var(--bento-accent)));
+  transform:scaleX(var(--header-progress,0)); transform-origin:left;
 }
 .shared-site-header.is-dev .shared-header-inner { width:100%; min-height:72px; padding:0 25px; gap:22px; }
 .shared-site-header.is-dev .shared-wordmark { font:600 12px "Manrope",Arial,sans-serif; gap:8px; }

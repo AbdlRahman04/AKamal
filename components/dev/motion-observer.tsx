@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import type { SplitText } from "gsap/SplitText";
 
 const staggerGroups = [
   ".ds-simple-timeline", ".ds-certificates-list", ".ds-simple-tags", ".ds-capability-list",
@@ -19,8 +18,6 @@ export default function MotionObserver() {
     const reveals = new Set<HTMLElement>();
     const counted = new WeakSet<HTMLElement>();
     const counts = new Map<HTMLElement, { value: number; start: number }>();
-    const splits: SplitText[] = [];
-    let disposed = false;
     let frame = 0;
     let observer: IntersectionObserver | undefined;
     let mutations: MutationObserver | undefined;
@@ -50,12 +47,15 @@ export default function MotionObserver() {
       if (!frame) frame = requestAnimationFrame(tick);
     };
     const register = () => {
+      root.querySelectorAll<HTMLElement>(".ds-project-explorer, .ds-selected-projects > *, .ds-practical-skills, .ds-learning-band, .ds-contact-copy, .ds-contact-grid > .contact-form").forEach(element => {
+        element.dataset.reveal = "";
+      });
       scopes.forEach(scope => {
         scope.querySelectorAll<HTMLElement>(staggerGroups).forEach(group => {
           [...group.children].forEach((child, index) => {
             if (!(child instanceof HTMLElement) || child.matches(".ds-certificates-empty")) return;
             child.dataset.reveal = "stagger";
-            child.style.setProperty("--i", String(index));
+            child.style.setProperty("--reveal-delay", `${Math.min(index, 4) * 55}ms`);
           });
         });
         scope.querySelectorAll<HTMLElement>("[data-reveal], [data-count-to]").forEach(element => {
@@ -81,28 +81,7 @@ export default function MotionObserver() {
       });
     };
 
-    async function initialize() {
-      if (!preference.matches) {
-        try {
-          const [{ default: gsap }, { SplitText }] = await Promise.all([import("gsap"), import("gsap/SplitText")]);
-          if (disposed) return;
-          gsap.registerPlugin(SplitText);
-          root!.querySelectorAll<HTMLElement>(".ds-section-heading h2").forEach(heading => {
-            splits.push(SplitText.create(heading, {
-              type: "lines", mask: "lines", linesClass: "ds-heading-line", autoSplit: true,
-              onSplit: split => split.lines.forEach((line, index) => (line as HTMLElement).style.setProperty("--i", String(index))),
-            }));
-          });
-        } catch { /* A failed optional chunk leaves the ordinary heading reveal available. */ }
-      }
-      if (disposed) return;
-      root!.querySelectorAll<HTMLElement>(".ds-section-heading").forEach(group => {
-        group.dataset.reveal = "group";
-        group.querySelectorAll<HTMLElement>("h2, .ds-index, h2 + p").forEach(element => {
-          element.dataset.reveal = element.matches("h2") ? "heading" : element.matches(".ds-index") ? "label" : "intro";
-        });
-      });
-      root!.querySelectorAll<HTMLElement>(".ds-background-group[data-reveal]").forEach(group => { group.dataset.reveal = "group"; });
+    function initialize() {
       if ("IntersectionObserver" in window) {
         observer = new IntersectionObserver(entries => {
           const indices = new Map<Element, number>();
@@ -112,12 +91,12 @@ export default function MotionObserver() {
             // Stagger newly visible siblings, so long lists never accumulate seconds of delay.
             if (element.dataset.reveal === "stagger" && element.parentElement) {
               const index = indices.get(element.parentElement) ?? 0;
-              element.style.setProperty("--i", String(index));
+              element.style.setProperty("--reveal-delay", `${Math.min(index, 4) * 55}ms`);
               indices.set(element.parentElement, index + 1);
             }
             show(element);
           });
-        }, { threshold: 0, rootMargin: "0px 0px -24px 0px" });
+        }, { threshold: 0.05, rootMargin: "0px 0px -8% 0px" });
       }
       register();
       // Never hide server HTML before observers and all their targets are ready.
@@ -127,16 +106,14 @@ export default function MotionObserver() {
       });
       scopes.forEach(scope => mutations!.observe(scope, { childList: true, subtree: true }));
     }
-    void initialize();
+    initialize();
     preference.addEventListener("change", motionChanged);
     scopes.forEach(scope => scope.addEventListener("focusin", focus));
     return () => {
-      disposed = true;
       observer?.disconnect();
       mutations?.disconnect();
       finishCounts();
       scopes.forEach(scope => { scope.classList.remove("reveal-ready"); scope.removeEventListener("focusin", focus); });
-      splits.forEach(split => split.revert());
       preference.removeEventListener("change", motionChanged);
     };
   }, []);

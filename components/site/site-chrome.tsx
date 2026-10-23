@@ -3,7 +3,7 @@
 import Link from "next/link";
 import localFont from "next/font/local";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills, portfolioLastUpdated } from "@/data/dev";
 import { hero as photographyHero, profile as photographyProfile } from "@/data/photography";
 
@@ -31,8 +31,11 @@ const photographyNavigation: NavItem[] = [
 
 function ThemeToggle({ theme, onToggle, mobile = false }: { theme: ThemeMode; onToggle: () => void; mobile?: boolean }) {
   return <button className={`site-theme-toggle${mobile ? " is-mobile" : ""}`} type="button" aria-label="Toggle theme" aria-pressed={theme === "dark"} title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`} onClick={onToggle}>
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {theme === "dark" ? <><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></> : <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />}
+    <svg className="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" />
+    </svg>
+    <svg className="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" />
     </svg>
   </button>;
 }
@@ -120,7 +123,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
   const isLightPhotography = isPhotography && photographyTheme === "light";
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const header = headerRef.current;
     if (!header) return;
     const site = !isPhotography ? document.querySelector<HTMLElement>(".ds-site") : null;
@@ -142,16 +145,74 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     observer.observe(document.documentElement);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule);
+    window.addEventListener("pageshow", update);
     update();
+    window.dispatchEvent(new Event("portfolio-header-ready"));
     return () => {
       observer.disconnect();
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      window.removeEventListener("pageshow", update);
       window.cancelAnimationFrame(frame);
     };
   }, [pathname, isPhotography, devDark]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header || typeof header.animate !== "function") return;
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let entrance: Animation | undefined;
+    let frame = 0;
+    let disposed = false;
+    let scrolled = header.dataset.scrolled;
+    const cancel = () => {
+      entrance?.cancel();
+      header.getAnimations().forEach(animation => {
+        if (animation instanceof CSSAnimation && animation.animationName === "shared-header-fade") animation.finish();
+      });
+    };
+    const reveal = () => {
+      cancel();
+      if (preference.matches || header.contains(document.activeElement)) return;
+      entrance = header.animate([
+        { opacity: 0 },
+        { opacity: 1 },
+      ], { duration: 550, easing: "cubic-bezier(.22,1,.36,1)" });
+    };
+    // The scroll tracker owns the surface; animate only when that state changes.
+    const observer = new MutationObserver(() => {
+      if (header.dataset.scrolled === scrolled) return;
+      scrolled = header.dataset.scrolled;
+      reveal();
+    });
+    // Let page loading, font metrics, and restored scrolling settle before watching changes.
+    const prepare = () => {
+      void document.fonts.ready.then(() => {
+        if (disposed) return;
+        frame = requestAnimationFrame(() => {
+          frame = requestAnimationFrame(() => {
+            scrolled = header.dataset.scrolled;
+            observer.observe(header, { attributes: true, attributeFilter: ["data-scrolled"] });
+          });
+        });
+      });
+    };
+    if (document.readyState === "complete") prepare();
+    else window.addEventListener("load", prepare, { once: true });
+    preference.addEventListener("change", cancel);
+    header.addEventListener("focusin", cancel);
+    return () => {
+      disposed = true;
+      cancelAnimationFrame(frame);
+      cancel();
+      observer.disconnect();
+      window.removeEventListener("load", prepare);
+      preference.removeEventListener("change", cancel);
+      header.removeEventListener("focusin", cancel);
+    };
+  }, [pathname, isPhotography]);
+
+  useLayoutEffect(() => {
     if (isPhotography) return;
     let dark = false;
     try { dark = window.localStorage.getItem("dev-theme") === "dark"; } catch { /* Use light when storage is unavailable. */ }
@@ -202,7 +263,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     return () => window.clearTimeout(timeout);
   }, [menuOpen, menuMounted]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isPhotography) {
       setPhotographyThemeReady(false);
       return;
@@ -212,24 +273,17 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
       const initialTheme: ThemeMode = savedTheme === "light" ? "light" : "dark";
       document.body.dataset.photographyMode = initialTheme;
       setPhotographyTheme(initialTheme);
-      window.requestAnimationFrame(() => setPhotographyThemeReady(true));
     } catch {
       document.body.dataset.photographyMode = "dark";
       setPhotographyTheme("dark");
-      window.requestAnimationFrame(() => setPhotographyThemeReady(true));
     }
-  }, [isPhotography]);
-
-  useEffect(() => {
-    if (!isPhotography) {
-      delete document.body.dataset.photographyMode;
-      return;
-    }
-
+    const frame = window.requestAnimationFrame(() => setPhotographyThemeReady(true));
     return () => {
+      window.cancelAnimationFrame(frame);
       delete document.body.dataset.photographyMode;
     };
   }, [isPhotography]);
+
 
   const togglePhotographyTheme = () => {
     setPhotographyTheme((current) => {
@@ -320,7 +374,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     <>
       {!isPhotography && <a className="ds-feature-skip" href="#main-content">Skip to content</a>}
       {/* A new header prevents color and border transitions from carrying across portfolios. */}
-      <header key={isPhotography ? "photography" : "dev"} ref={headerRef} className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
+      <header key={isPhotography ? "photography" : "dev"} ref={headerRef} suppressHydrationWarning className={`shared-site-header ${isPhotography ? "is-photography" : "is-dev"}${isLightPhotography ? " is-light" : ""}${isPhotography && photographyThemeReady ? " is-theme-ready" : ""}`}>
         {!isPhotography && <span className="shared-header-progress" aria-hidden="true" />}
         <div className={`shared-header-inner${isPhotography ? " photo-banner-inner" : ""}`}>
           <Link className="shared-wordmark" href={isPhotography ? "/photography#top" : "/#top"} aria-label={`${currentProfile.name}${isPhotography ? " Photography" : ""} — Back to top`}>

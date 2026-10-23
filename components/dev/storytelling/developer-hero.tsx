@@ -6,7 +6,6 @@ import { publicPath } from "@/components/site/public-path";
 import { devProfile, devProjects } from "@/data/dev";
 import { projectPreviews } from "@/data/project-previews";
 import { useMotionVisibility } from "../feature-motion";
-import { useHeroScroll } from "./hero-motion";
 
 const phrases = ["reliable software.", "AI applications.", "data-driven systems.", "thoughtful integrations."];
 const phases = ["Photo", "Prepare", "Classify", "Review"];
@@ -32,7 +31,6 @@ function TypedIntroduction({ running }: { running: boolean }) {
 
 export default function DeveloperHero() {
   const root = useRef<HTMLElement>(null);
-  useHeroScroll(root);
   const { visible, reduced } = useMotionVisibility(root);
   const [phase, setPhase] = useState(3);
   const running = visible && !reduced;

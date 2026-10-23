@@ -148,7 +148,7 @@ body[data-dev-mode="dark"] .ds-name-family { color:#79b6ff; background-image:lin
 .ds-simple .contact-status { margin-top:12px; }
 .ds-simple .contact-form-bottom { margin-top:16px; }
 .ds-simple .contact-submit { color:var(--bento-on-accent); }
-body:has(.ds-simple) .shared-site-header.is-dev { padding-inline:40px; background:color-mix(in srgb,var(--bento-panel) 94%,transparent); animation:none; }
+body:has(.ds-simple) .shared-site-header.is-dev { padding-inline:40px; }
 body:has(.ds-simple) .shared-site-header.is-dev .shared-header-inner { width:min(1280px,100%); padding-inline:0; gap:24px; }
 body:has(.ds-simple) .shared-site-header.is-dev :is(.shared-desktop-nav,.shared-header-actions) { font:400 15px var(--mono); letter-spacing:0; }
 body:has(.ds-simple) .shared-site-header.is-dev .shared-desktop-nav { gap:36px; }
@@ -160,13 +160,7 @@ body:has(.ds-simple) .shared-site-header.is-dev .shared-header-progress { backgr
 body:has(.ds-simple) .shared-site-header.is-dev + .shared-mobile-backdrop {
   --menu-surface:var(--bento-panel); --menu-text:var(--bento-text); --menu-muted:var(--bento-muted); --menu-line:var(--bento-line); --menu-accent:var(--bento-accent); --menu-on-accent:var(--bento-on-accent);
 }
-body:has(.ds-simple) .shared-site-header.is-dev + .shared-mobile-backdrop,
-body:has(.ds-simple) .shared-mobile-menu,body:has(.ds-simple) .shared-mobile-menu nav a { animation:none; }
 body:has(.ds-simple) .dev-footer { width:min(1280px,calc(100% - 80px)); margin:0 auto; padding:44px 0 22px; font:400 15px/1.5 "Manrope",Arial,sans-serif; }
-@media (prefers-reduced-motion:no-preference) {
-  .ds-simple-hero { animation:ds-simple-enter 450ms ease-out both; }
-}
-@keyframes ds-simple-enter { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
 @media (max-width:1000px) {
   .ds-simple-hero { gap:32px; grid-template-columns:1fr 1fr; }
   .ds-simple-preview-screen { height:260px; }

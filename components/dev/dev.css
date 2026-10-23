@@ -1,8 +1,6 @@
 [data-theme="dev"] .shared-site-header,
 [data-theme="dev"] .shared-site-footer { --section-accent:#58a6ff; }
 [data-theme="dev"] .shared-site-header { background:rgba(7,10,15,.78); border-color:rgba(170,197,231,.13); }
-.shared-site-header.is-dev { animation:dev-header-in .7s cubic-bezier(.2,.8,.2,1) both; }
-@keyframes dev-header-in { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
 .ds-site { animation:dev-page-in .7s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes dev-page-in { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
 .shared-site-header.is-dev .shared-desktop-nav a:focus:not(:focus-visible),
