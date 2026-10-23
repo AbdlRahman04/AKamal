@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import localFont from "next/font/local";
-import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent } from "react";
 import { devCertificates, devEducation, devExperience, devProfile, devProjects, devSkills, portfolioLastUpdated } from "@/data/dev";
 import { hero as photographyHero, profile as photographyProfile } from "@/data/photography";
 
@@ -40,7 +40,7 @@ function ThemeToggle({ theme, onToggle, mobile = false }: { theme: ThemeMode; on
   </button>;
 }
 
-function PortfolioFooterContent({ isPhotography }: { isPhotography: boolean }) {
+function PortfolioFooterContent({ isPhotography, onPortfolioNavigate }: { isPhotography: boolean; onPortfolioNavigate: (event: MouseEvent<HTMLAnchorElement>) => void }) {
   const [localTime, setLocalTime] = useState<{ label: string; dateTime: string } | null>(null);
   const profile = isPhotography ? { ...photographyProfile, links: photographyProfile.socialLinks } : devProfile;
   const location = isPhotography ? photographyHero?.locationLabel ?? "UAE" : devProfile.location.split(",")[0];
@@ -89,7 +89,7 @@ function PortfolioFooterContent({ isPhotography }: { isPhotography: boolean }) {
     </div>
     <nav className="dev-footer-navigation" aria-label="Footer navigation">
       {footerNavigation.filter(item => item.visible !== false).map(item => <a key={item.href} href={item.href}>{item.label}</a>)}
-      <Link className="dev-footer-photography" href={isPhotography ? "/" : "/photography"}>{isPhotography ? "See my development work" : "See my photography"} <span aria-hidden="true">↗</span></Link>
+      <Link className="dev-footer-photography" href={isPhotography ? "/" : "/photography"} onClick={onPortfolioNavigate}>{isPhotography ? "See my development work" : "See my photography"} <span aria-hidden="true">↗</span></Link>
     </nav>
     <div className="dev-footer-bottom">
       <div className="dev-footer-meta">
@@ -104,6 +104,7 @@ function PortfolioFooterContent({ isPhotography }: { isPhotography: boolean }) {
 
 export default function SiteChrome({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
+  const router = useRouter();
   const isPhotography = pathname.startsWith("/photography");
   const navigation = useMemo(
     () => (isPhotography ? photographyNavigation : devNavigation).filter((item) => item.visible !== false),
@@ -121,7 +122,40 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
   const headerRef = useRef<HTMLElement | null>(null);
   const mobileCloseRef = useRef<HTMLButtonElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+  const navigationTransition = useRef<ViewTransition | null>(null);
+  const finishTransitionUpdate = useRef<(() => void) | null>(null);
   const isLightPhotography = isPhotography && photographyTheme === "light";
+
+  useLayoutEffect(() => {
+    // Resolve after the destination and its saved theme have committed.
+    finishTransitionUpdate.current?.();
+    finishTransitionUpdate.current = null;
+  }, [pathname]);
+
+  function handlePortfolioNavigation(event: MouseEvent<HTMLAnchorElement>) {
+    if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    setMenuOpen(false);
+    setMenuMounted(false);
+    if (event.detail === 0 || !document.startViewTransition || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    event.preventDefault();
+    navigationTransition.current?.skipTransition();
+    finishTransitionUpdate.current?.();
+    const transition = document.startViewTransition(() => new Promise<void>((resolve) => {
+      // A failed or interrupted navigation must never leave the snapshot frozen.
+      const timeout = window.setTimeout(resolve, 4000);
+      finishTransitionUpdate.current = () => { window.clearTimeout(timeout); resolve(); };
+      router.push(isPhotography ? "/" : "/photography");
+    }));
+    navigationTransition.current = transition;
+    void transition.ready.catch(() => { /* Skipped snapshots must not produce an unhandled rejection. */ });
+    void transition.finished.catch(() => { /* Navigation still works if the browser skips the animation. */ }).finally(() => {
+      if (navigationTransition.current !== transition) return;
+      finishTransitionUpdate.current?.();
+      finishTransitionUpdate.current = null;
+      navigationTransition.current = null;
+    });
+  }
 
   useLayoutEffect(() => {
     const header = headerRef.current;
@@ -284,7 +318,6 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
     };
   }, [isPhotography]);
 
-
   const togglePhotographyTheme = () => {
     setPhotographyTheme((current) => {
       const nextTheme = current === "dark" ? "light" : "dark";
@@ -406,8 +439,8 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
           </nav>
           <div className="shared-header-actions">
             <ThemeToggle theme={isPhotography ? photographyTheme : devDark ? "dark" : "light"} onToggle={isPhotography ? togglePhotographyTheme : toggleDevTheme} />
-            <Link href={isPhotography ? "/" : "/photography"}>
-              {isPhotography ? "Developer ↗" : "Photography"}
+            <Link href={isPhotography ? "/" : "/photography"} onClick={handlePortfolioNavigation}>
+              {isPhotography ? "Developer" : "Photography"}
             </Link>
             <a href="#contact">{isPhotography ? "Commission" : "Contact me"} <span aria-hidden="true">→</span></a>
           </div>
@@ -448,7 +481,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
               ))}
             </nav>
             <div className="shared-mobile-actions">
-              <Link href={isPhotography ? "/" : "/photography"} onClick={() => setMenuOpen(false)}>
+              <Link href={isPhotography ? "/" : "/photography"} onClick={handlePortfolioNavigation}>
                 {isPhotography ? "Developer" : "Photography"}
               </Link>
               <a className="shared-mobile-contact" href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
@@ -463,7 +496,7 @@ export default function SiteChrome({ children }: Readonly<{ children: React.Reac
 
       <footer className={`shared-site-footer${isPhotography ? " photography-footer" : " dev-footer"}${isLightPhotography ? " is-light" : ""}`}>
         <div className="shared-footer-inner">
-          <PortfolioFooterContent isPhotography={isPhotography} />
+          <PortfolioFooterContent isPhotography={isPhotography} onPortfolioNavigate={handlePortfolioNavigation} />
         </div>
       </footer>
     </>

@@ -6,11 +6,10 @@ import BackgroundOverview from "./background-overview";
 import PortfolioSection from "./portfolio-section";
 import ProjectCard from "./project-card";
 import ProjectExplorer from "./project-explorer";
-import PortfolioFacts from "./portfolio-facts";
 import NetworkBackdrop from "./network-backdrop";
 import CredentialHighlights from "./credential-highlights";
 import MotionObserver from "./motion-observer";
-import { getPortfolioFacts, getProjectStory } from "@/data/project-case-study";
+import { getProjectStory } from "@/data/project-case-study";
 import DeveloperMotionProvider from "./storytelling/developer-motion";
 import DeveloperHero from "./storytelling/developer-hero";
 import SkillsExplorer from "./storytelling/skills-explorer";
@@ -34,7 +33,6 @@ export default function DevHome() {
       <MotionObserver />
       <NetworkBackdrop />
       <DeveloperHero />
-      <PortfolioFacts facts={getPortfolioFacts(devProjects, devExperience)} />
       {!!devProjects.length && <PortfolioSection id="projects" title="Selected projects" intro="Choose a project to explore the work, my contribution, and how it runs.">
         <span id="process" className="ds-anchor" aria-hidden="true" />
         <ProjectExplorer projects={devProjects} />

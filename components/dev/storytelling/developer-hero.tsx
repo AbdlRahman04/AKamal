@@ -1,77 +1,127 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import Image from "@/components/site/public-image";
 import { publicPath } from "@/components/site/public-path";
-import { devProfile, devProjects } from "@/data/dev";
+import { devExperience, devProfile, devProjects } from "@/data/dev";
+import { getPortfolioFacts } from "@/data/project-case-study";
 import { projectPreviews } from "@/data/project-previews";
-import { useMotionVisibility } from "../feature-motion";
+import { useDeveloperMotion } from "./developer-motion";
+import "./developer-hero.css";
 
-const phrases = ["reliable software.", "AI applications.", "data-driven systems.", "thoughtful integrations."];
-const phases = ["Photo", "Prepare", "Classify", "Review"];
-
-function TypedIntroduction({ running }: { running: boolean }) {
-  const [typing, setTyping] = useState({ phrase: 0, count: phrases[0].length, deleting: false });
-  useEffect(() => {
-    if (!running) return;
-    const word = phrases[typing.phrase];
-    const delay = typing.count === word.length && !typing.deleting ? 1800 : typing.count === 0 ? 350 : typing.deleting ? 40 : 75;
-    const timer = window.setTimeout(() => setTyping(previous => {
-      if (!previous.deleting && previous.count === phrases[previous.phrase].length) return { ...previous, deleting: true };
-      if (previous.deleting && previous.count === 0) return { phrase: (previous.phrase + 1) % phrases.length, count: 0, deleting: false };
-      return { ...previous, count: previous.count + (previous.deleting ? -1 : 1) };
-    }), delay);
-    return () => window.clearTimeout(timer);
-  }, [running, typing]);
-  return <p className="ds-typed-intro">
-    <span className="ds-project-sr-only">I build reliable software, AI applications, data-driven systems, and thoughtful integrations.</span>
-    <span aria-hidden="true">{"I build\u00a0"}<span>{running ? phrases[typing.phrase].slice(0, typing.count) : phrases[typing.phrase]}</span><i className="ds-typing-caret" data-running={running} /></span>
-  </p>;
-}
+const studioProjects = [
+  { slug: "plant-health-monitoring-system", kind: "plant", preview: projectPreviews.plant },
+  { slug: "smart-cafeteria-ordering-system", kind: "dine", preview: projectPreviews.dine },
+].flatMap(entry => {
+  const project = devProjects.find(project => project.slug === entry.slug);
+  return project ? [{ ...entry, project }] : [];
+});
+const facts = getPortfolioFacts(devProjects, devExperience);
 
 export default function DeveloperHero() {
-  const root = useRef<HTMLElement>(null);
-  const { visible, reduced } = useMotionVisibility(root);
-  const [phase, setPhase] = useState(3);
-  const running = visible && !reduced;
-  const leafProject = devProjects.find(project => project.slug === "plant-health-monitoring-system");
-  useEffect(() => {
-    if (!running) return;
-    const timer = window.setTimeout(() => setPhase(previous => (previous + 1) % phases.length), phase === 3 ? 2600 : 1100);
-    return () => window.clearTimeout(timer);
-  }, [running, phase]);
-  const displayedPhase = reduced || !visible ? 3 : phase;
-  const complete = displayedPhase === 3;
+  const { reduced } = useDeveloperMotion();
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const tabs = useRef<Array<HTMLButtonElement | null>>([]);
+  const preview = useRef<HTMLDivElement>(null);
+  const animateNext = useRef(false);
+  const selected = studioProjects[selectedIndex] ?? studioProjects[0];
+  const isPlant = selected?.kind === "plant";
   const nameBreak = devProfile.name.lastIndexOf(" ");
+  const technologies = selected?.project.technologies ?? [];
+  const technology = isPlant
+    ? technologies.find(item => item === "MobileNetV2") ?? technologies[0]
+    : technologies.slice(0, 2).join(" + ");
+  const supportingTechnologies = isPlant
+    ? technologies.filter(item => ["TensorFlow", "Keras", "Flask"].includes(item))
+    : technologies.slice(2, 5);
 
-  return <section ref={root} className="ds-simple-hero" id="top" aria-labelledby="dev-hero-title">
-    <div className="ds-simple-hero-copy">
-      <p className="ds-simple-role">{devProfile.role}</p>
-      <h1 id="dev-hero-title" aria-label={devProfile.name}>
-        {nameBreak > 0 ? <><span className="ds-name-given">{devProfile.name.slice(0, nameBreak)}</span>{" "}<span className="ds-name-family">{devProfile.name.slice(nameBreak + 1)}.</span></> : devProfile.name}
-      </h1>
-      <TypedIntroduction running={running} />
-      <p className="ds-simple-intro">{devProfile.intro}</p>
-      <div className="ds-hero-actions">
-        <a className="ds-button ds-button-primary" href="#projects">View projects</a>
-        <a className="ds-button ds-button-quiet" href="#contact">Get in touch</a>
+  useEffect(() => {
+    if (!animateNext.current || reduced) return;
+    animateNext.current = false;
+    const animation = preview.current?.animate?.([{ opacity: .25 }, { opacity: 1 }], {
+      duration: 220, easing: "cubic-bezier(.22,1,.36,1)",
+    });
+    return () => animation?.cancel();
+  }, [selectedIndex, reduced]);
+
+  function selectProject(index: number, animate = false) {
+    if (index === selectedIndex) return;
+    animateNext.current = animate && !reduced;
+    setSelectedIndex(index);
+  }
+
+  function navigateProjects(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const next = event.key === "ArrowRight" ? (index + 1) % studioProjects.length
+      : event.key === "ArrowLeft" ? (index - 1 + studioProjects.length) % studioProjects.length
+        : event.key === "Home" ? 0 : event.key === "End" ? studioProjects.length - 1 : null;
+    if (next === null) return;
+    event.preventDefault();
+    selectProject(next);
+    tabs.current[next]?.focus();
+  }
+
+  return <section className="product-studio-hero" id="top" aria-labelledby="dev-hero-title">
+    <div className={`studio-grid${selected ? "" : " is-empty"}`}>
+      <div className="studio-copy">
+        <p className="eyeline">{devProfile.role}</p>
+        <h1 id="dev-hero-title" aria-label={devProfile.name}>
+          {nameBreak > 0 ? <><span>{devProfile.name.slice(0, nameBreak)}</span><span>{devProfile.name.slice(nameBreak + 1)}.</span></> : devProfile.name}
+        </h1>
+        <p className="hero-specialty">{devProfile.title}{/[.!?]$/.test(devProfile.title) ? "" : "."}</p>
+        <p className="lead">{devProfile.intro}</p>
+        <div className="premium-actions">
+          <a className="premium-btn" href="#projects">Explore my work<i aria-hidden="true">↗</i></a>
+          <a className="text-action" href="#contact">Let’s talk</a>
+        </div>
+        <div className="quiet-meta" aria-label="Portfolio at a glance">
+          {facts.map(fact => <a key={fact.label} href={fact.href}><b>{fact.value}</b> {fact.label.toLowerCase()}</a>)}
+          <span>{devProfile.location}</span>
+        </div>
       </div>
-      <p className="ds-simple-availability">{devProfile.availability}</p>
-      <p className="ds-simple-location">{devProfile.location}</p>
+
+      {selected && <div className="studio-scene" id="studio-project-preview" role="tabpanel" aria-labelledby={`studio-tab-${selected.project.slug}`} tabIndex={0}>
+        <div className="scene-grid" aria-hidden="true" />
+        <div className="rear-sheet" aria-hidden="true" />
+        <div className="product-window">
+          <div className="product-core" ref={preview}>
+            <div className="browser-rail" aria-hidden="true"><i /><i /><i /><span>{selected.preview.brand} / {isPlant ? projectPreviews.plant.heading : "Campus ordering"}</span></div>
+            <div className="app-heading">
+              <div className="app-logo"><b className="app-mark" aria-hidden="true">{isPlant ? "L" : "D"}</b>{selected.preview.brand}</div>
+              <div className="app-nav" aria-hidden="true">{(isPlant ? projectPreviews.plant.navigation.slice(1) : projectPreviews.dine.navigation).map(label => <span key={label}>{label}</span>)}</div>
+            </div>
+            <div className="app-main">
+              <div className="app-photo">
+                <Image src={selected.preview.image} alt={isPlant ? "Tomato leaf in the illustrative LeafAI preview" : "Food featured in the illustrative AURAK Dine preview"} fill sizes="(max-width: 560px) 85vw, (max-width: 820px) 45vw, 24vw" priority={isPlant} unoptimized />
+                <span className="scan-corner" aria-hidden="true" />
+                <span className="image-caption">{isPlant ? `${projectPreviews.plant.subject} · sample input` : "Menu preview · sample content"}</span>
+              </div>
+              <div className="app-result">
+                <small>{isPlant ? "Plant health analysis" : "Campus dining"}</small>
+                <h2>{isPlant ? "A closer look at plant health." : "A simpler way to order."}</h2>
+                <span className="sample-label">Illustrative concept</span>
+                <div className="sample-score">{isPlant ? <>{projectPreviews.plant.sampleScore}<span>%</span></> : <>Dine<span>in</span></>}</div>
+                {isPlant && <div className="score-bar" aria-hidden="true"><i style={{ width: `${projectPreviews.plant.sampleScore}%` }} /></div>}
+                <p>{isPlant ? "Example score only, not measured model accuracy." : "Browse meals, place an order, and follow its progress."}</p>
+              </div>
+            </div>
+            <div className="app-footer">{(isPlant ? projectPreviews.plant.features : ["Campus ordering", "Order management", "Payments"]).map(label => <span key={label}>{label}</span>)}</div>
+          </div>
+        </div>
+        {technology && <div className="model-chip">{technology}<small>{supportingTechnologies.join(" · ")}</small></div>}
+        <div className="scene-label">Selected project<a className="scene-case" href={`#project-${selected.project.slug}`}>{selected.project.title}</a>
+          {selected.project.liveUrl && <a className="scene-demo" href={publicPath(selected.project.liveUrl)} target="_blank" rel="noopener noreferrer">Try {selected.preview.brand} ↗<span className="ds-project-sr-only"> (opens in a new tab)</span></a>}
+        </div>
+      </div>}
     </div>
-    <figure className="ds-simple-hero-preview">
-      <div className="ds-simple-preview-heading"><strong>LeafAI</strong><span>Illustrative leaf analysis</span></div>
-      <div className="ds-leaf-sample-photo">
-        <Image src={projectPreviews.plant.image} alt="Tomato leaf used in the illustrative analysis" fill sizes="(max-width: 820px) 90vw, 40vw" priority unoptimized />
-        <span className="ds-leaf-scan" aria-hidden="true" data-running={running} />
+
+    {selected && <div className="studio-workbar">
+      <p className="workbar-intro"><strong>Explore the projects</strong>Switch the interface preview</p>
+      <div className="workbar-tabs" role="tablist" aria-label="Project preview">
+        {studioProjects.map((entry, index) => <button key={entry.project.slug} ref={element => { tabs.current[index] = element; }} id={`studio-tab-${entry.project.slug}`} className="work-tab" type="button" role="tab" aria-selected={entry.project.slug === selected.project.slug} aria-controls="studio-project-preview" tabIndex={entry.project.slug === selected.project.slug ? 0 : -1} onClick={event => selectProject(index, event.detail > 0)} onKeyDown={event => navigateProjects(event, index)}>
+          <Image src={entry.preview.image} alt="" width={44} height={38} unoptimized />{entry.preview.brand}
+        </button>)}
       </div>
-      <ol className="ds-leaf-phases" aria-label="Illustrative analysis steps">{phases.map((label, index) => <li key={label} aria-current={index === displayedPhase ? "step" : undefined}>{label}</li>)}</ol>
-      <div className="ds-leaf-sample-result" aria-live="off"><span>{complete ? "Tomato leaf · example result" : phases[displayedPhase] + " · sample analysis"}</span><strong>{complete ? projectPreviews.plant.sampleScore + "%" : "…"}</strong></div>
-      <div className="ds-leaf-meter" aria-hidden="true"><span style={{ transform: `scaleX(${complete ? projectPreviews.plant.sampleScore / 100 : 0})` }} /></div>
-      <figcaption>Illustrative only. The sample score is not measured model accuracy. Use the live demo to run the real model.</figcaption>
-      <div className="ds-leaf-sample-actions">
-        {leafProject?.liveUrl && <a href={publicPath(leafProject.liveUrl)} target="_blank" rel="noreferrer">Try LeafAI<span className="ds-project-sr-only"> (opens in a new tab)</span></a>}
-      </div>
-    </figure>
+      <span className="workbar-end">{devProfile.role}</span>
+    </div>}
   </section>;
 }

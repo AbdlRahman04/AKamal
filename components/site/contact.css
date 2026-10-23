@@ -43,6 +43,6 @@
 .contact-retry { border:0; padding:4px; text-decoration:underline; background:transparent; color:var(--contact-text); cursor:pointer; }
 .contact-honeypot { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
 .photography-contact { --contact-bg:var(--darkroom-canvas); --contact-panel:var(--darkroom-surface); --contact-text:var(--darkroom-text); --contact-muted:var(--darkroom-muted-bright); --contact-line:var(--darkroom-outline-strong); --contact-accent:#b5c4a4; margin:0; padding:96px max(24px,calc((100vw - 1344px)/2)); scroll-margin-top:96px; }
-.photography-section.is-light .photography-contact { --contact-bg:#edece4; --contact-panel:#f7f6ef; --contact-text:#20302b; --contact-muted:#586a60; --contact-line:#a5b0a2; --contact-accent:#48664d; }
+body[data-photography-mode="light"] .photography-section .photography-contact { --contact-bg:#edece4; --contact-panel:#f7f6ef; --contact-text:#20302b; --contact-muted:#586a60; --contact-line:#a5b0a2; --contact-accent:#48664d; }
 @media(max-width:900px) { .portfolio-contact .ds-contact-grid,.photography-contact-grid { grid-template-columns:1fr; gap:36px; } .portfolio-contact { padding:48px 24px; } }
 @media(max-width:560px) { .portfolio-contact { padding:40px 18px; } .contact-form { padding:24px 18px; } .contact-field-row { grid-template-columns:1fr; gap:24px; } .contact-form-bottom { flex-wrap:wrap; } .contact-submit { justify-content:center; width:100%; } }

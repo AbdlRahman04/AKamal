@@ -269,7 +269,6 @@
 .shared-site-header.is-photography .shared-desktop-nav { justify-self:end; gap:36px; }
 .shared-site-header.is-photography .shared-desktop-nav a::after { bottom:-6px; height:2px; }
 .shared-site-header.is-photography .shared-desktop-nav a:is(.is-active,:hover,:focus-visible) { color:var(--bento-accent); }
-.shared-site-header.is-photography .shared-desktop-nav a:is(:hover,:focus-visible)::after { transform:scaleX(1); transform-origin:left; }
 .shared-site-header.is-photography .shared-header-actions { justify-self:end; align-items:center; gap:16px; }
 .shared-site-header.is-photography .shared-header-actions > a:nth-last-child(2) {
   width:auto;
